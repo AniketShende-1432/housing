@@ -1,0 +1,158 @@
+.pro-head{
+    border-left:2px solid black;
+}
+.pro-nav-cont{
+    box-shadow: 1px 1px 5px;
+    background-color: white;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    transform: translateY(-100%); /* Initially hidden */
+    transition: transform 0.3s ease-in-out;
+}
+.pro-nav-cont.show {
+    transform: translateY(0); /* Fully visible */
+}
+.product-nav{
+    display: flex;
+    gap:3rem;
+    > li button{
+        color:rgb(97, 96, 96) !important;
+        border: 2px solid transparent;
+        transition: border 0.6ms;
+        background-color: white;
+    }
+    > li button:hover{
+        border-bottom: 2px solid darkorange;
+    }
+}
+.pro-main{
+    gap:2rem;
+}
+.items{
+    height:80vh;
+    width:65%;
+    cursor:pointer;
+}
+.s-img{
+    height:100%;
+    width:18rem;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+}
+.rent-s-img{
+    height:100%;
+    width:18rem;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+}
+.comm-s-img{
+    height:100%;
+    width:18rem;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+}
+.head{
+    font-weight:600;
+}
+.head2{
+    font-size: 1rem;
+    font-weight: 500;
+}
+.price{
+    font-size: 0.8rem;
+}
+.item-bd{
+    border-left:1px solid gray
+}
+.item-btn{
+    border: 1px solid blue;
+    color:blue;
+}
+.checked{
+    color:orange;
+}
+.card1{
+    border: 1px solid gray;
+    border-radius: 14px;
+    width:100%;
+}
+.pro-img{
+    height:1.5rem;
+    width: 1.1rem;
+}
+.pro-status{
+    gap:3rem;
+}
+.pro-no{
+    font-size: 13px;
+}
+.pro-contact{
+    border:1px solid gray;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    width:13rem;
+    > button{
+        border-radius: 50px;
+    }
+}
+.pro-detail{
+    border:1px solid gray;
+    border-radius: 8px;
+
+}
+.pro-society{
+    > ul{
+        > li{
+            list-style: none;
+        }
+        gap:3rem;
+    }
+    .soc-text{
+        color:darkorange;
+    }
+    .soc-icon-list{
+        margin-top:3px;
+    }
+    border:1px solid gray;
+    border-radius: 5px;
+}
+.pro-amenities{
+    border:1px solid gray;
+    border-radius: 5px;
+}
+.amen-img{
+    height:1.5rem;
+    width:1.5rem;
+}
+.recomm-item{
+    gap:3rem;
+}
+.recomm-card{
+    height:20rem;
+    margin-right:1rem;
+}
+.carousel-control-prev{
+    background-color: gray;
+    border-radius:10px;
+    height:2rem;
+    width:2rem;
+    margin-top:9rem;
+}
+.carousel-control-next{
+    background-color: rgb(145, 141, 141);
+     border-radius:10px;
+     height:2rem;
+     width:2rem; 
+     margin-top:9rem;  
+}
+.deposit-price{
+    font-size: 16px;
+    color: gray;
+    font-family: 'Times New Roman', Times, serif;
+}
+.propertyid{
+    font-size: smaller;
+    font-family: Arial, Helvetica, sans-serif;
+}

@@ -1,0 +1,59 @@
+.signup-cont{
+    height:100vh;
+}
+.signup-box{
+    width: 40%;
+    border-radius: 8px;
+    border:1px solid gray;
+}
+.signup-text{
+    color:darkorange;
+}
+.signup-text:hover{
+    color:darkorange;
+}
+.signup-radio{
+    gap:2rem;
+}
+.signup-input{
+    width:100%;
+    border:1px solid white;
+    border-bottom-color: gray;
+}
+.signup-input:focus{
+    border:1px solid white;
+    border-bottom-color: gray;
+    outline:none;
+}
+.eye-icon{
+    cursor:pointer;
+}
+.phone-cont{
+    gap:0.5rem;
+    border-bottom:1px solid gray;
+    > .phone-input{
+        width:100%;
+        font-size: 16px;
+        border:none;
+    }
+    > .phone-input:focus{
+        border:none;
+        outline:none;
+    }
+}
+.check-label{
+    font-size: 13px;
+    font-family:Arial, Helvetica, sans-serif;
+    color:gray;
+}
+.signup-btn{
+    background-color: darkorange;
+    color:white;
+}
+.signup-btn:hover{
+    background-color: darkorange;
+    color:white;
+}
+.error-txt{
+    font-size: small;
+}

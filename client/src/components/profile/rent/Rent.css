@@ -1,0 +1,47 @@
+.rent-cont{
+    min-height:100vh;
+}
+.rent-head{
+    color:darkorange;
+}
+.rent-main-box{
+    position: relative;
+    padding-top:68px;
+    z-index:0;
+}
+.rent-main2-box{
+    border:1px solid gray;
+    border-radius: 10px;
+}
+.rent-drop{
+    > button{
+        width:16rem;
+    }
+    > .sell-drop-menu{
+        height:10rem;
+        overflow-y: auto;
+    }
+}
+.rent-drop-menu{
+    height:10rem;
+    overflow-y: auto;
+}
+.rent-property-inp{
+    border:1px solid white;
+    border-bottom-color: gray;
+    border-radius:0px;
+}
+.rent-property-inp:focus{
+    border:1px solid white;
+    border-bottom-color: gray;
+    outline:none;
+}
+.react-datepicker-wrapper {
+    width:100%;
+    > .react-datepicker__input-container{
+        width:100%;
+        > input{
+            width: 100%;
+        }
+    }
+}

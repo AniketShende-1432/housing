@@ -1,0 +1,43 @@
+.main-page{
+    background-color: rgb(253, 238, 218);
+    min-height: 100vh;
+    max-height: auto;
+}
+.manage-main{
+    gap:0.6rem;
+}
+.manage-card{
+    width:70%;
+}
+.manage-box{
+    gap:1rem;
+    > .manage-btn{
+        > button:first-child {
+            border:1px solid lightgray;
+            height:2rem;
+            border-radius: 4px;
+            background-color: white;
+            color: darkorange;
+        }
+        > button:nth-child(2) {
+            border:1px solid lightgray;
+            height:2rem;
+            margin-left:5px;
+            padding-bottom: 30px;
+            border-radius: 4px;
+            background-color: darkorange;
+            color: white;
+        }
+    }
+}
+.cardsecm{
+    border: 1px solid gray;
+    border-radius: 14px;
+    padding:8px;
+}
+.manage-csec{
+    gap:2rem;
+}
+.prop-id{
+    font-size: 12px;
+}
