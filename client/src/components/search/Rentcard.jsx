@@ -5,7 +5,7 @@ import { FaHeart } from "react-icons/fa";
 import backcard from "../../assets/backcard.png";
 import "./Search.css";
 
-const Rentcard = ({ property }) => {
+const Rentcard = ({ property, onViewNumber, handleSendsms }) => {
     const base_url = import.meta.env.VITE_BASE_URL;
     const formatPrice = (price) => {
         if (price >= 10000000) {
@@ -52,8 +52,20 @@ const Rentcard = ({ property }) => {
                             </div>
                         </div>
                         <div>
-                            <button className='btn view-btn me-2'>View Number</button>
-                            <button className='btn c-btn'><FaPhoneAlt /> Contact</button>
+                            <button className='btn view-btn me-2' onClick={
+                                (e) => {
+                                    e.stopPropagation(); // Prevents navigation
+                                    e.preventDefault();
+                                    onViewNumber(property)
+                                }
+                            }>View Number</button>
+                            <button className='btn c-btn'onClick={
+                                (e) => {
+                                    e.stopPropagation(); // Prevents navigation
+                                    e.preventDefault();
+                                    handleSendsms(property)
+                                }
+                            }><FaPhoneAlt /> Contact</button>
                         </div>
                         <div className='mt-2'>
                             <span class="fa fa-star checked"></span>

@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './Product.css'
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaHouse } from "react-icons/fa6";
@@ -25,6 +26,9 @@ import geyser from "../../assets/geyser.png";
 import swim from "../../assets/swim.png";
 import water from "../../assets/water.png";
 import backcard from "../../assets/backcard.png";
+import Modal from './Modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PGpro = () => {
     const location = useLocation();
@@ -47,6 +51,8 @@ const PGpro = () => {
         'Swimming Pool': swim,
         'Regular Water Supply': water,
     }
+    const [owner, setowner] = useState({});
+    const [show,setshow] = useState(false);
 
     const formatPrice = (price) => {
         if (price >= 10000000) {
@@ -99,8 +105,43 @@ const PGpro = () => {
             window.removeEventListener('mousemove', handleMouseMove);
         };
     }, []);
+    const handleViewNumber = async (property) => {
+        const userId = property.user;
+        const base_url = import.meta.env.VITE_BASE_URL;
+        try {
+            const response = await axios.get(`${base_url}/api/v3/user/${userId}`);
+            setowner(response.data);  // Store the fetched user data in state (you need to define this state)
+            setshow(true);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            alert('Failed to fetch user data');
+        }
+    };
+    const handleSms = async (property) => {
+        const base_url = import.meta.env.VITE_BASE_URL;
+        const data = {
+            type: property.type,
+            propertyId: property.propertyId,
+            userId: property.user,
+        }
+        try {
+            await axios.post(`${base_url}/api/v3/sendsms`, data).then((response) => {
+                if (response.status === 200) {
+                    toast.success('Information is send to Owner, Please wait for reply !');
+                }
+                else {
+                    toast.error(response.data.message);
+                }
+            })
+        } catch (error) {
+            console.error('Error sending contact SMS:', error);
+            alert('Failed to send SMS');
+        }
+    }
+
     return (
         <div style={{ backgroundColor: "aliceblue" }}>
+            <ToastContainer />
             <div className='container-fluid pro-nav-cont' id='navbar'>
                 <div className='d-flex p-3 pb-0'>
                     <div className='me-3 d-flex justify-content-center align-items-center'>
@@ -187,8 +228,8 @@ const PGpro = () => {
                                 </div>
                             </div>
                             <div className='mt-3'>
-                                <button className='btn view-btn me-2'>Get Phone No.</button>
-                                <button className='btn c-btn'><FaPhoneAlt /> Contact Agent</button>
+                                <button className='btn view-btn me-2' onClick={() => handleViewNumber(property)}>Get Phone No.</button>
+                                <button className='btn c-btn' onClick={() => handleSms(property)}><FaPhoneAlt /> Contact Agent</button>
                             </div>
                         </div>
                     </div>
@@ -387,6 +428,7 @@ const PGpro = () => {
                     </div>
                 </div>
             </div>
+            {show &&  <Modal owner={owner} show={show} setShow={setshow}/>}
         </div>
     )
 }

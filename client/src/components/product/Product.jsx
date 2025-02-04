@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import axios from "axios";
 import './Product.css'
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaHouse } from "react-icons/fa6";
@@ -26,11 +27,13 @@ import geyser from "../../assets/geyser.png";
 import swim from "../../assets/swim.png";
 import water from "../../assets/water.png";
 import backcard from "../../assets/backcard.png";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Modal from './Modal';
 
 const Product = () => {
   const location = useLocation();
   const { property } = location.state;
-  const base_url = import.meta.env.VITE_BASE_URL;
   const amenimg = {
     'Sofa': Sofa,
     'Washing Machine': Washing,
@@ -48,6 +51,9 @@ const Product = () => {
     'Swimming Pool': swim,
     'Regular Water Supply': water,
   }
+  // const modalRef = useRef(null);
+  const [owner, setowner] = useState({});
+  const [show,setshow] = useState(false);
 
   const formatPrice = (price) => {
     if (price >= 10000000) {
@@ -100,8 +106,56 @@ const Product = () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
+  // const handleViewNumber = async (property) => {
+  //   const userId = property.user;
+  //   const base_url = import.meta.env.VITE_BASE_URL;
+  //   try {
+  //     const response = await axios.get(`${base_url}/api/v3/user/${userId}`);
+  //     setowner(response.data);  // Store the fetched user data in state (you need to define this state)
+  //     const modal = new window.bootstrap.Modal(modalRef.current);
+  //     modal.show();
+  //   } catch (error) {
+  //     console.error('Error fetching user data:', error);
+  //     alert('Failed to fetch user data');
+  //   }
+  // };
+  const handleViewNumber = async (property) => {
+    const userId = property.user;
+    const base_url = import.meta.env.VITE_BASE_URL;
+    try {
+      const response = await axios.get(`${base_url}/api/v3/user/${userId}`);
+      setowner(response.data);  // Store the fetched user data in state (you need to define this state)
+      setshow(true);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      alert('Failed to fetch user data');
+    }
+  };
+  const handleSms = async (property) => {
+    const base_url = import.meta.env.VITE_BASE_URL;
+    const data = {
+      type: property.type,
+      propertyId: property.propertyId,
+      userId: property.user,
+    }
+    try {
+      await axios.post(`${base_url}/api/v3/sendsms`, data).then((response) => {
+        if (response.status === 200) {
+          toast.success('Information is send to Owner, Please wait for reply !');
+        }
+        else {
+          toast.error(response.data.message);
+        }
+      })
+    } catch (error) {
+      console.error('Error sending contact SMS:', error);
+      alert('Failed to send SMS');
+    }
+  }
+
   return (
     <div style={{ backgroundColor: "aliceblue" }}>
+      <ToastContainer />
       <div className='container-fluid pro-nav-cont' id='navbar'>
         <div className='d-flex p-3 pb-0'>
           <div className='me-3 fs-5 fw-bold'>₹ {formatPrice(property.price)}</div>
@@ -140,7 +194,7 @@ const Product = () => {
               <img src={property.images && property.images[0] ? property.images[0] : backcard} alt="image" className='s-img' />
             </div>
             <div className='item-box2 p-3'>
-            <div className='d-flex'>
+              <div className='d-flex'>
                 <div className='card-head d-flex flex-column'>
                   <div className='d-flex'>
                     <label className='head'>{property.locality}, {property.city}</label>
@@ -174,12 +228,12 @@ const Product = () => {
                 </div>
                 <div className='d-flex flex-column'>
                   <label className='fw-bold fs-6'>Age of Property</label>
-                  <label>{property.features.ageOfProperty ?? '-' } years</label>
+                  <label>{property.features.ageOfProperty ?? '-'} years</label>
                 </div>
               </div>
               <div className='mt-3'>
-                <button className='btn view-btn me-2'>Get Phone No.</button>
-                <button className='btn c-btn'><FaPhoneAlt /> Contact Agent</button>
+                <button className='btn view-btn me-2' onClick={() => handleViewNumber(property)}>Get Phone No.</button>
+                <button className='btn c-btn' onClick={()=>handleSms(property)}><FaPhoneAlt /> Contact Agent</button>
               </div>
             </div>
           </div>
@@ -369,6 +423,22 @@ const Product = () => {
           </div>
         </div>
       </div>
+      {/* <div className="modal owner-info" ref={modalRef} tabindex="-1">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Owner Information</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <p className='mb-0'><strong>Name:</strong> {owner.name}</p>
+              <p className='mb-0'><strong>Phone:</strong> +91 {owner.phone}</p>
+              <p className='mb-0'><strong>Email:</strong> {owner.email}</p>
+            </div>
+          </div>
+        </div>
+      </div> */}
+      {/* {show &&  <Modal owner={owner} show={show} setShow={setshow}/>} */}
     </div>
   )
 }

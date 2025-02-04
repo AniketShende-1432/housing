@@ -32,8 +32,6 @@ const Manage = () => {
         fetchProperties();
     }, []);
     const handleDeleteproperty = async (propertyId, propertyType) => {
-        console.log(propertyId);
-        console.log(propertyType);
         try {
             const base_url = import.meta.env.VITE_BASE_URL;
             const response = await axios.delete(`${base_url}/api/v4/deleteproperty/${propertyId}`,{

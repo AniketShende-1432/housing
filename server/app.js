@@ -8,6 +8,7 @@ const prop = require("./routes/prop");
 const search = require("./routes/search");
 const manage = require("./routes/manage");
 const adminuser = require("./routes/adminuser");
+const adminprop = require("./routes/adminprop");
 const cookieParser = require('cookie-parser');
 
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use("/api/v2", prop);
 app.use("/api/v3", search);
 app.use("/api/v4",manage);
 app.use("/api/v5",adminuser);
+app.use("/api/v6",adminprop);
 
 app.listen(process.env.PORT,()=>{
     console.log("Server Started");

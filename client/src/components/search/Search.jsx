@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { IoIosArrowDown } from "react-icons/io";
 import axios from "axios";
 import { useLocation } from 'react-router-dom';
@@ -12,6 +12,8 @@ import Rentcard from './Rentcard';
 import Plotcard from './Plotcard';
 import PGcard from './PGcard';
 import Commcard from './Commcard';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Search = () => {
 
@@ -58,6 +60,8 @@ const Search = () => {
         city: Filter.city,
         localities: [Filter.location],
     });
+    const modalRef = useRef(null);
+    const [owner, setowner] = useState({});
 
     useEffect(() => {
         const fetchProperties = async () => {
@@ -88,6 +92,7 @@ const Search = () => {
 
                 if (queryParams) {
                     url += `?${queryParams}`; // Append the filters to the URL
+                    console.log(queryParams);
                 }
                 console.log(url);
                 if (propertyType) {
@@ -273,11 +278,46 @@ const Search = () => {
             };
         });
     };
-
+    const handleViewNumber = async (property) => {
+        const userId = property.user;
+        const base_url = import.meta.env.VITE_BASE_URL;
+        try {
+            const response = await axios.get(`${base_url}/api/v3/user/${userId}`);
+            setowner(response.data);  // Store the fetched user data in state (you need to define this state)
+            // Show the modal after fetching the data
+            const modal = new window.bootstrap.Modal(modalRef.current);
+            modal.show();
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            alert('Failed to fetch user data');
+        }
+    };
+    const handleSms = async (property) => {
+        const base_url = import.meta.env.VITE_BASE_URL;
+        const data = {
+            type: property.type,
+            propertyId: property.propertyId,
+            userId: property.user,
+        }
+        try {
+            await axios.post(`${base_url}/api/v3/sendsms`, data).then((response) => {
+                if (response.status === 200) {
+                    toast.success('Information is send to Owner, Please wait for reply !');
+                }
+                else {
+                    toast.error(response.data.message);
+                }
+            })
+        } catch (error) {
+            console.error('Error sending contact SMS:', error);
+            alert('Failed to send SMS');
+        }
+    }
 
     return (
         <>
             <nav className="navbar navbar-expand-lg border search-nav">
+                <ToastContainer />
                 <div className="container-fluid justify-content-evenly search-cont">
                     <a className="navbar-brand text-white s-logo fs-3" href="#">ShelterBIG</a>
                     <div className="dropdown d-flex w-50">
@@ -509,20 +549,35 @@ const Search = () => {
                 </div>
                 <div className='items-sec p-2'>
                     {properties.sell.map((property) => (
-                        <Propcard key={property._id} property={property} /> // Render a card for each property
+                        <Propcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} /> // Render a card for each property
                     ))}
                     {properties.rent.map((property) => (
-                        <Rentcard key={property._id} property={property} /> // Render a card for each property
+                        <Rentcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms}/> // Render a card for each property
                     ))}
                     {properties.plot.map((property) => (
-                        <Plotcard key={property._id} property={property} /> // Render a card for each property
+                        <Plotcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms}/> // Render a card for each property
                     ))}
                     {properties.pg.map((property) => (
-                        <PGcard key={property._id} property={property} /> // Render a card for each property
+                        <PGcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms}/> // Render a card for each property
                     ))}
                     {properties.commercial.map((property) => (
-                        <Commcard key={property._id} property={property} /> // Render a card for each property
+                        <Commcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms}/> // Render a card for each property
                     ))}
+                </div>
+                <div className="modal owner-info" ref={modalRef} tabindex="-1">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Owner Information</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <p className='mb-0'><strong>Name:</strong> {owner.name}</p>
+                                <p className='mb-0'><strong>Phone:</strong> +91 {owner.phone}</p>
+                                <p className='mb-0'><strong>Email:</strong> {owner.email}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

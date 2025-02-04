@@ -186,7 +186,7 @@ router.post('/send-otp', async (req, res) => {
 
         const otp = generateOTP();
         // Store OTP with an expiration time (5 minutes)
-        otpStore[phoneNumber] = { otp, expiresAt: Date.now() + 900000 };
+        otpStore[phoneNumber] = { otp, expiresAt: Date.now() + 300000 };
         // Send OTP via Twilio
         phoneNumber = `+91${phoneNumber}`;
         await client.messages.create({
