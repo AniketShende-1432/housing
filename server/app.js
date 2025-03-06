@@ -10,6 +10,7 @@ const manage = require("./routes/manage");
 const adminuser = require("./routes/adminuser");
 const adminprop = require("./routes/adminprop");
 const cookieParser = require('cookie-parser');
+require("./utlis/cronJob");
 
 app.use(express.json());
 app.use(cors({origin: true, credentials: true}));

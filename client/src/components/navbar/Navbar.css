@@ -68,3 +68,71 @@
 .signcol:hover{
     color:darkorange;
 }
+
+@media (max-width: 991px) { 
+    .logo{
+        font-size: 1.8rem;
+    }
+    .cont{
+        height:auto;
+        >div{
+            padding: 0px;
+        }
+    }
+    .navbar-nav {
+        background-color: white !important;
+    }
+    .nav-nlink{
+        color:darkorange !important;
+        font-size: 1.4rem;
+        font-weight: 500;
+    }
+    .nav-item{
+        display: flex;
+        justify-content: center;
+    }
+    .navbar-collapse{
+        position: absolute;
+        top:4.3rem;
+        left:0;
+        z-index: 1000;
+        width:100%;
+    }
+    .login-box{
+        position:absolute;
+        left:75%;
+        right:0;
+        top:70px;
+    }
+    .login-box2{
+        position:absolute;
+        left:75%;
+        right:0;
+        top:70px;
+    }
+}
+@media (min-width: 300px) and (max-width: 750px) {
+    .logo{
+        font-size: 1.8rem;
+    }
+    .nav-item{
+        margin-left: 0px !important;
+        display: flex;
+        justify-content: start;
+    }
+    .nav-nlink{
+        margin-left: 1rem !important;
+    }
+    .login-box{
+        position:absolute;
+        left:50%;
+        right:0;
+        top:70px;
+    }
+    .login-box2{
+        position:absolute;
+        left:47%;
+        right:0px;
+        top:70px;
+    }
+}

@@ -7,7 +7,7 @@ import { FaSquarePhone } from "react-icons/fa6";
 import { BiShow } from "react-icons/bi";
 import axios from "axios";
 import { useDispatch } from 'react-redux';
-import { authActions } from '../../store';
+import { authActions } from '../../store/Slice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -127,8 +127,8 @@ const Login = () => {
     return (
         <div style={{ backgroundColor: "aliceblue" }}>
             <ToastContainer />
-            <div className='container d-flex justify-content-center align-items-start log-cont pt-2'>
-                <div className='log-cont-box bg-white mt-5 p-4'>
+            <div className='container d-flex justify-content-center align-items-center log-cont pt-2'>
+                <div className='log-cont-box bg-white p-4'>
                     <div className='fw-bold fs-4 login-text mb-3 text-center'>Login</div>
                     <div className='d-flex google-cont'>
                         <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">

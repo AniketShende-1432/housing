@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay'; // Autoplay styles
 import { Pagination, Autoplay } from 'swiper/modules';
+import { FaSearch } from "react-icons/fa";
 
 const Home = () => {
 
@@ -63,7 +64,6 @@ const Home = () => {
         navigate('/profile', { state: { tab: 'Sell' } })
     };
     const handleSearch = ()=>{
-
         navigate('/search',{state:filter});
     }
 
@@ -71,17 +71,17 @@ const Home = () => {
         <>
             <Navbar back="profile-bg" />
             <div className='d-flex'>
-                <div style={{ width: '80%' }}>
+                <div className='main-hcont'>
                     <div id="carouselExampleAutoplaying" className="carousel slide h-adv-cont" data-bs-ride="carousel">
                         <div className="carousel-inner">
                             <div className="carousel-item active">
-                                <img src="https://housing-images.n7net.in/3a1452c5/69b1a317abbdcf1e6f1072386dc28707/v0/banner.jpg" className="d-block w-100 h-adv-image" alt="img" />
+                                <img src="https://housing-images.n7net.in/3a1452c5/69b1a317abbdcf1e6f1072386dc28707/v0/banner.jpg" className="d-block w-100 h-adv-image img-fluid" alt="img" />
                             </div>
                             <div className="carousel-item">
-                                <img src="https://i.pinimg.com/originals/c2/52/d7/c252d7160599e5d0683c65f968bd103b.jpg" className="d-block w-100 h-adv-image" alt="img" />
+                                <img src="https://i.pinimg.com/originals/c2/52/d7/c252d7160599e5d0683c65f968bd103b.jpg" className="d-block w-100 h-adv-image img-fluid" alt="img" />
                             </div>
                             <div className="carousel-item">
-                                <img src="https://png.pngtree.com/thumb_back/fh260/background/20220405/pngtree-real-estatebright-colorful-tone-concept-dispossession-foreclosure-exterior-photo-image_16921278.jpg" className="d-block w-100 h-adv-image" alt="img" />
+                                <img src="https://png.pngtree.com/thumb_back/fh260/background/20220405/pngtree-real-estatebright-colorful-tone-concept-dispossession-foreclosure-exterior-photo-image_16921278.jpg" className="d-block w-100 h-adv-image img-fluid" alt="img" />
                             </div>
                         </div>
                         <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
@@ -93,7 +93,7 @@ const Home = () => {
                             <span className="visually-hidden">Next</span>
                         </button>
                     </div>
-                    <div className='s-cont d-flex justify-content-center'>
+                    <div className='s-cont d-flex res-cont justify-content-center'>
                         <div className='s-cont-box'>
                             <div className='s-cont-box1 d-flex'>
                                 <div onClick={() => changetab('Buy')}
@@ -111,19 +111,19 @@ const Home = () => {
                             </div>
                             <div className='s-cont-sbox d-flex p-2'>
                                 <form className='d-flex align-items-center justify-content-start ms-2'>
-                                    <div class="dropdown d-flex loc-dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle bg-white text-dark p-2 loc-drop" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div className="dropdown d-flex loc-dropdown">
+                                        <button className="btn btn-secondary dropdown-toggle bg-white text-dark p-2 loc-drop" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             {filter.city || 'Select City'}
                                         </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" onClick={() => change1("Mumbai")} >Mumbai</a></li>
-                                            <li><a class="dropdown-item" onClick={() => change1("Western Mumbai")} >Western Mumbai</a></li>
-                                            <li><a class="dropdown-item" onClick={() => change1("Central Mumbai")} >Central Mumbai</a></li>
-                                            <li><a class="dropdown-item" onClick={() => change1("Navi Mumbai")} >Navi Mumbai</a></li>
-                                            <li><a class="dropdown-item" onClick={() => change1("Thane")} >Thane</a></li>
-                                            <li><a class="dropdown-item" onClick={() => change1("Beyond Thane")} >Beyond Thane</a></li>
-                                            <li><a class="dropdown-item" onClick={() => change1("Pune")} >Pune</a></li>
-                                            <li><a class="dropdown-item" onClick={() => change1("Nashik")} >Nashik</a></li>
+                                        <ul className="dropdown-menu">
+                                            <li><a className="dropdown-item" onClick={() => change1("Mumbai")} >Mumbai</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Western Mumbai")} >Western Mumbai</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Central Mumbai")} >Central Mumbai</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Navi Mumbai")} >Navi Mumbai</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Thane")} >Thane</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Beyond Thane")} >Beyond Thane</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Pune")} >Pune</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Nashik")} >Nashik</a></li>
                                         </ul>
                                     </div>
                                     <input type="text" className="s-cont-input" placeholder='Location' 
@@ -154,8 +154,49 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
+                    <div className='s-cont d-flex justify-content-center d-sm-none'>
+                        <div className='s-cont-box'>
+                            <div className='s-cont-box1 d-flex'>
+                                <div onClick={() => changetab('Buy')}
+                                    className={`s-itm ${selectedTab === 'Buy' ? 's-itmcol' : ''}`}>Buy</div>
+                                <div onClick={() => changetab('Rent')}
+                                    className={`s-itm ${selectedTab === 'Rent' ? 's-itmcol' : ''}`}>Rent</div>
+                                <div onClick={() => changetab('Plot/Land')}
+                                    className={`s-itm ${selectedTab === 'Plot/Land' ? 's-itmcol' : ''}`}>Plot</div>
+                                <div onClick={() => changetab('PG')}
+                                    className={`s-itm ${selectedTab === 'PG' ? 's-itmcol' : ''}`}>PG</div>
+                                <div onClick={() => changetab('Commercial')}
+                                    className={`s-itm ${selectedTab === 'Commercial' ? 's-itmcol' : ''}`}>Commercial</div>
+                            </div>
+                            <div className='s-cont-sbox d-flex p-2'>
+                                <form className='d-flex align-items-center justify-content-start ms-2'>
+                                    <div className="dropdown d-flex loc-dropdown">
+                                        <button className="btn btn-secondary dropdown-toggle bg-white text-dark p-2 loc-drop" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {filter.city || 'Select City'}
+                                        </button>
+                                        <ul className="dropdown-menu">
+                                            <li><a className="dropdown-item" onClick={() => change1("Mumbai")} >Mumbai</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Western Mumbai")} >Western Mumbai</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Central Mumbai")} >Central Mumbai</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Navi Mumbai")} >Navi Mumbai</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Thane")} >Thane</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Beyond Thane")} >Beyond Thane</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Pune")} >Pune</a></li>
+                                            <li><a className="dropdown-item" onClick={() => change1("Nashik")} >Nashik</a></li>
+                                        </ul>
+                                    </div>
+                                    <input type="text" className="s-cont-input" placeholder='Location' 
+                                    value={filter.location}
+                                    onChange={handlelocation}/>
+                                </form>
+                                <div className='d-flex align-items-center ms-auto'>
+                                    <button className='btn search-btn text-white' onClick={handleSearch}><FaSearch /></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className='advbox'>
+                <div className='advbox d-none d-sm-block'>
                     <Swiper
                         direction={'vertical'} // Enables vertical direction
                         pagination={{
@@ -168,8 +209,8 @@ const Home = () => {
                         modules={[Pagination, Autoplay]}  // Include the Pagination module
                         className="mySwiper"
                         style={{
-                            height: '402px', // Set the height of the carousel container
-                            width: '255px',  // Set the width of the carousel container
+                            height: '387px', // Set the height of the carousel container
+                            width: '100%',  // Set the width of the carousel container
                         }}
                     >
                         {/* Slides */}
@@ -220,9 +261,9 @@ const Home = () => {
                     </Swiper>
                 </div>
             </div>
-            <div className='container' style={{ marginTop: "8rem" }}>
+            <div className='container-lg container-fluid'>
                 <div className='mb-4'><h4>Projects On High Demand</h4></div>
-                <div className='d-flex' style={{ gap: "1rem" }}>
+                <div className='d-flex demand-card' style={{ gap: "1rem" }}>
                     <div className="card" style={{ width: "18rem" }}>
                         <img src={build1} className="card-img-top" alt="img" />
                         <div className="card-body">

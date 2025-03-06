@@ -33,20 +33,27 @@ const Sell2 = () => {
     const [images, setImages] = useState(formdata?.images || []); // State to store image previews
     const [selectImage, setselectImage] = useState([]);
     const isLoggedin = useSelector((state) => state.auth.isLoggedIn);
+    const [simage,setsimage] = useState([]);
     console.log(formdata);
     console.log(mode);
 
     const handleFileChange = (event) => {
+        if (!event.target.files.length) return;
         const files = Array.from(event.target.files); // Convert FileList to an array
-        const previewImages = files.map((file) => URL.createObjectURL(file)); // Create object URLs for preview
-        setImages((prevImages) => [...prevImages, ...previewImages]); // Add new previews to existing ones
+        const newFiles = files.map((file) => ({
+            file,
+            url: URL.createObjectURL(file),
+        }));
+        setImages((prevImages) => [...prevImages, ...newFiles.map((item) => item.url)]); // Add new previews to existing ones
+        setsimage((prevFiles) => [...prevFiles, ...newFiles]);
         setselectImage((prevFiles) => [...prevFiles, ...files]); // Add new files to existing ones
+        event.target.value = "";
     };
     const handleRemoveImage = (index) => {
         const imageToRemove = images[index]; // This is the image being removed from the preview
 
         // Case 1: If the image is a Cloudinary URL (from formData.images)
-        if (formdata.images.includes(imageToRemove)) {
+        if (formdata?.images && formdata.images.includes(imageToRemove)) {
             // Remove from formData.images
             setformdata((prevFormData) => ({
                 ...prevFormData,
@@ -56,10 +63,12 @@ const Sell2 = () => {
         // Case 2: If the image is a temporary URL (from selectImage)
         else {
             // Find the file corresponding to the temporary URL in selectImage
-            const fileIndex = selectImage.findIndex((file) => URL.createObjectURL(file) === imageToRemove);
+            const fileIndex = simage.findIndex((file) => file.url === imageToRemove);
     
             // Remove from selectImage (newly uploaded files)
             if (fileIndex !== -1) {
+                URL.revokeObjectURL(simage[fileIndex].url);
+                setsimage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
                 setselectImage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
             }
         }
@@ -323,7 +332,7 @@ const Sell2 = () => {
                                     onChange={(value) => handleFeaturesChange("bedrooms", value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Balconies"
                                     options={balconiesoptions}
@@ -341,7 +350,7 @@ const Sell2 = () => {
                                     onChange={(value) => handleFeaturesChange('bathrooms', value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Age of Property"
                                     options={Agepropoptions}
@@ -359,7 +368,7 @@ const Sell2 = () => {
                                     onChange={(value) => handleFeaturesChange('totalFloors', value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Floor no"
                                     options={Floornooptions}

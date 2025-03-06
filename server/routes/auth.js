@@ -17,10 +17,10 @@ router.post("/register", async (req, res) => {
         }
         const hpassword = bcrypt.hashSync(password);
         // If user doesn't exist, create a new user
-        const user = new User({ name, email, usertype, phone, agreement, password:hpassword });
+        const user = new User({ name, email, usertype, phone, agreement, password: hpassword });
         await user.save();
         // Send success response
-        res.status(200).json({ message:"SignUp Successfully" });
+        res.status(200).json({ message: "SignUp Successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error" });
@@ -57,9 +57,9 @@ router.post("/signin", async (req, res) => {
             secure: process.env.NODE_ENV === 'production', // Send only over HTTPS
             sameSite: 'Lax', // CSRF protection
             maxAge: 12 * 60 * 60 * 1000, // 1 hour in milliseconds
-            path:'/'
+            path: '/'
         });
-        return res.status(200).json({token});
+        return res.status(200).json({ token });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server Error" });
@@ -82,9 +82,9 @@ router.get('/checkAuth', (req, res) => {
 
 router.get("/profile", async (req, res) => {
     const token = req.cookies.authToken;
-    if(!token){
-        return res.status(200).json({ message: "Please Login first"});
-    }  
+    if (!token) {
+        return res.status(200).json({ message: "Please Login first" });
+    }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
@@ -105,7 +105,7 @@ router.post('/logout', (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'Lax',
-        path:'/'
+        path: '/'
     });
     res.status(200).json({ message: 'Logout successful' });
 });
@@ -118,11 +118,11 @@ router.put("/profile", async (req, res) => {
         const { name, email, phone, usertype } = req.body; // Extract data from the request body
         // Find the user by ID and update the document
         const updatedUser = await User.findByIdAndUpdate(
-            userId, 
-            { name, email, phone, usertype }, 
+            userId,
+            { name, email, phone, usertype },
             { new: true } // This returns the updated document
         );
-        
+
         if (!updatedUser) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -167,10 +167,10 @@ router.put("/profile/password", async (req, res) => {
 });
 
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-const otpStore = {}; 
+const otpStore = {};
 const generateOTP = () => crypto.randomInt(10000, 99999).toString();
 router.post('/send-otp', async (req, res) => {
-    let { phoneNumber,usertype } = req.body;
+    let { phoneNumber, usertype } = req.body;
     try {
         const user = await User.findOne({ phone: phoneNumber });
         if (!user) {
@@ -240,6 +240,49 @@ router.post('/verify-otp', async (req, res) => {
     } catch (error) {
         console.error('Error verifying OTP:', error.message);
         res.status(500).json({ message: 'Error verifying OTP' });
+    }
+});
+
+router.get('/get-coin', async (req, res) => {
+    const token = req.cookies.authToken;
+    if (!token) {
+        return res.status(200).json({ message: "Please Login first" });
+    }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({ coins: user.coins });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+});
+
+router.put("/update-coins", async (req, res) => {
+    const token = req.cookies.authToken;
+    if (!token) {
+        return res.status(200).json({ message: "Please Login first" });
+    }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        const { coinsChange } = req.body; // Positive to add coins, negative to deduct
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $inc: { coins: coinsChange } },
+            { new: true }
+        );
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.json({ success: true, coins: user.coins });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
     }
 });
 

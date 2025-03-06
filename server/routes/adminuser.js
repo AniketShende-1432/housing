@@ -1,5 +1,8 @@
 const router = require("express").Router();
 const User = require('../models/user');
+const XLSX = require('xlsx');
+const fs = require('fs');
+const path = require('path');
 const { verifyAdmin } = require('../middleware/authadmin');
 
 router.get('/users',verifyAdmin, async (req, res) => {
@@ -64,5 +67,31 @@ router.delete('/users/:id',verifyAdmin, async (req, res) => {
           res.status(500).json({ message: "Server Error" });
       }
   });
+
+  router.get('/export-userexcel', verifyAdmin, async (req, res) => {
+    try {
+        const users = await User.find(); // Fetch data from MongoDB
+        const data = users.map((user,index) => ({
+            ID: index+1,
+            Name: user.name,
+            Email: user.email,
+            Phone_Number: user.phone,
+            User_Type: user.usertype,
+        }));
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(data);
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+        // Set headers for Excel file download
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        res.setHeader("Content-Disposition", 'attachment; filename="users.xlsx"');
+        // Send the file to the client
+        res.send(excelBuffer);
+    } catch (error) {
+        console.error("Error exporting data:", error);
+        res.status(500).json({ message: "Failed to export data" });
+    }
+});
 
 module.exports = router;

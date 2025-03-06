@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Profilenav from '../../profilenav/Profilenav';
 import { useLocation } from 'react-router-dom';
 import { FaRupeeSign } from "react-icons/fa";
@@ -48,7 +48,7 @@ const Plot = () => {
         },
         amenities: [], // Array of amenities (e.g., Water Storage, Rain Water Harvesting)
         overlooking: [], //
-        ...property 
+        ...property
     });
     const [formErrors, setFormErrors] = useState({});
 
@@ -58,19 +58,19 @@ const Plot = () => {
             ...plotData, // Copy the existing state
             city: value, // Update the city field with the new value
         });
-        const namepattern = /^[A-Za-z\s]+$/; 
+        const namepattern = /^[A-Za-z\s]+$/;
         if (value.trim() === "") {
             setFormErrors({
                 ...formErrors,
                 city: "",
             });
-        } 
+        }
         else if (!namepattern.test(value)) {
             setFormErrors({
                 ...formErrors,
                 city: "Please enter a valid city",
             });
-        } 
+        }
         else {
             setFormErrors({
                 ...formErrors,
@@ -79,33 +79,33 @@ const Plot = () => {
         }
     }
     useEffect(() => {
-            if (mode === 'edit' && property) {
-                setplotData({
-                    ...plotData, // Spread initial form data to maintain structure
-                    ...property, // Override with property-specific data
-                });
-            }
-        }, [mode, property]);
-    
+        if (mode === 'edit' && property) {
+            setplotData({
+                ...plotData, // Spread initial form data to maintain structure
+                ...property, // Override with property-specific data
+            });
+        }
+    }, [mode, property]);
+
     const handlelocation = (e) => {
         const value = e.target.value;
         setplotData({
             ...plotData, // Copy the existing state
             locality: value, // Update the city field with the new value
         });
-        const namepattern = /^[A-Za-z\s]+$/; 
+        const namepattern = /^[A-Za-z\s]+$/;
         if (value.trim() === "") {
             setFormErrors({
                 ...formErrors,
                 location: "",
             });
-        } 
+        }
         else if (!namepattern.test(value)) {
             setFormErrors({
                 ...formErrors,
                 location: "Please enter a valid Locality",
             });
-        } 
+        }
         else {
             setFormErrors({
                 ...formErrors,
@@ -119,19 +119,19 @@ const Plot = () => {
             ...plotData, // Copy the existing state
             societyName: value, // Update the city field with the new value
         });
-        const namepattern = /^[A-Za-z\s]+$/; 
+        const namepattern = /^[A-Za-z\s]+$/;
         if (value.trim() === "") {
             setFormErrors({
                 ...formErrors,
                 society: "",
             });
-        } 
+        }
         else if (!namepattern.test(value)) {
             setFormErrors({
                 ...formErrors,
                 society: "Please enter a valid Name",
             });
-        } 
+        }
         else {
             setFormErrors({
                 ...formErrors,
@@ -143,7 +143,7 @@ const Plot = () => {
         const value = e.target.value;
         setplotData({
             ...plotData,
-            plotArea:value === '' ? '' : parseInt(value, 10), // Update the area value based on input
+            plotArea: value === '' ? '' : parseInt(value, 10), // Update the area value based on input
         });
         const areapattern = /^\d+(\.\d{1,2})?$/;
         if (value.trim() === "") {
@@ -151,13 +151,13 @@ const Plot = () => {
                 ...formErrors,
                 parea: "",
             });
-        } 
+        }
         else if (!areapattern.test(value)) {
             setFormErrors({
                 ...formErrors,
                 parea: "Please enter a Valid Number",
             });
-        } 
+        }
         else {
             setFormErrors({
                 ...formErrors,
@@ -165,7 +165,7 @@ const Plot = () => {
             });
         }
     };
-    const changeplotarea = (e,value) => {
+    const changeplotarea = (e, value) => {
         e.preventDefault();
         setplotData({
             ...plotData,
@@ -261,7 +261,7 @@ const Plot = () => {
             open: "", // Dynamically update the error key
         }));
     };
-    const changeposs = (e,value) => {
+    const changeposs = (e, value) => {
         e.preventDefault();
         setplotData((prevData) => ({
             ...prevData,
@@ -277,12 +277,12 @@ const Plot = () => {
             [buttonKey]: !prevState[buttonKey], // Toggle the clicked button's style
         }));
         const approve = buttonKey === 'na' ? 'N.A(Non-Agricultural)' :
-        buttonKey === 'na_pro' ? 'N.A(in-process)' :
-            buttonKey === 'collect' ? 'Collector Approved' :
-                'Corporation Approved';
+            buttonKey === 'na_pro' ? 'N.A(in-process)' :
+                buttonKey === 'collect' ? 'Collector Approved' :
+                    'Corporation Approved';
         setplotData((prevData) => ({
             ...prevData,
-            approvedBy:approve,
+            approvedBy: approve,
         }));
         setFormErrors((prevErrors) => ({
             ...prevErrors,
@@ -294,12 +294,12 @@ const Plot = () => {
             [buttonKey]: !prevState[buttonKey], // Toggle the clicked button's style
         }));
         const owner = buttonKey === 'free' ? 'Freehold' :
-        buttonKey === 'lease' ? 'Leasehold' :
-            buttonKey === 'co_operate' ? 'Co-operative Society' :
-                'Power of Attorney';
+            buttonKey === 'lease' ? 'Leasehold' :
+                buttonKey === 'co_operate' ? 'Co-operative Society' :
+                    'Power of Attorney';
         setplotData((prevData) => ({
             ...prevData,
-            ownershipType:owner,
+            ownershipType: owner,
         }));
         setFormErrors((prevErrors) => ({
             ...prevErrors,
@@ -324,7 +324,7 @@ const Plot = () => {
     };
     const handleplotInputChange = (e) => {
         const value = e.target.value.replace(/[^\d]/g, ""); // Allow only numbers
-        setplotData({...plotData,price:value === '' ? '' : parseInt(value, 10)});
+        setplotData({ ...plotData, price: value === '' ? '' : parseInt(value, 10) });
         setFormattedplotPrice(formatplotPrice(value));
         setFormErrors((prevErrors) => ({
             ...prevErrors,
@@ -332,55 +332,55 @@ const Plot = () => {
         }));
     };
     const handleplotpage = () => {
-        const error = {...formErrors};
+        const error = { ...formErrors };
         if (!plotData.city.trim()) {
-            error.city= "City is required";
+            error.city = "City is required";
         }
         if (!plotData.locality.trim()) {
-            error.location= "locality is required";
+            error.location = "locality is required";
         }
         if (!plotData.societyName.trim()) {
-            error.society= "Name is required";
+            error.society = "Name is required";
         }
         if (!plotData.plotArea) {
-            error.parea= "Plot Area is required";
+            error.parea = "Plot Area is required";
         }
         if (!plotData.areaUnit) {
-            error.punit= "Select Plot Area Unit";
+            error.punit = "Select Plot Area Unit";
         }
         if (!plotData.dimensions.length) {
-            error.plength= "Length is Required";
+            error.plength = "Length is Required";
         }
         if (!plotData.dimensions.breadth) {
-            error.pbreadth= "Breadth is Required";
+            error.pbreadth = "Breadth is Required";
         }
         if (!plotData.features.floorAllowed) {
-            error.floor= "No. Of Floors is Required";
+            error.floor = "No. Of Floors is Required";
         }
         if (plotData.features.boundaryWall === '' || plotData.features.boundaryWall === undefined) {
-           error.boundary= "Boundary Wall is Required"; // Dynamically update the error key
+            error.boundary = "Boundary Wall is Required"; // Dynamically update the error key
         }
         if (!plotData.features.openSides) {
-           error.open= "Open Sides is required"; // Dynamically update the error key
+            error.open = "Open Sides is required"; // Dynamically update the error key
         }
         if (!plotData.possessionBy) {
-            error.possession= "Possession By is required"; // Dynamically update the error key
+            error.possession = "Possession By is required"; // Dynamically update the error key
         }
         if (!plotData.approvedBy) {
-          error.approve= "Approved By is required"; // Dynamically update the error key
+            error.approve = "Approved By is required"; // Dynamically update the error key
         }
         if (!plotData.ownershipType) {
-           error.owner= "Ownership is required"; // Dynamically update the error key
+            error.owner = "Ownership is required"; // Dynamically update the error key
         }
         if (!plotData.price) {
-            error.price= "Cost is required"; // Dynamically update the error key
+            error.price = "Cost is required"; // Dynamically update the error key
         }
         setFormErrors(error);
         const hasErrors = Object.values(error).some((er) => er.trim() !== "");
-        if(hasErrors){
+        if (hasErrors) {
             return;
-        }else{
-            navigate('/profile/plot-property',{ state: { plotData,mode} });
+        } else {
+            navigate('/profile/plot-property', { state: { plotData, mode } });
         }
     };
 
@@ -398,19 +398,19 @@ const Plot = () => {
                                 value={plotData.city}
                                 onChange={handlecity} />
                             {formErrors.city && <div className="text-danger error-txt">{formErrors.city}</div>}
-                            <div className={formErrors.city ? 'mt-2':'mt-3'}>Locality</div>
+                            <div className={formErrors.city ? 'mt-2' : 'mt-3'}>Locality</div>
                             <input type="text" className="property-inp p-2 pt-1 w-100" name='locality' id='plocality'
                                 value={plotData.locality}
                                 onChange={handlelocation} />
                             {formErrors.location && <div className="text-danger error-txt">{formErrors.location}</div>}
-                            <div className={formErrors.location ? 'mt-2':'mt-3'}>Name of Society/Project</div>
+                            <div className={formErrors.location ? 'mt-2' : 'mt-3'}>Name of Society/Project</div>
                             <input type="text" className="property-inp p-2 pt-1 w-100" name='society' id='project'
                                 value={plotData.societyName}
                                 onChange={handlesociety} />
                             {formErrors.society && <div className="text-danger error-txt">{formErrors.society}</div>}
                         </div>
                     </div>
-                    <div className={formErrors.society ? 'mt-4':'mt-5'}>
+                    <div className={formErrors.society ? 'mt-4' : 'mt-5'}>
                         <div><h5>Area</h5></div>
                         <div className='mt-2 mb-2'>Plot/Land Area</div>
                         <div className="input-group mb-3">
@@ -419,32 +419,32 @@ const Plot = () => {
                                 onChange={handleAreaChange} />
                             <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{plotData.areaUnit || 'Select Unit'}</button>
                             <ul className="dropdown-menu dropdown-menu-end">
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e,"Sq-ft")} href="#">Sq-ft</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e,"Sq-yrd")} href="#">Sq-yrd</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e,"Sq-m")} href="#">Sq-m</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e,"Acre")} href="#">Acre</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e,"Bigha")} href="#">Bigha</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Sq-m")} href="#">Sq-m</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Acre")} href="#">Acre</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Bigha")} href="#">Bigha</a></li>
                             </ul>
                         </div>
                         {formErrors.parea && <div className="text-danger error-txt">{formErrors.parea}</div>}
                         {formErrors.punit && <div className="text-danger error-txt">{formErrors.punit}</div>}
                     </div>
-                    <div className={formErrors.parea || formErrors.punit ? 'mt-3':'mt-5'}>
+                    <div className={formErrors.parea || formErrors.punit ? 'mt-3' : 'mt-5'}>
                         <div><h5>Property Dimensions</h5></div>
                         <div>
                             <div>Length of Plot (in Ft.)</div>
                             <input type="text" className="property-inp p-2 pt-1 w-100" name='length' id='lengthp'
                                 value={plotData.dimensions.length} // Bind the length to the state
                                 onChange={handledimenChange} />
-                             {formErrors.plength && <div className="text-danger error-txt">{formErrors.plength}</div>}
-                            <div className={formErrors.plength ? 'mt-2':'mt-3'}>Breadth of Plot (in Ft.)</div>
+                            {formErrors.plength && <div className="text-danger error-txt">{formErrors.plength}</div>}
+                            <div className={formErrors.plength ? 'mt-2' : 'mt-3'}>Breadth of Plot (in Ft.)</div>
                             <input type="text" className="property-inp p-2 pt-1 w-100" name='breadth' id='breadthp'
                                 value={plotData.dimensions.breadth} // Bind the length to the state
                                 onChange={handledimenChange} />
-                             {formErrors.pbreadth && <div className="text-danger error-txt">{formErrors.pbreadth}</div>}
+                            {formErrors.pbreadth && <div className="text-danger error-txt">{formErrors.pbreadth}</div>}
                         </div>
                     </div>
-                    <div className={formErrors.pbreadth ? 'mt-4':'mt-5'}>
+                    <div className={formErrors.pbreadth ? 'mt-4' : 'mt-5'}>
                         <div><h5>Floor Allowed for Construction</h5></div>
                         <div>
                             <div>No. of floors</div>
@@ -486,16 +486,16 @@ const Plot = () => {
                                 <span className="dropdown-arrow"></span>
                             </button>
                             <ul class="dropdown-menu rent-drop-menu">
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"Immediate")} href="#">Immediate</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"Within 3 Months")} href="#">Within 3 Months</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"Within 6 Months")} href="#">Within 6 Months</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"By 2025")} href="#">By 2025</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"By 2026")} href="#">By 2026</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"By 2027")} href="#">By 2027</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"By 2028")} href="#">By 2028</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"By 2029")} href="#">By 2029</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"By 2030")} href="#">By 2030</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e,"By 2031")} href="#">By 2031</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "Immediate")} href="#">Immediate</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "Within 3 Months")} href="#">Within 3 Months</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "Within 6 Months")} href="#">Within 6 Months</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2025")} href="#">By 2025</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2026")} href="#">By 2026</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2027")} href="#">By 2027</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2028")} href="#">By 2028</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2029")} href="#">By 2029</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2030")} href="#">By 2030</a></li>
+                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2031")} href="#">By 2031</a></li>
                             </ul>
                         </div>
                         {formErrors.possession && <div className="text-danger error-txt">{formErrors.possession}</div>}
@@ -503,27 +503,27 @@ const Plot = () => {
                     <div className='mt-5'>
                         <div><h5>Approved By</h5></div>
                         <div className='d-flex flex-wrap plot-approve justify-content-center'>
-                            <button className='btn btn-light border' onClick={() => handleplotapprove("na")}
-                                style={clickedplotapprove.na || plotData.approvedBy === 'N.A(Non-Agricultural)' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >N.A(Non-Agricultural)</button>
-                            <button className='btn btn-light border ms-3' onClick={() => handleplotapprove("na_pro")}
-                                style={clickedplotapprove.na_pro || plotData.approvedBy === 'N.A(in-process)' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>N.A(in-process)</button>
-                            <button className='btn btn-light border ms-3' onClick={() => handleplotapprove("collect")}
+                            <button className='btn btn-light border' onClick={() => handleplotapprove("collect")}
                                 style={clickedplotapprove.collect || plotData.approvedBy === 'Collector Approved' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Collector Approved</button>
-                            <button className='btn btn-light border ms-3' onClick={() => handleplotapprove("co_operation")}
+                            <button className='btn btn-light border ms-1 ms-sm-3' onClick={() => handleplotapprove("na_pro")}
+                                style={clickedplotapprove.na_pro || plotData.approvedBy === 'N.A(in-process)' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>N.A(in-process)</button>
+                            <button className='btn btn-light border ms-1 ms-sm-3' onClick={() => handleplotapprove("na")}
+                                style={clickedplotapprove.na || plotData.approvedBy === 'N.A(Non-Agricultural)' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >N.A(Non-Agricultural)</button>
+                            <button className='btn btn-light border ms-1 ms-sm-3' onClick={() => handleplotapprove("co_operation")}
                                 style={clickedplotapprove.co_operation || plotData.approvedBy === 'Corporation Approved' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Corporation Approved</button>
                         </div>
                         {formErrors.approve && <div className="text-danger error-txt">{formErrors.approve}</div>}
                     </div>
                     <div className='mt-4'>
                         <div><h5>Ownership</h5></div>
-                        <div className='d-flex'>
+                        <div className='d-flex flex-wrap justify-content-center justify-content-lg-start'>
                             <button className='btn btn-light border' onClick={() => handleplotowner("free")}
                                 style={clickedplotowner.free || plotData.ownershipType === 'Freehold' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Freehold</button>
-                            <button className='btn btn-light border ms-3' onClick={() => handleplotowner("lease")}
-                                style={clickedplotowner.lease || plotData.ownershipType === 'Leasehold' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Leasehold</button>
                             <button className='btn btn-light border ms-3' onClick={() => handleplotowner("co_operate")}
                                 style={clickedplotowner.co_operate || plotData.ownershipType === 'Co-operative Society' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Co-operative Society</button>
-                            <button className='btn btn-light border ms-3' onClick={() => handleplotowner("power")}
+                             <button className='btn btn-light border ms-3 mt-1 mt-sm-0' onClick={() => handleplotowner("lease")}
+                                style={clickedplotowner.lease || plotData.ownershipType === 'Leasehold' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Leasehold</button>
+                            <button className='btn btn-light border ms-3 mt-1 mt-lg-0' onClick={() => handleplotowner("power")}
                                 style={clickedplotowner.power || plotData.ownershipType === 'Power of Attorney' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Power of Attorney</button>
                         </div>
                         {formErrors.owner && <div className="text-danger error-txt">{formErrors.owner}</div>}

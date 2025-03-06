@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Profilenav from '../../profilenav/Profilenav';
 import { FaRupeeSign } from "react-icons/fa";
@@ -32,14 +32,14 @@ const Commercial = () => {
   });
   const [errors, setErrors] = useState({});
 
-   useEffect(() => {
-          if (mode === 'edit' && property) {
-              setCommData({
-                  ...CommData, // Spread initial form data to maintain structure
-                  ...property, // Override with property-specific data
-              });
-          }
-      }, [mode, property]);
+  useEffect(() => {
+    if (mode === 'edit' && property) {
+      setCommData({
+        ...CommData, // Spread initial form data to maintain structure
+        ...property, // Override with property-specific data
+      });
+    }
+  }, [mode, property]);
   const changedropcomm = (value) => {
     setCommData((prevState) => ({
       ...prevState,
@@ -70,9 +70,9 @@ const Commercial = () => {
       [buttonKey]: !prevState[buttonKey], // Toggle the clicked button's style
     }));
     const own = buttonKey === 'free' ? 'Freehold' :
-            buttonKey === 'lease' ? 'Leasehold' : 
-            buttonKey === 'co_operate' ? 'Co-operative Society' : 'Power of Attorney'
-        setCommData({ ...CommData, ownership: own });
+      buttonKey === 'lease' ? 'Leasehold' :
+        buttonKey === 'co_operate' ? 'Co-operative Society' : 'Power of Attorney'
+    setCommData({ ...CommData, ownership: own });
   };
   const formatcommPrice = (value) => {
     if (!value) return ""; // Handle empty input
@@ -92,7 +92,7 @@ const Commercial = () => {
   };
   const handleInputcommChange = (e) => {
     const value = e.target.value.replace(/[^\d]/g, ""); // Allow only numbers
-    setCommData({ ...CommData, price: value === '' ? '' : parseInt(value, 10)});
+    setCommData({ ...CommData, price: value === '' ? '' : parseInt(value, 10) });
     setFormattedcommPrice(formatcommPrice(value));
   };
   const handlecommpage = () => {
@@ -131,14 +131,14 @@ const Commercial = () => {
     if (!CommData.ownership) {
       formErrors.owner = 'Ownership is Required';
     }
-    if(!CommData.price){
+    if (!CommData.price) {
       formErrors.price = 'Price is Required';
     }
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return; // Stop the form submission if there are errors
     }
-    navigate('/profile/commercial-property',{ state: { CommData,mode} });
+    navigate('/profile/commercial-property', { state: { CommData, mode } });
   }
 
   return (
@@ -236,21 +236,21 @@ const Commercial = () => {
             {errors.carea && <div className="text-danger error-txt">{errors.carea}</div>}
             {errors.cunit && <div className="text-danger error-txt">{errors.cunit}</div>}
           </div>
-          <div className={errors.carea || errors.cunit ? 'mt-3':'mt-4'}>
+          <div className={errors.carea || errors.cunit ? 'mt-3' : 'mt-4'}>
             <div><h5>Ownership</h5></div>
-            <div className='d-flex'>
+            <div className='d-flex flex-wrap justify-content-center'>
               <button className='btn btn-light border' onClick={() => handlecommowner("free")}
                 style={clickedcommowner.free || CommData.ownership === 'Freehold' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Freehold</button>
-              <button className='btn btn-light border ms-3' onClick={() => handlecommowner("lease")}
-                style={clickedcommowner.lease || CommData.ownership === 'Leasehold' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Leasehold</button>
               <button className='btn btn-light border ms-3' onClick={() => handlecommowner("co_operate")}
                 style={clickedcommowner.co_operate || CommData.ownership === 'Co-operative Society' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Co-operative Society</button>
-              <button className='btn btn-light border ms-3' onClick={() => handlecommowner("power")}
+              <button className='btn btn-light border ms-3 mt-1 mt-md-0' onClick={() => handlecommowner("lease")}
+                style={clickedcommowner.lease || CommData.ownership === 'Leasehold' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Leasehold</button>
+              <button className='btn btn-light border ms-3 mt-1 mt-lg-0' onClick={() => handlecommowner("power")}
                 style={clickedcommowner.power || CommData.ownership === 'Power of Attorney' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Power of Attorney</button>
             </div>
             {errors.owner && <div className="text-danger error-txt">{errors.owner}</div>}
           </div>
-          <div className={errors.owner ? 'mt-3':'mt-4'}>
+          <div className={errors.owner ? 'mt-3' : 'mt-4'}>
             <div><h5>Price Details</h5></div>
             <div>
               <div>Cost</div>

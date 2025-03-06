@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { IoIosArrowDown } from "react-icons/io";
 import axios from "axios";
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import "./Search.css"
 import build from "../../assets/building.jpg";
 import { FaPhoneAlt } from "react-icons/fa";
@@ -12,17 +14,24 @@ import Rentcard from './Rentcard';
 import Plotcard from './Plotcard';
 import PGcard from './PGcard';
 import Commcard from './Commcard';
+import coin from '../../assets/coin.png';
+import { CiFilter } from "react-icons/ci";
+import { FcFilledFilter } from "react-icons/fc";
+import { coinActions } from '../../store/Slice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Search = () => {
 
     const location = useLocation();
+    const dispatch = useDispatch();
     const initialFilter = {
         ...location.state, // Prioritize location.state for other properties
         tab: localStorage.getItem('filterTab') || location.state?.tab, // Use localStorage or fallback to location.state or default
     };
     const [Filter, setFilter] = useState(initialFilter);
+    const balance = useSelector((state) => state.coin.balance);
+    const [coins, setcoins] = useState(balance);
     useEffect(() => {
         localStorage.setItem('filterTab', Filter.tab);
         setfilterdata({
@@ -35,6 +44,7 @@ const Search = () => {
             localities: [Filter.location],
         })
     }, [Filter.tab]);
+
     const [properties, setProperties] = useState({
         sell: [],
         rent: [],
@@ -279,38 +289,66 @@ const Search = () => {
         });
     };
     const handleViewNumber = async (property) => {
-        const userId = property.user;
-        const base_url = import.meta.env.VITE_BASE_URL;
-        try {
-            const response = await axios.get(`${base_url}/api/v3/user/${userId}`);
-            setowner(response.data);  // Store the fetched user data in state (you need to define this state)
-            // Show the modal after fetching the data
-            const modal = new window.bootstrap.Modal(modalRef.current);
-            modal.show();
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-            alert('Failed to fetch user data');
+        if (coins < 1) {
+            toast.info('Not enough coins to View Number!');
+        } else {
+            const userId = property.user;
+            const base_url = import.meta.env.VITE_BASE_URL;
+            try {
+                const response = await axios.get(`${base_url}/api/v3/user/${userId}`);
+                setowner(response.data);  // Store the fetched user data in state (you need to define this state)
+                // Show the modal after fetching the data
+                const modal = new window.bootstrap.Modal(modalRef.current);
+                modal.show();
+                if (response.status === 200) {
+                    await axios.put(`${base_url}/api/v1/update-coins`, { coinsChange: -1 }, { withCredentials: true }).then((response) => {
+                        setcoins(response.data.coins);
+                        dispatch(coinActions.setBalance(response.data.coins));
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                alert('Failed to fetch user data');
+            }
         }
     };
     const handleSms = async (property) => {
-        const base_url = import.meta.env.VITE_BASE_URL;
-        const data = {
-            type: property.type,
-            propertyId: property.propertyId,
-            userId: property.user,
-        }
-        try {
-            await axios.post(`${base_url}/api/v3/sendsms`, data).then((response) => {
+        if (coins < 1) {
+            toast.info('Not enough coins to Contact!');
+        } else {
+            const base_url = import.meta.env.VITE_BASE_URL;
+            const data = {
+                type: property.type,
+                propertyId: property.propertyId,
+                userId: property.user,
+            }
+            try {
+                const response = await axios.post(`${base_url}/api/v3/sendsms`, data);
                 if (response.status === 200) {
                     toast.success('Information is send to Owner, Please wait for reply !');
+                    const res = await axios.put(`${base_url}/api/v1/update-coins`, { coinsChange: -1 }, { withCredentials: true });
+                    setcoins(res.data.coins);
+                    dispatch(coinActions.setBalance(res.data.coins));
                 }
                 else {
                     toast.error(response.data.message);
                 }
-            })
+            } catch (error) {
+                console.error('Error sending contact SMS:', error);
+                alert('Failed to send SMS');
+            }
+        }
+    };
+    const handlevisit = async (propertyId, propertyType) => {
+        try {
+            const base_url = import.meta.env.VITE_BASE_URL;
+            const response = await axios.put(`${base_url}/api/v4/increment-visit/${propertyType}/${propertyId}`, { withCredentials: true, });
+
+            if (!response.data.success) {
+                console.log('Property is not Refreshed');
+            }
         } catch (error) {
-            console.error('Error sending contact SMS:', error);
-            alert('Failed to send SMS');
+            toast.error('Error refreshing property');
         }
     }
 
@@ -318,9 +356,9 @@ const Search = () => {
         <>
             <nav className="navbar navbar-expand-lg border search-nav">
                 <ToastContainer />
-                <div className="container-fluid justify-content-evenly search-cont">
+                <div className="container-fluid justify-content-lg-evenly search-cont">
                     <a className="navbar-brand text-white s-logo fs-3" href="#">ShelterBIG</a>
-                    <div className="dropdown d-flex w-50">
+                    <div className="dropdown d-flex w-50 resp-drop">
                         <button className="btn btn-secondary dropdown-toggle bg-white text-dark search-drop" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {Filter.tab}
                         </button>
@@ -336,10 +374,234 @@ const Search = () => {
                             onChange={handlecity} />
                         <button className='btn s-nav-btn bg-white ms-2'
                             onClick={() => setSearchTrigger((prev) => !prev)}>Search</button>
+                        <div className='d-flex align-items-center ms-1 ms-sm-4'>
+                            <img src={coin} alt="coin" className='search-coin' />
+                            <div className='ms-1'>{coins}</div>
+                        </div>
                     </div>
                 </div>
             </nav>
-            <div className='item-cont p-4'>
+            <div className='apply-divbtn mt-2 ms-4 d-lg-none'>
+                <button className="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                    <FcFilledFilter className='fs-4 mb-1 applyf-icon' />Apply Filters
+                </button>
+                <div className="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                    <div className="offcanvas-header">
+                        <h5 className="offcanvas-title" id="offcanvasExampleLabel"></h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div className="offcanvas-body">
+                        <div className='filters bg-white p-3'>
+                            <h3 className='filter-h3'>Apply Filters</h3>
+                            <div className='budg mt-3'>
+                                <div className='bdg-box1 p-2 d-flex justify-content-between align-items-center'
+                                    onClick={() => toggleVisibilitys("budget")}>
+                                    <div className='fw-bold'>Budget</div>
+                                    <IoIosArrowDown />
+                                </div>
+                                {visibility.budget && (
+                                    <div className="bdg-box2 mt-3">
+                                        {Filter.tab === "Buy" || Filter.tab === "Plot/Land" || Filter.tab === "Commercial" ? (
+                                            // Buy Budget Slider
+                                            <div>
+                                                <div className="range d-flex justify-content-between">
+                                                    <div className="minrange">0</div>
+                                                    <div className="maxrange">{filterdata.budget / 10000000}&nbsp;crores</div>
+                                                </div>
+                                                <input
+                                                    type="range" className="form-range" min="0" max="5" step="0.5" id="buyBudgetRange"
+                                                    value={filterdata.budget / 10000000}
+                                                    onChange={mchange}
+                                                />
+                                            </div>
+                                        ) : Filter.tab === "Rent" || Filter.tab === "PG" ? (
+                                            // Rent Budget Slider
+                                            <div>
+                                                <div className="range d-flex justify-content-between">
+                                                    <div className="minrange">0</div>
+                                                    <div className="maxrange">{filterdata.rentBudget / 1000}&nbsp;K</div>
+                                                </div>
+                                                <input
+                                                    type="range" className="form-range" min="0" max="100000" step="1000" id="rentBudgetRange"
+                                                    value={filterdata.rentBudget} // Default value if not set
+                                                    onChange={(e) => setfilterdata({ ...filterdata, rentBudget: e.target.value })}
+                                                />
+                                            </div>
+                                        ) : null}
+                                    </div>
+
+                                )}
+                            </div>
+                            <div className='type'>
+                                <div className='type-box pt-4 p-2 d-flex justify-content-between align-items-center'
+                                    onClick={() => toggleVisibilitys("type")}>
+                                    <div className='fw-bold'>{Filter.tab === "Plot/Land" ? 'Ownership' : 'Type of Property'}</div>
+                                    <IoIosArrowDown />
+                                </div>
+                                {visibility.type && (
+                                    <div className={`container type-box1 pb-2 ${Filter.tab === "Commercial" ? 'ps-0' : ''}`}>
+                                        {Filter.tab === "Buy" || Filter.tab === "Rent" || Filter.tab === "PG" ? (
+                                            <>
+                                                <button className='btn btn-light type-btn mt-2' onClick={() => handleClick("1 RK/Studio Apartment")}
+                                                    style={filterdata.propertyType.includes('1 RK/Studio Apartment') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+1 RK/Studio Apartment</button>
+                                                <button className='btn btn-light type-btn mt-2' onClick={() => handleClick("Residental Apartment")}
+                                                    style={filterdata.propertyType.includes('Residental Apartment') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ Residental Apartment</button>
+                                                <button className='btn btn-light type-btn ms-1 mt-2 me-1' onClick={() => handleClick("House Villa")}
+                                                    style={filterdata.propertyType.includes('House Villa') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ House Villa</button>
+                                                <button className='btn btn-light type-btn mt-2' onClick={() => handleClick("Flat")}
+                                                    style={filterdata.propertyType.includes('Flat') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ Flat</button>
+                                            </>
+                                        ) : Filter.tab === "Plot/Land" ? (
+                                            <div className='ms-1'>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleowner('Freehold')}
+                                                    style={filterdata.ownership.includes('Freehold') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Freehold</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleowner('Leasehold')}
+                                                    style={filterdata.ownership.includes('Leasehold') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Leasehold</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleowner('Co-operative Society')}
+                                                    style={filterdata.ownership.includes('Co-operative Society') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Co-operative Society</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleowner('Power of Attorney')}
+                                                    style={filterdata.ownership.includes('Power of Attorney') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Power of Attorney</button>
+                                            </div>
+                                        ) : Filter.tab === "Commercial" ? (
+                                            <div className=''>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handlecommproperty('Office')}
+                                                    style={filterdata.commproper.includes('Office') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Office</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handlecommproperty('Retail')}
+                                                    style={filterdata.commproper.includes('Retail') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Retail</button>
+                                                <button className='btn btn-light type-btn mt-2' onClick={() => handlecommproperty('Shop')}
+                                                    style={filterdata.commproper.includes('Shop') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Shop</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handlecommproperty('Godam')}
+                                                    style={filterdata.commproper.includes('Godam') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Godam</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handlecommproperty('Industry')}
+                                                    style={filterdata.commproper.includes('Industry') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Industry</button>
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                )}
+                            </div>
+                            <div className='Nbed'>
+                                <div className='type-box pt-4 p-2 d-flex justify-content-between align-items-center'
+                                    onClick={() => toggleVisibilitys("Nbed")}>
+                                    <div className='fw-bold'>{Filter.tab === "PG" ? 'Available For' : Filter.tab === "Plot/Land" ? "Approved By" : Filter.tab === "Commercial" ? "Ownership" : 'No. of Bedrooms'}</div>
+                                    <IoIosArrowDown />
+                                </div>
+                                {visibility.Nbed && (
+                                    <div className='container type-box1 pb-2'>
+                                        {Filter.tab === "Buy" || Filter.tab === "Rent" ? (
+                                            <>
+                                                <button className='btn btn-light type-btn mt-2 me-1' onClick={() => bedClick("1RK")}
+                                                    style={filterdata.bedrooms.includes('1RK') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+1 RK</button>
+                                                <button className='btn btn-light type-btn mt-2 me-1' onClick={() => bedClick("1BHK")}
+                                                    style={filterdata.bedrooms.includes('1BHK') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+1 BHK</button>
+                                                <button className='btn btn-light type-btn mt-2' onClick={() => bedClick("2BHK")}
+                                                    style={filterdata.bedrooms.includes('2BHK') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ 2BHK</button>
+                                                <button className='btn btn-light type-btn ms-1 mt-2 me-1' onClick={() => bedClick("3BHK")}
+                                                    style={filterdata.bedrooms.includes('3BHK') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ 3BHK</button>
+                                                <button className='btn btn-light type-btn mt-2' onClick={() => bedClick("4BHK")}
+                                                    style={filterdata.bedrooms.includes('4BHK') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ 4BHK</button>
+                                            </>
+                                        ) : Filter.tab === "PG" ? (
+                                            <div>
+                                                <button className='btn btn-light type-btn me-1' onClick={() => handleavailable('Girls')}
+                                                    style={filterdata.Availablefor.includes('Girls') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Girls</button>
+                                                <button className='btn btn-light type-btn me-1' onClick={() => handleavailable('Boys')}
+                                                    style={filterdata.Availablefor.includes('Boys') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Boys</button>
+                                                <button className='btn btn-light type-btn me-1' onClick={() => handleavailable('Any')}
+                                                    style={filterdata.Availablefor.includes('Any') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Any</button>
+                                            </div>
+                                        ) : Filter.tab === "Plot/Land" ? (
+                                            <div>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleapprove('N.A(Non-Agricultural)')}
+                                                    style={filterdata.approvedby.includes('N.A(Non-Agricultural)') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ N.A(Non-Agricultural)</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleapprove('N.A(in-process)')}
+                                                    style={filterdata.approvedby.includes('N.A(in-process)') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ N.A(in-process)</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleapprove('Collector Approved')}
+                                                    style={filterdata.approvedby.includes('Collector Approved') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Collector Approved</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleapprove('Corporation Approved')}
+                                                    style={filterdata.approvedby.includes('Corporation Approved') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Corporation Approved</button>
+                                            </div>
+                                        ) : Filter.tab === "Commercial" ? (
+                                            <div className='ms-1'>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleowner('Freehold')}
+                                                    style={filterdata.ownership.includes('Freehold') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Freehold</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleowner('Leasehold')}
+                                                    style={filterdata.ownership.includes('Leasehold') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Leasehold</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleowner('Co-operative Society')}
+                                                    style={filterdata.ownership.includes('Co-operative Society') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Co-operative Society</button>
+                                                <button className='btn btn-light type-btn me-1 mt-2' onClick={() => handleowner('Power of Attorney')}
+                                                    style={filterdata.ownership.includes('Power of Attorney') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Power of Attorney</button>
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                )}
+                            </div>
+                            <div className='area'>
+                                <div className='bdg-box1 pt-4 type-box p-2 d-flex justify-content-between align-items-center'
+                                    onClick={() => toggleVisibilitys("area")}>
+                                    <div className='fw-bold'>{Filter.tab === 'PG' ? 'Room Type' : 'Area'}</div>
+                                    <IoIosArrowDown />
+                                </div>
+                                {visibility.area && (
+                                    <div className='bdg-box2 mt-2 pb-2'>
+                                        {Filter.tab === "Buy" || Filter.tab === "Rent" || Filter.tab === "Plot/Land" || Filter.tab === "Commercial" ? (
+                                            <><div className='range d-flex justify-content-between'>
+                                                <div className='minrange w-25'>0&nbsp;sq.ft</div>
+                                                <div className='maxrange'>{filterdata.area}&nbsp;sq.ft</div>
+                                            </div><input type="range" className="form-range" min="0" max="4000" step="500" id="customRange2"
+                                                value={filterdata.area} onChange={achange} /></>
+                                        ) : Filter.tab === "PG" ? (
+                                            <div className='ms-1'>
+                                                <button className='btn btn-light type-btn me-1' onClick={() => handleroomtype('Shared')}
+                                                    style={filterdata.roomtype.includes('Shared') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Shared</button>
+                                                <button className='btn btn-light type-btn me-1' onClick={() => handleroomtype('Private')}
+                                                    style={filterdata.roomtype.includes('Private') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+ Private</button>
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                )}
+                            </div>
+                            <div className='locate'>
+                                <div className='type-box pt-4 p-2 d-flex justify-content-between align-items-center'
+                                    onClick={() => toggleVisibilitys("locate")}>
+                                    <div className='fw-bold'>Localities</div>
+                                    <IoIosArrowDown />
+                                </div>
+                                {visibility.locate && (<div className='container d-flex flex-column mt-2 mb-2'>
+                                    <div>
+                                        <input className="form-check-input me-2" type="checkbox" value="Nerul" id="Check1" onChange={handleLocationChange} />
+                                        <label className="form-check-label" for="Check1">
+                                            Nerul
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input className="form-check-input me-2" type="checkbox" value="Sion" id="Check2" onChange={handleLocationChange} />
+                                        <label className="form-check-label" for="Check2">
+                                            Sion
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input className="form-check-input me-2" type="checkbox" value="Thane" id="Check3" onChange={handleLocationChange} />
+                                        <label className="form-check-label" for="Check3">
+                                            Thane
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input className="form-check-input me-2" type="checkbox" value="Bandra" id="Check4" onChange={handleLocationChange} />
+                                        <label className="form-check-label" for="Check4">
+                                            Bandra
+                                        </label>
+                                    </div>
+                                </div>
+                                )}
+                            </div>
+                            <div className='mt-2'>
+                                <button className='btn apply-btn' onClick={() => setSearchTrigger((prev) => !prev)}>Apply Filter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className='item-cont pt-1 pb-4 px-2 px-lg-4'>
                 <div className='filter bg-white p-3'>
                     <h3 className='filter-h3'>Apply Filters</h3>
                     <div className='budg'>
@@ -549,19 +811,19 @@ const Search = () => {
                 </div>
                 <div className='items-sec p-2'>
                     {properties.sell.map((property) => (
-                        <Propcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} /> // Render a card for each property
+                        <Propcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
                     ))}
                     {properties.rent.map((property) => (
-                        <Rentcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms}/> // Render a card for each property
+                        <Rentcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
                     ))}
                     {properties.plot.map((property) => (
-                        <Plotcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms}/> // Render a card for each property
+                        <Plotcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
                     ))}
                     {properties.pg.map((property) => (
-                        <PGcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms}/> // Render a card for each property
+                        <PGcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
                     ))}
                     {properties.commercial.map((property) => (
-                        <Commcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms}/> // Render a card for each property
+                        <Commcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
                     ))}
                 </div>
                 <div className="modal owner-info" ref={modalRef} tabindex="-1">

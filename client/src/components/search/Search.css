@@ -32,6 +32,7 @@
     display: flex; 
     justify-content: space-around !important;
     width:100%;
+    min-height: 100vh;
     height: auto;
     background-color:floralwhite;
 }
@@ -49,6 +50,10 @@
     scrollbar-width: none;
     position:sticky;
     top:100px;
+}
+.filters{
+    display: flex;
+    flex-direction: column;
 }
 .filter-h3{
     color:darkorange;
@@ -157,4 +162,71 @@
 }
 .owner-info{
     margin-top:4rem;
+}
+.search-coin{
+    height:25px;
+    width:25px;
+}
+.apply-divbtn{
+    background-color: floralwhite;
+    > button{
+        background-color: white;
+        color: darkorange;
+        font-weight: bold;
+        border: 2px solid darkorange;
+    }
+    > button:hover{
+        background-color: white;
+        color: darkorange;
+        font-weight: bold;
+        border: 2px solid darkorange;
+    }
+}
+@media (max-width: 991px) {
+ .resp-drop{
+    width:70% !important;
+ }
+ .filter{
+    display: none;
+ }
+ .items-sec{
+    width:100%;
+ }
+ .offcanvas{
+    border-top-right-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+    margin-top: 5rem !important;
+    margin-bottom: 50px !important;
+ }
+}
+
+@media (min-width: 300px) and (max-width: 750px) {
+    .s-logo{
+        display: none;
+    }
+    .resp-drop{
+        width: 100% !important;
+    }
+    .apply-divbtn{
+        > button{
+            background-color: white;
+            color: darkorange;
+            font-weight: bold;
+            font-size: small;
+            border: 2px solid darkorange;
+            padding:4px;
+        }
+    }
+    .applyf-icon{
+        display: none;
+    }
+    .s-img{
+        width:100% !important;
+        border-top-left-radius: 14px;
+        border-bottom-left-radius: 0px !important;
+        border-top-right-radius: 14px !important;
+    }
+    /* .heart{
+        font-size: small !important;
+    } */
 }

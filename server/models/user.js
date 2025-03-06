@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         required: true,   // Must agree to terms and conditions
     },
+    coins: { type: Number, default: 5 },
     sell: [
         { type: mongoose.Types.ObjectId, ref: 'Sell' },
     ],

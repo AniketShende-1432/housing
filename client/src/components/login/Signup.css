@@ -57,3 +57,13 @@
 .error-txt{
     font-size: small;
 }
+@media (max-width: 991px) {
+    .signup-box{
+        width:60%;
+    }
+}
+@media (min-width: 300px) and (max-width: 750px) {
+    .signup-box{
+        width:100%;
+    }
+}

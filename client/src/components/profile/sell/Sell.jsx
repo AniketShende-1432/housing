@@ -262,13 +262,13 @@ const Sell = () => {
                 <Navbar back="profile-bg" login="login-box2" cname="sell-nav" />
                 <div className='sell-cont-box' id='navbar'>
                     <div className='p-cont-box1 d-flex justify-content-around'>
-                        <div className='sell-itm' onClick={() => navigate('/', { state: { tab: 'buy' } })}>Buy</div>
+                        <div className='sell-itm d-none d-sm-block' onClick={() => navigate('/', { state: { tab: 'buy' } })}>Buy</div>
                         <div className="sell-itm sell-itmcol"><Link className="nav-link active small" aria-current="page" to="/profile/sell">Sell</Link></div>
                         <div className="sell-itm"><Link className="nav-link active small" aria-current="page" to="/profile/Rent">Rent</Link></div>
                         <div className="sell-itm"><Link className="nav-link active small" aria-current="page" to="/profile/plot">Plot/Land</Link></div>
                         <div className="sell-itm"><Link className="nav-link active small" aria-current="page" to="/profile/pg">PG</Link></div>
                         <div className="sell-itm"><Link className="nav-link active small" aria-current="page" to="/profile/commercial">Commercial</Link></div>
-                        <div className="sell-itm">Home Loan</div>
+                        <div className="sell-itm d-none d-sm-block">Home Loan</div>
                     </div>
                 </div>
             </div>

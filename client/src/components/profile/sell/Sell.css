@@ -117,3 +117,36 @@
     position: relative;
     top:-18px;
 }
+@media (max-width: 991px) { 
+    .parent-cont{
+        padding-bottom: 2rem;
+    }
+    .sell-cont-box{
+        position:fixed;
+        top:14px;
+        z-index:20;
+        transform: translateY(0%); 
+        transition: transform 0.3s ease-in-out;
+    }
+    .sell-cont-box.show {
+        transform: translateY(100%); 
+    }
+    .main-box{
+        width:70% !important;
+        padding-top: 100px;
+    }
+
+}
+@media (min-width: 300px) and (max-width: 750px) {
+    .main-box{
+        width:100% !important;
+        padding-top: 100px;
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    .drop2-div{
+        margin-left: 1rem !important;
+    }
+}

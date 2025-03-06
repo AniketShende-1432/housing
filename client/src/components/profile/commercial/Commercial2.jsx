@@ -28,6 +28,7 @@ const Commercial2 = () => {
     const [imagescomm, setImagescomm] = useState(commdata?.images || []); // State to store image previews
     const [selectcommImage, setselectcommImage] = useState([]);
     const isLoggedin = useSelector((state) => state.auth.isLoggedIn);
+    const [simage, setsimage] = useState([]);
 
     const Bathroomoptionscomm = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const Floornooptionscomm = [];
@@ -82,16 +83,21 @@ const Commercial2 = () => {
         });
     };
     const handleFileChangecomm = (event) => {
+        if (!event.target.files.length) return;
         const files = Array.from(event.target.files); // Convert FileList to an array
-        const previewImages = files.map((file) => URL.createObjectURL(file)); // Create object URLs for preview
-        setImagescomm((prevImages) => [...prevImages, ...previewImages]); // Update state with image previews
+        const newFiles = files.map((file) => ({
+            file,
+            url: URL.createObjectURL(file),
+        }));
+        setImagescomm((prevImages) => [...prevImages, ...newFiles.map((item) => item.url)]); // Update state with image previews
+        setsimage((prevFiles) => [...prevFiles, ...newFiles]);
         setselectcommImage((prevFiles) => [...prevFiles, ...files]);
+        event.target.value = "";
     };
     const handleRemoveImage = (index) => {
         const imageToRemove = imagescomm[index]; // This is the image being removed from the preview
-
         // Case 1: If the image is a Cloudinary URL (from formData.images)
-        if (commdata.images.includes(imageToRemove)) {
+        if (commdata?.images && commdata.images.includes(imageToRemove)) {
             // Remove from formData.images
             setcommdata((prevFormData) => ({
                 ...prevFormData,
@@ -101,10 +107,11 @@ const Commercial2 = () => {
         // Case 2: If the image is a temporary URL (from selectImage)
         else {
             // Find the file corresponding to the temporary URL in selectImage
-            const fileIndex = selectcommImage.findIndex((file) => URL.createObjectURL(file) === imageToRemove);
-
+            const fileIndex = simage.findIndex((file) => file.url === imageToRemove);
             // Remove from selectImage (newly uploaded files)
             if (fileIndex !== -1) {
+                URL.revokeObjectURL(simage[fileIndex].url);
+                setsimage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
                 setselectcommImage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
             }
         }
@@ -227,7 +234,7 @@ const Commercial2 = () => {
                                     onChange={(value) => handlecommFeaturesChange("washroom", value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Age of Property"
                                     options={Agepropoptionscomm}
@@ -245,7 +252,7 @@ const Commercial2 = () => {
                                     onChange={(value) => handlecommFeaturesChange("totalFloors", value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Floor no/ Room no"
                                     options={Floornooptionscomm}
@@ -259,13 +266,13 @@ const Commercial2 = () => {
                         <div><h5>Add Amenities</h5></div>
                         <div>
                             <div className='text-secondary'>Amenities</div>
-                            <div className='d-flex flex-wrap justify-content-start flat-ament mt-2'>
+                            <div className='d-flex flex-wrap justify-content-center justify-content-sm-start flat-ament mt-2'>
                                 <button className='btn btn-light btn-flatimg border' onClick={() => handleamenitycomm("Rain Water Harvesting")}
                                     style={commdata.amenities.includes("Rain Water Harvesting") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={rain} alt="img" className='flat-img' />Rain Water Harvesting</button>
-                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleamenitycomm("Water Storage")}
-                                    style={commdata.amenities.includes("Water Storage") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={water} alt="img" className='flat-img' />Water Storage</button>
                                 <button className='btn btn-light border' onClick={() => handleamenitycomm("Lift")}
                                     style={commdata.amenities.includes("Lift") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiElevator className='mb-1 fs-5 me-2' />Lift</button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleamenitycomm("Water Storage")}
+                                    style={commdata.amenities.includes("Water Storage") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={water} alt="img" className='flat-img' />Water Storage</button>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleamenitycomm("Waste Disposal")}
                                     style={commdata.amenities.includes("Waste Disposal") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={waste} alt="img" className='flat-img' />Waste Disposal</button>
                                 <button className='btn btn-light border' onClick={() => handleamenitycomm("Vaastu Compliant")}
@@ -274,15 +281,15 @@ const Commercial2 = () => {
                         </div>
                         <div className='mt-3'>
                             <div className='text-secondary'>Building/Society Feature</div>
-                            <div className='d-flex flex-wrap flat-ament justify-content-start mt-2'>
+                            <div className='d-flex flex-wrap flat-ament justify-content-center justify-content-lg-start mt-2'>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlecomm("Shooping Centre")}
                                     style={commdata.amenities.includes("Shooping Centre") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><FaShoppingCart className='fs-5 me-2' /><label>Shooping Centre</label></button>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlecomm("Grade A Building")}
                                     style={commdata.amenities.includes("Grade A Building") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><FaBuilding className='fs-5 me-2' /><label>Grade A Building</label></button>
-                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlecomm("Power Backup")}
-                                    style={commdata.amenities.includes("Power Backup") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiPowerGenerator className='fs-5 me-2' /><label>Power Backup</label></button>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlecomm("Main Road")}
                                     style={commdata.amenities.includes("Main Road") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><FaRoad className='fs-5 me-2 mt-1' /><label>Main Road</label></button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlecomm("Power Backup")}
+                                    style={commdata.amenities.includes("Power Backup") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiPowerGenerator className='fs-5 me-2' /><label>Power Backup</label></button>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlecomm("CCTV")}
                                     style={commdata.amenities.includes("CCTV") ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><BiCctv className='fs-5 me-2' /><label>CCTV</label></button>
                             </div>
@@ -311,7 +318,7 @@ const Commercial2 = () => {
                                 </div>
                             </div>
                         </div>
-                        {(mode ?? '') !== 'edit' && ( <button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handlecommSubmit}>Submit Property</button>)}
+                        {(mode ?? '') !== 'edit' && (<button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handlecommSubmit}>Submit Property</button>)}
                         {mode === 'edit' && (<button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handleCommupdate}>Save Changes</button>)}
                     </div>
                 </div>

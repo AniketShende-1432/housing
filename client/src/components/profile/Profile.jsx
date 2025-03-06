@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from "axios";
 import Navbar from '../navbar/Navbar';
 import { BiShow } from "react-icons/bi";
+import coin from '../../assets/coin.png';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Profile.css"
@@ -18,6 +19,7 @@ const Profile = () => {
         email: "",
         phone: "",
         usertype: "",
+        coins:"",
     });
     const [passwordData, setPasswordData] = useState({
         currentPassword: "",
@@ -51,12 +53,12 @@ const Profile = () => {
                 await axios.get(`${base_url}/api/v1/profile`, { withCredentials: true, }).then((response) => {
                     setUserData(response.data);
                     if (response.data.message) {
-                        toast.error(response.data.message,{ toastId: "login-error" });
+                        toast.error(response.data.message, { toastId: "login-error" });
                     }
                 })
 
             } catch (error) {
-                toast.error("Server error",{ toastId: "server-error" });
+                toast.error("Server error", { toastId: "server-error" });
             }
         }
         userd();
@@ -102,7 +104,7 @@ const Profile = () => {
         }
         const user_upd = async () => {
             const base_url = import.meta.env.VITE_BASE_URL;
-            await axios.put(`${base_url}/api/v1/profile`, userData,{withCredentials:true})
+            await axios.put(`${base_url}/api/v1/profile`, userData, { withCredentials: true })
                 .then((response) => {
                     toast.success("Profile updated successfully");
                     setUserData(response.data); // Update state with the latest data
@@ -175,7 +177,7 @@ const Profile = () => {
             <Navbar back="profile-bg" />
             <div className='p-cont-box'>
                 <div className='p-cont-box1 d-flex justify-content-around'>
-                    <div className='p-itm' onClick={() => navigate('/', { state: { tab: 'buy' } })}>Buy</div>
+                    <div className='p-itm d-none d-sm-block' onClick={() => navigate('/', { state: { tab: 'Buy' } })}>Buy</div>
                     <div className={`p-itm ${selectTab === 'Sell' ? 'p-itmcol' : ''}`}
                         onClick={() => setSelectTab('Sell')}><Link className="nav-link active small" aria-current="page" to="/profile/sell">Sell</Link></div>
                     <div className={`p-itm ${selectTab === 'Rent' ? 'p-itmcol' : ''}`}
@@ -186,107 +188,116 @@ const Profile = () => {
                         onClick={() => setSelectTab('PG')}><Link className="nav-link active small" aria-current="page" to="/profile/pg">PG</Link></div>
                     <div className={`p-itm ${selectTab === 'Commercial' ? 'p-itmcol' : ''}`}
                         onClick={() => setSelectTab('Commercial')}><Link className="nav-link active small" aria-current="page" to="/profile/commercial">Commercial</Link></div>
-                    <div className={`p-itm ${selectTab === 'Home Loan' ? 'p-itmcol' : ''}`}
+                    <div className={`p-itm d-none d-sm-block ${selectTab === 'Home Loan' ? 'p-itmcol' : ''}`}
                         onClick={() => setSelectTab('Home Loan')}>Home Loan</div>
                 </div>
             </div>
-            <div className='d-flex flex-column mt-5 pt-4 align-items-center pr-main-box'>
-                <div className='d-flex justify-content-center w-50'>
-                    <div className={`choice-btn1 fw-bold p-2 px-4 ${Choice ? "profile-bg text-white" : ""}`} onClick={() => setChoice(true)}>My Profile</div>
-                    <div className={`choice-btn2 fw-bold p-2 ${!Choice ? "profile-bg text-white" : ""}`} onClick={() => setChoice(false)}>Change Password</div>
+            <div className='d-flex flex-column flex-sm-row'>
+                <div className='coin-div d-flex justify-content-center align-items-center'>
+                    <div className='h-50 d-flex flex-column justify-content-center align-items-center coin-box ms-auto'>
+                        <img src={coin} alt="coin" className='coin-img' />
+                        <div className='mt-2 mt-sm-4 fs-5'>Balance coins</div>
+                        <div className='fs-5'>{userData.coins}</div>
+                    </div>
                 </div>
-                <div className='pr-cont p-3 pe-3'>
-                    <div className='container'>
-                        {Choice ? (<div>
-                            <div className={`row ${perrors.name ? 'mb-2' : "mb-3"}`}>
-                                <div className='col-5 me-2 text-end my-2'>Name</div>
-                                <div className='col'>
-                                    <input type="text" className="form-control ms-2" name='name' id='username'
-                                        value={userData.name}
-                                        onChange={handleInputChange} />
-                                    {perrors.name && <div className="text-danger perror-txt ms-2">{perrors.name}</div>}
-                                </div>
-                            </div>
-                            <div className={`row ${perrors.name ? 'mb-2' : "mb-3"}`}>
-                                <div className='col-5 me-2 text-end my-2'>User Type</div>
-                                <div className='col'>
-                                    <div className="dropdown d-flex w-75 p-0 ms-2">
-                                        <button className="btn btn-secondary border dropdown-toggle w-100 bg-white text-dark d-flex justify-content-between align-items-center border-secondary-subtle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <span>{userData.usertype || 'Select UserType'}</span>
-                                            <span className="dropdown-arrow"></span>
-                                        </button>
-                                        <ul className="dropdown-menu w-75">
-                                            <li><a className="dropdown-item" onClick={() => userchange("Buyer/Owner/Tenant")} href="#">Buyer/Owner/Tenant</a></li>
-                                            <li><a className="dropdown-item" onClick={() => userchange("Agent")} href="#">Agent</a></li>
-                                            <li><a className="dropdown-item" onClick={() => userchange("Builder")} href="#">Builder</a></li>
-                                        </ul>
-                                    </div>
-                                    {perrors.usertype && <div className="text-danger perror-txt ms-2">{perrors.usertype}</div>}
-                                </div>
-                            </div>
-                            <div className={`row ${perrors.name ? 'mb-2' : "mb-3"}`}>
-                                <div className='col-5 me-2 text-end my-2'>Email</div>
-                                <div className='col'>
-                                    <input type="email" className="form-control ms-2" name='email' id='useremail'
-                                        value={userData.email}
-                                        onChange={handleInputChange} />
-                                    {perrors.email && <div className="text-danger perror-txt ms-2">{perrors.email}</div>}
-                                </div>
-                            </div>
-                            <div className={`row ${perrors.name ? 'mb-2' : "mb-3"}`}>
-                                <div className='col-5 me-2 text-end my-2'>Mobile</div>
-                                <div className='col d-flex p-0'>
-                                    <div className='pr-pcode my-2 ms-2'>IND +91</div>
+                <div className='d-flex flex-column pt-4 pr-main-box ms-sm-4 justify-content-center align-items-center align-items-sm-start'>
+                    <div className='d-flex justify-content-center tab-div'>
+                        <div className={`choice-btn1 fw-bold p-2 px-4 ${Choice ? "profile-bg text-white" : ""}`} onClick={() => setChoice(true)}>My Profile</div>
+                        <div className={`choice-btn2 fw-bold p-2 ${!Choice ? "profile-bg text-white" : ""}`} onClick={() => setChoice(false)}>Change Password</div>
+                    </div>
+                    <div className='pr-cont p-3 pe-3'>
+                        <div className='container'>
+                            {Choice ? (<div>
+                                <div className={`row ${perrors.name ? 'mb-2' : "mb-3"}`}>
+                                    <div className='col-3 col-sm-5 me-2 text-end my-2'>Name</div>
                                     <div className='col'>
-                                        <input type="text" className="form-control ms-2" name='phone' id='userphone'
-                                            value={userData.phone}
+                                        <input type="text" className="form-control ms-2" name='name' id='username'
+                                            value={userData.name}
                                             onChange={handleInputChange} />
-                                        {perrors.phone && <div className="text-danger perror-txt ms-2">{perrors.phone}</div>}
+                                        {perrors.name && <div className="text-danger perror-txt ms-2">{perrors.name}</div>}
                                     </div>
                                 </div>
-                            </div>
-                            <button className="btn profile-btn fw-bold w-100" onClick={handleSubmit}>Save Profile</button>
-                        </div>) : (
-                            <div>
-                                <div className={`row ${passerrors.cpassword ? 'mb-2' : "mb-3"}`}>
-                                    <div className='col-4 me-2 text-end my-2'>Current Password</div>
+                                <div className={`row ${perrors.name ? 'mb-2' : "mb-3"}`}>
+                                    <div className='col-3 col-sm-5 me-sm-2 text-end my-sm-2 text-nowrap'>User Type</div>
                                     <div className='col'>
-                                        <div className='row'>
-                                            <input type={showPassword1 ? "text" : "password"} className="form-control pass-inp col ms-2" name='currentPassword' id='usercpass'
-                                                value={passwordData.currentPassword}
-                                                onChange={handlePasswordInputChange} />
-                                            <div className='eye-icon-pass col-2 p-1 d-flex justify-content-center align-items-center' onClick={togglePasswordVisibility1}><BiShow className='fs-3' /></div>
+                                        <div className="dropdown d-flex w-75 p-0 ms-3 ms-sm-2">
+                                            <button className="btn btn-secondary border dropdown-toggle w-100 bg-white text-dark d-flex justify-content-between align-items-center border-secondary-subtle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span>{userData.usertype || 'Select UserType'}</span>
+                                                <span className="dropdown-arrow"></span>
+                                            </button>
+                                            <ul className="dropdown-menu w-75">
+                                                <li><a className="dropdown-item" onClick={() => userchange("Buyer/Owner/Tenant")} href="#">Buyer/Owner/Tenant</a></li>
+                                                <li><a className="dropdown-item" onClick={() => userchange("Agent")} href="#">Agent</a></li>
+                                                <li><a className="dropdown-item" onClick={() => userchange("Builder")} href="#">Builder</a></li>
+                                            </ul>
                                         </div>
-                                        {passerrors.cpassword && <div className="text-danger perror-txt">{passerrors.cpassword}</div>}
+                                        {perrors.usertype && <div className="text-danger perror-txt ms-2">{perrors.usertype}</div>}
                                     </div>
                                 </div>
-                                <div className={`row ${passerrors.npassword ? 'mb-2' : "mb-3"}`}>
-                                    <div className='col-4 me-2 text-end my-2'>New Password</div>
+                                <div className={`row ${perrors.name ? 'mb-2' : "mb-3"}`}>
+                                    <div className='col-3 col-sm-5 me-2 text-end my-2'>Email</div>
                                     <div className='col'>
-                                        <div className='row'>
-                                            <input type={showPassword2 ? "text" : "password"} className="form-control pass-inp col ms-2" name='newPassword' id='usernpass'
-                                                value={passwordData.newPassword}
-                                                onChange={handlePasswordInputChange} />
-                                            <div className='eye-icon-pass col-2 p-1 d-flex justify-content-center align-items-center' onClick={togglePasswordVisibility2}><BiShow className='fs-3' /></div>
-                                        </div>
-                                        {passerrors.npassword && <div className="text-danger perror-txt">{passerrors.npassword}</div>}
+                                        <input type="email" className="form-control ms-2" name='email' id='useremail'
+                                            value={userData.email}
+                                            onChange={handleInputChange} />
+                                        {perrors.email && <div className="text-danger perror-txt ms-2">{perrors.email}</div>}
                                     </div>
                                 </div>
-                                <div className={`row ${passerrors.name ? 'mb-2' : "mb-3"}`}>
-                                    <div className='col-4 me-2 text-end my-2'>Confirm Password</div>
-                                    <div className='col'>
-                                        <div className='row'>
-                                            <input type={showPassword3 ? "text" : "password"} className="form-control pass-inp col ms-2" name='confirmPassword' id='userconpass'
-                                                value={passwordData.confirmPassword}
-                                                onChange={handlePasswordInputChange} />
-                                            <div className='eye-icon-pass col-2 p-1 d-flex justify-content-center align-items-center' onClick={togglePasswordVisibility3}><BiShow className='fs-3' /></div>
+                                <div className={`row ${perrors.name ? 'mb-2' : "mb-3"}`}>
+                                    <div className='col-3 col-sm-5 me-2 text-end my-2'>Mobile</div>
+                                    <div className='col d-flex'>
+                                        <div className='pr-pcode my-2 ms-2'>IND +91</div>
+                                        <div className='col'>
+                                            <input type="text" className="form-control ms-2" name='phone' id='userphone'
+                                                value={userData.phone}
+                                                onChange={handleInputChange} />
+                                            {perrors.phone && <div className="text-danger perror-txt ms-2">{perrors.phone}</div>}
                                         </div>
-                                        {passerrors.conpassword && <div className="text-danger perror-txt">{passerrors.conpassword}</div>}
                                     </div>
                                 </div>
-                                <button className="btn profile-btn fw-bold w-100" type="submit" onClick={handlePasswordSubmit}>Save Password</button>
-                            </div>
-                        )}
+                                <button className="btn profile-btn fw-bold w-100" onClick={handleSubmit}>Save Profile</button>
+                            </div>) : (
+                                <div>
+                                    <div className={`row ${passerrors.cpassword ? 'mb-2' : "mb-3"}`}>
+                                        <div className='col-4 me-2 text-start text-sm-end my-0 my-sm-2'>Current Password</div>
+                                        <div className='col'>
+                                            <div className='row'>
+                                                <input type={showPassword1 ? "text" : "password"} className="form-control pass-inp col ms-2" name='currentPassword' id='usercpass'
+                                                    value={passwordData.currentPassword}
+                                                    onChange={handlePasswordInputChange} />
+                                                <div className='eye-icon-pass col-2 p-1 d-flex justify-content-center align-items-center' onClick={togglePasswordVisibility1}><BiShow className='fs-3' /></div>
+                                            </div>
+                                            {passerrors.cpassword && <div className="text-danger perror-txt">{passerrors.cpassword}</div>}
+                                        </div>
+                                    </div>
+                                    <div className={`row ${passerrors.npassword ? 'mb-2' : "mb-3"}`}>
+                                        <div className='col-4 me-2 text-start text-sm-end my-0 my-sm-2'>New Password</div>
+                                        <div className='col'>
+                                            <div className='row'>
+                                                <input type={showPassword2 ? "text" : "password"} className="form-control pass-inp col ms-2" name='newPassword' id='usernpass'
+                                                    value={passwordData.newPassword}
+                                                    onChange={handlePasswordInputChange} />
+                                                <div className='eye-icon-pass col-2 p-1 d-flex justify-content-center align-items-center' onClick={togglePasswordVisibility2}><BiShow className='fs-3' /></div>
+                                            </div>
+                                            {passerrors.npassword && <div className="text-danger perror-txt">{passerrors.npassword}</div>}
+                                        </div>
+                                    </div>
+                                    <div className={`row ${passerrors.name ? 'mb-2' : "mb-3"}`}>
+                                        <div className='col-4 me-2 text-start text-sm-end my-0 my-sm-2'>Confirm Password</div>
+                                        <div className='col'>
+                                            <div className='row'>
+                                                <input type={showPassword3 ? "text" : "password"} className="form-control pass-inp col ms-2" name='confirmPassword' id='userconpass'
+                                                    value={passwordData.confirmPassword}
+                                                    onChange={handlePasswordInputChange} />
+                                                <div className='eye-icon-pass col-2 p-1 d-flex justify-content-center align-items-center' onClick={togglePasswordVisibility3}><BiShow className='fs-3' /></div>
+                                            </div>
+                                            {passerrors.conpassword && <div className="text-danger perror-txt">{passerrors.conpassword}</div>}
+                                        </div>
+                                    </div>
+                                    <button className="btn profile-btn fw-bold w-100" type="submit" onClick={handlePasswordSubmit}>Save Password</button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

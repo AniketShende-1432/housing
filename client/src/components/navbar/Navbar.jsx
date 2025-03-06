@@ -1,8 +1,8 @@
-import React, { useState ,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Navbar.css'
 import { Link } from 'react-router-dom';
-import { useSelector,useDispatch } from 'react-redux';
-import { authActions } from '../../store';
+import { useSelector, useDispatch } from 'react-redux';
+import { authActions } from '../../store/Slice';
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,10 +12,9 @@ const Navbar = (props) => {
     const hchange = () => {
         setVisible(!Visible);
     }
-
     const isLoggedin = useSelector((state) => state.auth.isLoggedIn);
     const dispatch = useDispatch();
-    const logout =async()=>{
+    const logout = async () => {
         try {
             const base_url = import.meta.env.VITE_BASE_URL;
             const response = await axios.post(`${base_url}/api/v1/logout`, {}, { withCredentials: true });
@@ -43,27 +42,30 @@ const Navbar = (props) => {
     return (
         <>
             <nav className={`navbar navbar-expand-lg ${props.back} ${props.cname} border cont`}>
-                <div className="container d-flex justify-content-around">
-                    <a className="navbar-brand logo" href="#">ShelterBIG</a>
+                <div className="container-lg d-flex justify-content-lg-around justify-content-between">
+                    <a className="navbar-brand logo ms-md-4 ms-lg-0 ms-2">ShelterBIG</a>
+                    <button className="navbar-toggler me-md-4 me-lg-0 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                             <li className="nav-item ms-1">
-                                <Link className="nav-link active text-white small" aria-current="page" to="/">Home</Link>
+                                <Link className="nav-link nav-nlink text-sm-dark active text-white small" aria-current="page" to="/">Home</Link>
                             </li>
                             <li className="nav-item ms-2">
-                                <a className="nav-link text-white" href="#">ForBuyers</a>
+                                <a className="nav-link nav-nlink text-white" href="#">ForBuyers</a>
                             </li>
                             <li className="nav-item ms-2">
-                                <a className="nav-link text-white" href="#">ForOwners</a>
+                                <a className="nav-link nav-nlink text-white" href="#">ForOwners</a>
                             </li>
-                            <li>
-                                <a className="nav-link text-white ms-2" onClick={hchange} style={{cursor:"pointer"}}>Login</a>
+                            <li className='nav-item'>
+                                <a className="nav-link nav-nlink text-white ms-2" onClick={hchange} style={{ cursor: "pointer" }}>Login</a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-            {Visible && (<div className={`${props.login==='login-box2' ? 'login-box2' : 'login-box'} p-2`}>
+            {Visible && (<div className={`${props.login === 'login-box2' ? 'login-box2' : 'login-box'} p-2`}>
                 <div className='login-link'>
                     <div className='text-secondary q-link'>Quick Links</div>
                     <div className='fw-bold p-1 log-links'>My Activity</div>

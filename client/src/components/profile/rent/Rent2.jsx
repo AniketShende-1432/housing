@@ -59,18 +59,25 @@ const Rent2 = () => {
     });
     const [imagesrent, setImagesrent] = useState(rentdata?.images || []); // State to store image previews
     const [selectImage, setselectImage] = useState([]);
+    const [simage,setsimage] = useState([]);
 
     const handleFileChangerent = (event) => {
+        if (!event.target.files.length) return;
         const files = Array.from(event.target.files); // Convert FileList to an array
-        const previewImages = files.map((file) => URL.createObjectURL(file)); // Create object URLs for preview
-        setImagesrent((prevImages) => [...prevImages, ...previewImages]); // Update state with image previews
+        const newFiles = files.map((file) => ({
+            file,
+            url: URL.createObjectURL(file),
+        }));
+        setImagesrent((prevImages) => [...prevImages, ...newFiles.map((item) => item.url)]); // Update state with image previews
+        setsimage((prevFiles) => [...prevFiles, ...newFiles]);
         setselectImage((prevFiles) => [...prevFiles, ...files]);
+        event.target.value = "";
     };
     const handleRemoveImage = (index) => {
         const imageToRemove = imagesrent[index]; // This is the image being removed from the preview
 
         // Case 1: If the image is a Cloudinary URL (from formData.images)
-        if (rentdata.images.includes(imageToRemove)) {
+        if (rentdata?.images && rentdata.images.includes(imageToRemove)) {
             // Remove from formData.images
             setrentdata((prevFormData) => ({
                 ...prevFormData,
@@ -80,10 +87,11 @@ const Rent2 = () => {
         // Case 2: If the image is a temporary URL (from selectImage)
         else {
             // Find the file corresponding to the temporary URL in selectImage
-            const fileIndex = selectImage.findIndex((file) => URL.createObjectURL(file) === imageToRemove);
-    
+            const fileIndex = simage.findIndex((file) => file.url === imageToRemove);
             // Remove from selectImage (newly uploaded files)
             if (fileIndex !== -1) {
+                URL.revokeObjectURL(simage[fileIndex].url);
+                setsimage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
                 setselectImage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
             }
         }
@@ -289,7 +297,7 @@ const Rent2 = () => {
                                     onChange={(value) => handleFeaturesChange("bedrooms", value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Balconies"
                                     options={balconiesoptionsrent}
@@ -307,7 +315,7 @@ const Rent2 = () => {
                                     onChange={(value) => handleFeaturesChange('bathrooms', value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Age of Property"
                                     options={Agepropoptionsrent}
@@ -325,7 +333,7 @@ const Rent2 = () => {
                                     onChange={(value) => handleFeaturesChange('totalFloors', value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Floor no"
                                     options={Floornooptionsrent}
@@ -340,9 +348,9 @@ const Rent2 = () => {
                         <div>
                             <button className='btn btn-light border' onClick={() => handlerentperson("family")}
                                 style={clickedrentperson.family || rentdata.willingToRent.includes('Family') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Family</button>
-                            <button className='btn btn-light border ms-3' onClick={() => handlerentperson("men")}
+                            <button className='btn btn-light border ms-1 ms-sm-3' onClick={() => handlerentperson("men")}
                                 style={clickedrentperson.men || rentdata.willingToRent.includes('Single Men') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Single Men</button>
-                            <button className='btn btn-light border ms-3' onClick={() => handlerentperson("women")}
+                            <button className='btn btn-light border ms-1 ms-sm-3' onClick={() => handlerentperson("women")}
                                 style={clickedrentperson.women || rentdata.willingToRent.includes('Single Women') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Single Women</button>
                         </div>
                     </div>

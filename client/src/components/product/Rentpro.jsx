@@ -27,13 +27,18 @@ import swim from "../../assets/swim.png";
 import water from "../../assets/water.png";
 import backcard from "../../assets/backcard.png";
 import Modal from './Modal';
+import { useSelector } from 'react-redux';
+import { coinActions } from '../../store/Slice';
+import { useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Slider from './Slider';
 
 const Rentpro = () => {
   const location = useLocation();
   const { property } = location.state;
-  const base_url = import.meta.env.VITE_BASE_URL;
+  const dispatch = useDispatch();
+  const balance = useSelector((state) => state.coin.balance);
   const amenimg = {
     'Sofa': Sofa,
     'Washing Machine': Washing,
@@ -52,7 +57,7 @@ const Rentpro = () => {
     'Regular Water Supply': water,
   }
   const [owner, setowner] = useState({});
-  const [show,setshow] = useState(false);
+  const [show, setshow] = useState(false);
 
   const formatPrice = (price) => {
     if (price >= 10000000) {
@@ -106,36 +111,51 @@ const Rentpro = () => {
     };
   }, []);
   const handleViewNumber = async (property) => {
-    const userId = property.user;
-    const base_url = import.meta.env.VITE_BASE_URL;
-    try {
-      const response = await axios.get(`${base_url}/api/v3/user/${userId}`);
-      setowner(response.data);  // Store the fetched user data in state (you need to define this state)
-      setshow(true);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      alert('Failed to fetch user data');
+    if (balance < 1) {
+      toast.info('Not enough coins to View Number!');
+    } else {
+      const userId = property.user;
+      const base_url = import.meta.env.VITE_BASE_URL;
+      try {
+        const response = await axios.get(`${base_url}/api/v3/user/${userId}`);
+        if (response.status === 200) {
+          await axios.put(`${base_url}/api/v1/update-coins`, { coinsChange: -1 }, { withCredentials: true }).then((response) => {
+            dispatch(coinActions.setBalance(response.data.coins));
+          });
+        }
+        setowner(response.data);  // Store the fetched user data in state (you need to define this state)
+        setshow(true);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        alert('Failed to fetch user data');
+      }
     }
   };
+
   const handleSms = async (property) => {
-    const base_url = import.meta.env.VITE_BASE_URL;
-    const data = {
-      type: property.type,
-      propertyId: property.propertyId,
-      userId: property.user,
-    }
-    try {
-      await axios.post(`${base_url}/api/v3/sendsms`, data).then((response) => {
+    if (balance < 1) {
+      toast.info('Not enough coins to View Number!');
+    } else {
+      const base_url = import.meta.env.VITE_BASE_URL;
+      const data = {
+        type: property.type,
+        propertyId: property.propertyId,
+        userId: property.user,
+      }
+      try {
+        const response = await axios.post(`${base_url}/api/v3/sendsms`, data);
         if (response.status === 200) {
           toast.success('Information is send to Owner, Please wait for reply !');
+          const res = await axios.put(`${base_url}/api/v1/update-coins`, { coinsChange: -1 }, { withCredentials: true });
+          dispatch(coinActions.setBalance(res.data.coins));
         }
         else {
           toast.error(response.data.message);
         }
-      })
-    } catch (error) {
-      console.error('Error sending contact SMS:', error);
-      alert('Failed to send SMS');
+      } catch (error) {
+        console.error('Error sending contact SMS:', error);
+        alert('Failed to send SMS');
+      }
     }
   }
 
@@ -143,15 +163,30 @@ const Rentpro = () => {
     <div style={{ backgroundColor: "aliceblue" }}>
       <ToastContainer />
       <div className='container-fluid pro-nav-cont' id='navbar'>
-        <div className='d-flex p-3 pb-0'>
-          <div className='me-3 d-flex justify-content-center align-items-center'>
+        <div className='d-flex p-1 p-sm-3 pb-sm-0'>
+          <div className='me-1 me-sm-3 d-flex justify-content-center align-items-center text-nowrap'>
             <label className='fs-5 fw-bold'>₹ {formatPrice(property.monthlyRent)}</label>&nbsp;
             <span>/Month</span>
           </div>
-          <div className='ps-3 pt-1 pro-head'>{property.bhk} ({property.features.bathrooms || "-"} Baths) {property.carpetArea} {property.areaUnit}  &nbsp;&nbsp;&nbsp;For Sale {property.locality}, {property.city}</div>
+          <div className='ps-3 pt-1 pro-head d-none d-sm-block'>{property.bhk} ({property.features.bathrooms || "-"} Baths) {property.carpetArea} {property.areaUnit}  &nbsp;&nbsp;&nbsp;For Sale {property.locality}, {property.city}</div>
+          <div className='ps-2 pt-1 pro-head d-sm-none text-nowrap'>{property.bhk} {property.locality}, {property.city}</div>
         </div>
         <div>
-          <nav class="navbar navbar-expand-lg bg-wite">
+          <ul class="nav product-nav p-2">
+            <li className="nav-item">
+              <button onClick={() => handleOverviewClick("overid")}>Overview</button>
+            </li>
+            <li className="nav-item">
+              <button onClick={() => handleOverviewClick("detailid")}>More Details</button>
+            </li>
+            <li className="nav-item">
+              <button onClick={() => handleOverviewClick("societyid")}>Society</button>
+            </li>
+            <li className="nav-item">
+              <button onClick={() => handleOverviewClick("recommid")}>Recommendation</button>
+            </li>
+          </ul>
+          {/* <nav class="navbar navbar-expand-lg bg-wite">
             <div class="container-fluid pro-cont">
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -173,12 +208,12 @@ const Rentpro = () => {
                 </ul>
               </div>
             </div>
-          </nav>
+          </nav> */}
         </div>
       </div>
-      <div className='container d-flex pro-main'>
+      <div className='container-lg container-fluid d-flex pro-main'>
         <div>
-          <div className='card1 d-flex mt-4 bg-white' id="overid">
+          <div className='card1 d-flex flex-column flex-sm-row mt-4 bg-white' id="overid">
             <div className='item-box1'>
               <img src={property.images && property.images[0] ? property.images[0] : backcard} alt="image" className='rent-s-img' />
             </div>
@@ -190,7 +225,7 @@ const Rentpro = () => {
                   </div>
                   <label className='head2'>{property.bhk} Flat in {property.locality}, {property.city}</label>
                 </div>
-                <label className='ms-auto propertyid'>Property ID : {property.propertyId}</label>
+                <label className='ms-auto propertyid d-none d-sm-block'>Property ID : {property.propertyId}</label>
               </div>
               <div className='mt-2 d-flex'>
                 <div className='d-flex flex-column m-3 ms-0'>
@@ -204,25 +239,29 @@ const Rentpro = () => {
                   <label className='fw-bold fs-6'>{property.carpetArea} {property.areaUnit}</label>
                   <label className='mt-1'>Build-up Area</label>
                 </div>
-                <div className='d-flex flex-column m-3 ms-0 ps-3 item-bd'>
+                <div className='d-none d-lg-flex flex-column m-3 ms-0 ps-3 item-bd'>
                   <label className='fw-bold fs-6'>{property.bhk}</label>
                   <label>({property.features.bathrooms || '-'} Baths)</label>
                 </div>
-                <div className='d-flex flex-column m-3 ms-0 ps-3 item-bd'>
+                <div className='d-none d-sm-flex flex-column m-3 ms-0 ps-3 item-bd'>
                   <label className='fw-bold fs-6'>Available From</label>
                   <label>{new Date(property.availableFrom).toLocaleDateString()}</label>
                 </div>
               </div>
               <div className='d-flex pro-status'>
-                <div className='d-flex flex-column'>
-                  <label className='fw-bold fs-6'><img src={furni} alt="img" className='pro-img me-1 pb-1' />Furnished Status</label>
-                  <label>{property.furnishedType}</label>
+              <div className='d-flex flex-column d-sm-none'>
+                  <label className='fw-bold fs-6 text-nowrap'>Available From</label>
+                  <label>{new Date(property.availableFrom).toLocaleDateString()}</label>
                 </div>
                 <div className='d-flex flex-column'>
+                  <label className='fw-bold fs-6 text-nowrap'><img src={furni} alt="img" className='pro-img me-1 pb-1' />Furnished Status</label>
+                  <label>{property.furnishedType}</label>
+                </div>
+                <div className='d-none d-sm-flex flex-column'>
                   <label className='fw-bold fs-6'>Age of Property</label>
                   <label>{property.features.ageOfProperty?.trim() === '' ? '-' : property.features.ageOfProperty} years</label>
                 </div>
-                <div className='d-flex flex-column'>
+                <div className='d-none d-sm-flex flex-column'>
                   <label className='fw-bold fs-6'>Available For</label>
                   <label> {property.willingToRent.map((item, index) => (
                     <span key={index}>{item}</span>
@@ -238,44 +277,44 @@ const Rentpro = () => {
           <div className='pro-detail p-3 mt-3 bg-white' id="detailid">
             <h4>More Details</h4>
             <div className='row mt-3'>
-              <div className='col-4 fw-light fs-5'>Rent Value</div>
-              <div className='col-8 d-flex align-items-center'>
+              <div className='col-5 col-sm-4 fw-light fs-5'>Rent Value</div>
+              <div className='col-7 col-sm-8 d-flex align-items-center'>
                 <label className='fw-bold fs-5'>₹ {formatPrice(property.monthlyRent)}</label>&nbsp;
                 <span>/Month</span>
               </div>
             </div>
             <div className='row mt-3'>
-              <div className='col-4 fw-light fs-5'>Security Deposit</div>
-              <div className='col-8 fw-bold fs-5'>₹ {formatPrice(property.securityDeposit)}</div>
+              <div className='col-5 col-sm-4 fw-light fs-5'>Security Deposit</div>
+              <div className='col-7 col-sm-8 fw-bold fs-5'>₹ {formatPrice(property.securityDeposit)}</div>
             </div>
             <div className='row mt-3'>
-              <div className='col-4 fw-light fs-5'>Address</div>
-              <div className='col-8 fw-bold fs-5'>{property.locality}, {property.city}, Maharashtra</div>
+              <div className='col-5 col-sm-4 fw-light fs-5'>Address</div>
+              <div className='col-7 col-sm-8 fw-bold fs-5'>{property.locality}, {property.city}, Maharashtra</div>
             </div>
             <div className='row mt-3'>
-              <div className='col-4 fw-light fs-5'>Duration of Agreement</div>
-              <div className='col-8 fw-bold fs-5'>{property.durationOfAgreement?.trim() === '' ? '-' : property.durationOfAgreement}</div>
+              <div className='col-5 col-sm-4 fw-light fs-5'>Duration of Agreement</div>
+              <div className='col-7 col-sm-8 fw-bold fs-5'>{property.durationOfAgreement?.trim() === '' ? '-' : property.durationOfAgreement}</div>
             </div>
             <div className='row mt-3'>
-              <div className='col-4 fw-light fs-5'>Available For</div>
-              <div className='col-8 fw-bold fs-5'>
+              <div className='col-5 col-sm-4 fw-light fs-5'>Available For</div>
+              <div className='col-7 col-sm-8 fw-bold fs-5'>
                 <label> {property.willingToRent.map((item, index) => (
                   <span key={index}>{item}</span>
                 ))}</label></div>
             </div>
             <div className='row mt-3'>
-              <div className='col-4 fw-light fs-5'>Age of Property</div>
-              <div className='col-8 fw-bold fs-5'>{property.features.ageOfProperty?.trim() === '' ? '-' : property.features.ageOfProperty} years</div>
+              <div className='col-5 col-sm-4 fw-light fs-5'>Age of Property</div>
+              <div className='col-7 col-sm-8 fw-bold fs-5'>{property.features.ageOfProperty?.trim() === '' ? '-' : property.features.ageOfProperty} years</div>
             </div>
             <button className='btn c-btn mt-3'>Contact Agent</button>
           </div>
           <div className='pro-society bg-white mt-3 p-3' id='societyid'>
             <h4>Society</h4>
-            <ul className='d-flex mt-2'>
+            <ul className='d-flex mt-2 flex-wrap'>
               <li>
                 <div className='soc-text'>{property.societyName} CHS</div>
               </li>
-              <li>
+              <li className='ms-auto ms-sm-0'>
                 <div className='d-flex'>
                   <div className='me-1'><GiFamilyHouse /></div><div className='soc-icon-list'>Project Details</div>
                 </div>
@@ -288,7 +327,7 @@ const Rentpro = () => {
                 <div className='fw-bold'>{property.features.bathrooms || '-'} Bathroom</div>
                 <div className='fw-bold'>{property.features.balconies || '-'} Balcony</div>
               </li>
-              <li>
+              <li className='ms-auto ms-sm-0'>
                 <div className='d-flex'>
                   <div className='me-1'><FaHouse /></div><div className='soc-icon-list'>Property types</div>
                 </div>
@@ -296,7 +335,7 @@ const Rentpro = () => {
               </li>
             </ul>
           </div>
-          <div className='pro-amenities bg-white mt-3 p-3'>
+          <div className='pro-amenities bg-white mt-3 p-3 d-none d-sm-block'>
             <h4>Amenities</h4>
             {property.amenities && property.amenities.length > 0 ? (
               <div>
@@ -314,9 +353,28 @@ const Rentpro = () => {
               <h5>-</h5>
             )}
           </div>
+          <div className='pro-amenities bg-white mt-3 p-3 d-sm-none'>
+            <h4>Amenities</h4>
+            {property.amenities && property.amenities.length > 0 ? (
+              <div>
+                {Array.from({ length: Math.ceil(property.amenities.length / 2) }, (_, i) => (
+                  <div className='row mt-3' key={i}>
+                    {property.amenities.slice(i * 2, i * 2 + 2).map((amenity, index) => (
+                      <div className='col-6' key={index}>
+                        <img src={amenimg[amenity]} alt="img" className='amen-img mb-1' /> {amenity}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <h5>-</h5>
+            )}
+          </div>
           <div className='mt-4' id='recommid'>
             <h5>Similar Properties</h5>
-            <div id="carouselExample" class="carousel carousel-dark slide">
+            <Slider />
+            {/* <div id="carouselExample" class="carousel carousel-dark slide">
               <div class="carousel-inner p-3">
                 <div class="carousel-item active">
                   <div className='card-wrapper d-flex'>
@@ -389,10 +447,10 @@ const Rentpro = () => {
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
-        <div className='pt-2'>
+        <div className='pt-2 d-none d-lg-block'>
           <div className='pro-contact d-flex flex-column p-3 mt-3 bg-white'>
             <label className='fw-bold fs-5'>Contact Agent</label>
             <label className='pro-no mt-2'>+91-98XXXXXXXX</label>
@@ -429,7 +487,7 @@ const Rentpro = () => {
           </div>
         </div>
       </div>
-      {show &&  <Modal owner={owner} show={show} setShow={setshow}/>}
+      {show && <Modal owner={owner} show={show} setShow={setshow} />}
     </div>
   )
 }

@@ -27,6 +27,10 @@ const pgSchema = new mongoose.Schema({
     amenities: { type: [String] }, // Washing Machine, Sofa, etc.
     images: { type: [String] },
     propertyId: { type: String ,required:true},
+    visits: { type: Number, default: 0 },
+    lastVisitTime: { type: Date, default: null },
+    status: { type: String, enum: ['Active', 'Inactive'],default: 'Active'},
+    StatusUpdatedAt: { type: Date, default: Date.now },
     user: {
         type: mongoose.Types.ObjectId,
         ref: 'User',

@@ -79,7 +79,9 @@ const getProperties = async (modelName, filters,res) => {
         query.carpetArea = {$lte: filters.area}
       }
     }
-    const properties = await model.find(query);  // Fetch all properties from the selected model
+    const sortmethod = {visits : -1}
+    query.status = 'Active';
+    const properties = await model.find(query).sort(sortmethod);  // Fetch all properties from the selected model
     res.json(properties);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -99,7 +101,7 @@ router.get('/user/:id', async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.json(user);
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }

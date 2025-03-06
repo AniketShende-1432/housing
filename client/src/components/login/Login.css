@@ -104,3 +104,18 @@
     outline:1px solid darkorange;
     border-radius: 2px;
 }
+@media (max-width: 991px) {
+    .log-cont-box{
+        width:65%;
+    }
+}
+@media (min-width: 300px) and (max-width: 750px) {
+    .google-cont{
+        > div:nth-child(2){
+            width:45%;
+        }
+    }
+    .log-cont-box{
+        width:100%;
+    }
+}

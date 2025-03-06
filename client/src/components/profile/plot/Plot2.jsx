@@ -25,22 +25,29 @@ const Plot2 = () => {
     const {plotData, mode} = location.state || {};
     const [plotdata, setplotdata] = useState(plotData);
     const isLoggedin = useSelector((state) => state.auth.isLoggedIn);
-    console.log(plotdata);
     const [imagesplot, setImagesplot] = useState(plotdata?.images || []); // State to store image previews
     const [selectedImage,setselectedImage] = useState([]);
-
+    const [simage,setsimage] = useState([]);
+    console.log(imagesplot);
+    console.log(selectedImage);
 
     const handleFileChangeplot = (event) => {
+        if (!event.target.files.length) return;
         const files = Array.from(event.target.files); // Convert FileList to an array
-        const previewImages = files.map((file) => URL.createObjectURL(file)); // Create object URLs for preview
-        setImagesplot((prevImages) => [...prevImages, ...previewImages]); // Update state with image previews
+        // const previewImages = files.map((file) => URL.createObjectURL(file)); // Create object URLs for preview
+        const newFiles = files.map((file) => ({
+            file,
+            url: URL.createObjectURL(file),
+        }));
+        setImagesplot((prevImages) => [...prevImages, ...newFiles.map((item) => item.url)]); // Update state with image previews
+        setsimage((prevFiles) => [...prevFiles, ...newFiles]);
         setselectedImage((prevFiles) => [...prevFiles, ...files]);
+        event.target.value = "";
     };
     const handleRemoveImage = (index) => {
         const imageToRemove = imagesplot[index]; // This is the image being removed from the preview
-
         // Case 1: If the image is a Cloudinary URL (from formData.images)
-        if (plotdata.images.includes(imageToRemove)) {
+        if (plotdata?.images && plotdata.images.includes(imageToRemove)) {
             // Remove from formData.images
             setplotdata((prevFormData) => ({
                 ...prevFormData,
@@ -50,10 +57,13 @@ const Plot2 = () => {
         // Case 2: If the image is a temporary URL (from selectImage)
         else {
             // Find the file corresponding to the temporary URL in selectImage
-            const fileIndex = selectedImage.findIndex((file) => URL.createObjectURL(file) === imageToRemove);
-    
+            // const fileIndex = selectedImage.findIndex((file) => URL.createObjectURL(file) === imageToRemove);
+            const fileIndex = simage.findIndex((file) => file.url === imageToRemove);
             // Remove from selectImage (newly uploaded files)
+            console.log(fileIndex);
             if (fileIndex !== -1) {
+                URL.revokeObjectURL(simage[fileIndex].url);
+                setsimage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
                 setselectedImage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
             }
         }
@@ -173,9 +183,6 @@ const Plot2 = () => {
                 }
             }
             selectedImage.forEach((image) => pltData.append("newimages", image))
-            pltData.forEach((value, key) => {
-                console.log(key, value);
-              });
             // Send the update request
             const response = await axios.put(`${base_url}/api/v4/updateplotproperty/${pdata._id}`, pltData,
                 { withCredentials: true }
@@ -208,7 +215,7 @@ const Plot2 = () => {
                         <div><h5>Add Amenities</h5></div>
                         <div>
                             <div className='text-secondary'>Amenities</div>
-                            <div className='d-flex flex-wrap justify-content-start flat-ament mt-2'>
+                            <div className='d-flex flex-wrap justify-content-center justify-content-lg-start flat-ament mt-2'>
                                 <button className='btn btn-light border' onClick={() => handleamenity("Water Storage")}
                                     style={plotdata.amenities.includes('Water Storage') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={storage} alt="img" className='flat-img' />Water Storage</button>
                                 <button className='btn btn-light border' onClick={() => handleamenity("Water Supply")}
@@ -223,7 +230,7 @@ const Plot2 = () => {
                         </div>
                         <div className='mt-3'>
                             <div className='text-secondary'>Overlooking</div>
-                            <div className='d-flex flex-wrap flat-ament justify-content-start mt-2'>
+                            <div className='d-flex flex-wrap flat-ament justify-content-center justify-content-lg-start mt-2'>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleover("Pool")}
                                     style={plotdata.overlooking.includes('Pool') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={pool} alt="img" className='flat-img' /><label>Pool</label></button>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleover("Park/Garden")}

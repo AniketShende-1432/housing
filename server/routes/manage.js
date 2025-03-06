@@ -84,10 +84,10 @@ router.put("/updateproperty/:propertyId", upload.array('newimages', 5), async (r
 
         const updatedImages = [...imagesArray, ...newImages];
 
-        Object.assign(property, { ...req.body,features:parsedFeatures,images: updatedImages });
+        Object.assign(property, { ...req.body, features: parsedFeatures, images: updatedImages });
         await property.save();
 
-        res.status(200).json({ message: "Property updated successfully"});
+        res.status(200).json({ message: "Property updated successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error updating property" });
@@ -118,10 +118,10 @@ router.put("/updaterentproperty/:propertyId", upload.array('newimages', 5), asyn
 
         const updatedImages = [...imagesArray, ...newImages];
 
-        Object.assign(property, { ...req.body,features:parsedFeatures,images: updatedImages });
+        Object.assign(property, { ...req.body, features: parsedFeatures, images: updatedImages });
         await property.save();
 
-        res.status(200).json({ message: "Property updated successfully"});
+        res.status(200).json({ message: "Property updated successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error updating property" });
@@ -137,7 +137,7 @@ router.put("/updateplotproperty/:propertyId", upload.array('newimages', 5), asyn
         const images = req.body.images || [];
         const features = JSON.parse(JSON.stringify(req.body.features));
         const dimensions = JSON.parse(JSON.stringify(req.body.dimensions));
-       
+
         const newImages = req.files.map((file) => file.path);
         const imagesArray = Array.isArray(images) ? images : [images];
 
@@ -148,10 +148,10 @@ router.put("/updateplotproperty/:propertyId", upload.array('newimages', 5), asyn
 
         const updatedImages = [...imagesArray, ...newImages];
 
-        Object.assign(property, { ...req.body,features,dimensions,images: updatedImages });
+        Object.assign(property, { ...req.body, features, dimensions, images: updatedImages });
         await property.save();
 
-        res.status(200).json({ message: "Property updated successfully"});
+        res.status(200).json({ message: "Property updated successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error updating property" });
@@ -182,10 +182,10 @@ router.put("/updatepgproperty/:propertyId", upload.array('newimages', 5), async 
 
         const updatedImages = [...imagesArray, ...newImages];
 
-        Object.assign(property, { ...req.body,features:parsedFeatures,images: updatedImages });
+        Object.assign(property, { ...req.body, features: parsedFeatures, images: updatedImages });
         await property.save();
 
-        res.status(200).json({ message: "Property updated successfully"});
+        res.status(200).json({ message: "Property updated successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error updating property" });
@@ -216,10 +216,10 @@ router.put("/updatecommproperty/:propertyId", upload.array('newimages', 5), asyn
 
         const updatedImages = [...imagesArray, ...newImages];
 
-        Object.assign(property, { ...req.body,features:parsedFeatures,images: updatedImages });
+        Object.assign(property, { ...req.body, features: parsedFeatures, images: updatedImages });
         await property.save();
 
-        res.status(200).json({ message: "Property updated successfully"});
+        res.status(200).json({ message: "Property updated successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error updating property" });
@@ -275,5 +275,93 @@ router.delete('/deleteproperty/:propertyId', async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 });
+
+const Modelmap = {
+    sell: Sell,
+    Rent: Rent,
+    Plot: Plot,
+    PG: PG,
+    Commercial: Commercial
+};
+
+router.put("/increment-visit/:propertyType/:propertyId", async (req, res) => {
+    try {
+        const { propertyType, propertyId } = req.params;
+        const Model = Modelmap[propertyType];
+        const property = await Model.findByIdAndUpdate(
+            propertyId,
+            { $inc: { visits: 1 } }, // Increment visit count
+            { new: true }
+        );
+        if (!property) {
+            return res.status(404).json({ error: "Property not found" });
+        }
+        res.json({ success: true, visits: property.visits });
+    } catch (error) {
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+router.put("/property-visit/:propertyType/:propertyId", async (req, res) => {
+    try {
+        const { propertyType, propertyId } = req.params;
+        const Model = Modelmap[propertyType];
+
+        if (!Model) {
+            return res.status(400).json({ error: "Invalid property type" });
+        }
+
+        const property = await Model.findById(propertyId);
+        if (!property) {
+            return res.status(404).json({ error: "Property not found" });
+        }
+
+        const now = new Date();
+        const lastVisitTime = property.lastVisitTime || new Date(0); // Default to old date if null
+
+        const minutesPassed = (now - lastVisitTime) / (1000 * 60);
+        if (minutesPassed < 5) {
+            return res.status(400).json({ error: "Wait 15 minutes before refreshing again." });
+        }
+        // Increment visits and update timestamp
+        property.visits += 1;
+        property.lastVisitTime = now;
+
+        await property.save();
+
+        res.json({ success: true, visits: property.visits, lastVisitTime: property.lastVisitTime });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+router.put("/property-status/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status, propertyType } = req.body;
+        const Model = Modelmap[propertyType];
+        let updatedProperty;
+        if (status === 'Active') {
+            updatedProperty = await Model.findByIdAndUpdate(
+                id,
+                { status, StatusUpdatedAt: new Date(), },
+                { new: true }
+            );
+        } else {
+            updatedProperty = await Model.findByIdAndUpdate(
+                id,
+                { status },
+                { new: true }
+            );
+        }
+        if (!updatedProperty) return res.status(404).json({ error: "Property not found" });
+
+        res.json({ message: "Status updated successfully", property: updatedProperty });
+    } catch (error) {
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 
 module.exports = router;

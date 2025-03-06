@@ -5,18 +5,22 @@
     justify-content: space-around !important;
     width: 100%;
 }
+.main-hcont{
+    width: 100%;
+}
 .h-adv-cont{
     width:100%;
 }
 .h-adv-image{
-    height:67.7vh;
+    height:387px;
     object-fit: cover;
 }
 .carousel-control-prev, .carousel-control-next{
     margin-top: 10rem !important;
 }
 .advbox{
-    height:25.4rem;
+    height:100%;
+    width:auto;
     overflow: auto;
     cursor: pointer;
     scrollbar-width: none;
@@ -50,12 +54,11 @@
 .s-cont{
     width:100%; 
     z-index:1000;
-    position:absolute;
-    top:70vh;
-    right:8.4rem;
+    position: relative;
+    bottom: 50px;
 }
 .s-cont-box{
-    width:60%;
+    width:75%;
     padding:10px;
     background-color: white;
     box-shadow: 2px 2px 5px;
@@ -103,7 +106,65 @@
     font-size: small;
 }
 .adv-card{
+    height: 50% !important;
     border-radius: 0px !important;
 }
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .main-hcont{
+        width:77%;
+        height:40% !important;
+    }
+    .h-adv-cont{
+        width:100%;
+    }
+    .s-cont{
+        width:100%; 
+        z-index:1000;
+        justify-content: start !important;
+    }
+    .s-cont-input{
+        width:12rem;
+    }
+    .s-cont-box{
+        width:100%;
+    }
+}
+@media (min-width: 300px) and (max-width: 750px) {
+    .s-cont{
+        width:100%; 
+        justify-content: start !important;
+    }
+    .s-cont-box{
+        width:100% !important;
+    }
+    .s-cont-input{
+        margin-left: 1rem;
+        width:auto;
+    }
+    .res-cont{
+        display: none !important;
+    } 
+    .search-btn{
+        width:4rem;
+        position: absolute;
+        right: 1rem;
+        border-radius: 25px;
+        background-color: darkorange;
+    }
+    .demand-card{
+        align-items: center;
+        overflow-x: scroll;
+        scrollbar-width:thin;
+    }
+    .demand-card .card{
+        min-width: 70% !important;
+        flex-shrink:0;
+    }
+    .card-img-top{
+        height:9rem !important;
+    }
+}
+
 
   

@@ -24,6 +24,10 @@ const plotSchema = new mongoose.Schema({
     overlooking: { type: [String] }, // Array of views (e.g., Pool, Park, Main Road)
     images: { type: [String] }, // Array of image URLs
     propertyId: { type: String },
+    visits: { type: Number, default: 0 },
+    lastVisitTime: { type: Date, default: null },
+    status: { type: String, enum: ['Active', 'Inactive'],default: 'Active'},
+    StatusUpdatedAt: { type: Date, default: Date.now },
     user: { 
         type: mongoose.Types.ObjectId, 
         ref: 'User', 

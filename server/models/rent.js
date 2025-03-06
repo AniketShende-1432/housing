@@ -27,6 +27,10 @@ const rentSchema = new mongoose.Schema({
     amenities: { type: [String]}, // Combined amenities
     images: { type: [String] }, // Array of image URLs
     propertyId: { type: String },
+    visits: { type: Number, default: 0 },
+    lastVisitTime: { type: Date, default: null },
+    status: { type: String, enum: ['Active', 'Inactive'],default: 'Active'},
+    StatusUpdatedAt: { type: Date, default: Date.now },
     user: { 
         type: mongoose.Types.ObjectId, 
         ref: 'User', 

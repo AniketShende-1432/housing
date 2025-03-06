@@ -45,3 +45,23 @@
         }
     }
 }
+@media (max-width: 991px) { 
+    .rent-cont{
+        padding-bottom: 2rem;
+    }
+    .rent-main-box{
+        width: 70% !important;
+    }
+    .rent-main2-box{
+        margin-top: 1.5rem;
+    }
+}
+@media (min-width: 300px) and (max-width: 750px) {
+    .rent-main-box{
+        width: 100% !important;
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}

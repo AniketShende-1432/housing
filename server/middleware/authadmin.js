@@ -5,10 +5,9 @@ exports.verifyAdmin = (req, res, next) => {
     if (!token) {
         return res.status(401).json({ message: 'Authorization required' });
     }
-
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (decoded.role !== 'Super Admin') {
+        if (decoded.role !== 'Super Admin' && decoded.role !== 'Admin') {
             return res.status(403).json({ message: 'Not authorized' });
         }
         req.user = decoded; // Attach user info to request

@@ -28,25 +28,32 @@ const PG2 = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const {pgData , mode} = location.state || {};
+    const { pgData, mode } = location.state || {};
     const [pgdata, setpgdata] = useState(pgData);
     const isLoggedin = useSelector((state) => state.auth.isLoggedIn);
     console.log(pgdata);
 
     const [imagespg, setImagespg] = useState(pgdata?.images || []); // State to store image previews
     const [selectImage, setselectImage] = useState([]);
+    const [simage, setsimage] = useState([]);
 
     const handleFileChangepg = (event) => {
+        if (!event.target.files.length) return;
         const files = Array.from(event.target.files); // Convert FileList to an array
-        const previewImages = files.map((file) => URL.createObjectURL(file)); // Create object URLs for preview
-        setImagespg((prevImages) => [...prevImages, ...previewImages]); // Update state with image previews
+        const newFiles = files.map((file) => ({
+            file,
+            url: URL.createObjectURL(file),
+        }));
+        setImagespg((prevImages) => [...prevImages, ...newFiles.map((item) => item.url)]); // Update state with image previews
+        setsimage((prevFiles) => [...prevFiles, ...newFiles]);
         setselectImage((prevFiles) => [...prevFiles, ...files]);
+        event.target.value = ""; //to have change in value otherwise 
     };
     const handleRemoveImage = (index) => {
         const imageToRemove = imagespg[index]; // This is the image being removed from the preview
 
         // Case 1: If the image is a Cloudinary URL (from formData.images)
-        if (pgdata.images.includes(imageToRemove)) {
+        if (pgdata?.images && pgdata.images.includes(imageToRemove)) {
             // Remove from formData.images
             setpgdata((prevFormData) => ({
                 ...prevFormData,
@@ -56,14 +63,15 @@ const PG2 = () => {
         // Case 2: If the image is a temporary URL (from selectImage)
         else {
             // Find the file corresponding to the temporary URL in selectImage
-            const fileIndex = selectImage.findIndex((file) => URL.createObjectURL(file) === imageToRemove);
-    
+            const fileIndex = simage.findIndex((file) => file.url === imageToRemove);
             // Remove from selectImage (newly uploaded files)
             if (fileIndex !== -1) {
+                URL.revokeObjectURL(simage[fileIndex].url);
+                setsimage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
                 setselectImage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
             }
         }
-    
+
         // Remove from the image preview array (this is common for both cases)
         setImagespg((prevImages) => prevImages.filter((_, i) => i !== index));
     };
@@ -152,7 +160,7 @@ const PG2 = () => {
                         if (response.data.message === "Error posting property") {
                             toast.error(response.data.message);
                         } else {
-                            toast.success(response.data.message,{
+                            toast.success(response.data.message, {
                                 onClose: () => {
                                     // Reset form data and navigate after success toast closes
                                     setpgdata({
@@ -208,7 +216,7 @@ const PG2 = () => {
             selectImage.forEach((image) => pgrData.append("newimages", image));
             pgrData.forEach((value, key) => {
                 console.log(key, value);
-              });
+            });
             // Send the update request
             const response = await axios.put(`${base_url}/api/v4/updatepgproperty/${pdata._id}`, pgrData,
                 { withCredentials: true }
@@ -248,7 +256,7 @@ const PG2 = () => {
                                     onChange={(value) => handleFeaturesChange("bedrooms", value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Balconies"
                                     options={balconiesoptionspg}
@@ -266,7 +274,7 @@ const PG2 = () => {
                                     onChange={(value) => handleFeaturesChange('bathrooms', value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Age of Property"
                                     options={Agepropoptionspg}
@@ -284,7 +292,7 @@ const PG2 = () => {
                                     onChange={(value) => handleFeaturesChange('totalFloors', value)}
                                 />
                             </div>
-                            <div>
+                            <div className='drop2-div'>
                                 <Selldrop
                                     label="Floor no"
                                     options={Floornooptionspg}
@@ -328,10 +336,10 @@ const PG2 = () => {
                                     style={pgdata.amenities.includes('Kides Area') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={kidsarea} alt="img" className='flat-img' /><label>Kides Area</label></button>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocpg("Garden")}
                                     style={pgdata.amenities.includes('Garden') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={garden} alt="img" className='flat-img' /><label>Garden</label></button>
-                                <button className='btn btn-light border' onClick={() => handlesocpg("Gym")}
-                                    style={pgdata.amenities.includes('Gym') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={gym} alt="img" className='flat-img' /><label>Gym</label></button>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocpg("Swimming Pool")}
                                     style={pgdata.amenities.includes('Swimming Pool') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={swim} alt="img" className='flat-img' /><label>Swimming Pool</label></button>
+                                <button className='btn btn-light border' onClick={() => handlesocpg("Gym")}
+                                    style={pgdata.amenities.includes('Gym') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={gym} alt="img" className='flat-img' /><label>Gym</label></button>
                                 <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocpg("Regular Water Supply")}
                                     style={pgdata.amenities.includes('Regular Water Supply') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={water} alt="img" className='flat-img' /><label>Regular Water Supply</label></button>
                             </div>

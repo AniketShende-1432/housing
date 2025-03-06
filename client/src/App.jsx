@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Navbar from './components/navbar/Navbar'
 import './App.css'
 import Home from './components/home/Home'
-import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Search from './components/search/Search';
 import Product from './components/product/Product';
 import Login from './components/login/Login';
@@ -26,7 +26,10 @@ import Manage from './components/manage/Manage';
 import Otp from './components/login/Otp';
 import axios from "axios";
 import { useDispatch } from 'react-redux';
-import { authActions } from './store';
+import { authActions } from './store/Slice';
+import { coinActions } from './store/Slice';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -43,36 +46,51 @@ function App() {
         console.error("Authentication check failed:", error);
       }
     };
+    const fetchcoins = async () => {
+      try {
+        const base_url = import.meta.env.VITE_BASE_URL;
+        await axios.get(`${base_url}/api/v1/get-coin`, { withCredentials: true }).then((response) => {
+          if (typeof response.data.coins !== "object" || response.data.coins === null) {
+            console.warn("Invalid coin data received", response.data.coins);
+            return;
+          }
+          dispatch(coinActions.setBalance(response.data.coins));
+        })
+      } catch (error) {
+        console.log("Coin error", { toastId: "server-error" });
+      }
+    }
     checkAuthStatus();
+    fetchcoins();
   }, [])
-  
+
 
   return (
     <>
       <Router>
         <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/login/otp" element={<Otp />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile/sell" element={<Sell />} />
-        <Route path="/profile/sell-property" element={<Sell2 />} />
-        <Route path="/profile/rent" element={<Rent />} />
-        <Route path="/profile/rent-property" element={<Rent2 />} />
-        <Route path="/profile/plot" element={<Plot />} />
-        <Route path="/profile/plot-property" element={<Plot2 />} />
-        <Route path="/profile/pg" element={<PG />} />
-        <Route path="/profile/pg-property" element={<PG2 />} />
-        <Route path="/profile/commercial" element={<Commercial />} />
-        <Route path="/profile/commercial-property" element={<Commercial2 />} />
-        <Route path="/rent-product" element={<Rentpro />} />
-        <Route path="/plot-product" element={<Plotpro />} />
-        <Route path="/pg-product" element={<PGpro />} />
-        <Route path="/commercial-product" element={<Commpro />} />
-        <Route path="/manage" element={<Manage />} />
+          <Route exact path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/login/otp" element={<Otp />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/sell" element={<Sell />} />
+          <Route path="/profile/sell-property" element={<Sell2 />} />
+          <Route path="/profile/rent" element={<Rent />} />
+          <Route path="/profile/rent-property" element={<Rent2 />} />
+          <Route path="/profile/plot" element={<Plot />} />
+          <Route path="/profile/plot-property" element={<Plot2 />} />
+          <Route path="/profile/pg" element={<PG />} />
+          <Route path="/profile/pg-property" element={<PG2 />} />
+          <Route path="/profile/commercial" element={<Commercial />} />
+          <Route path="/profile/commercial-property" element={<Commercial2 />} />
+          <Route path="/rent-product" element={<Rentpro />} />
+          <Route path="/plot-product" element={<Plotpro />} />
+          <Route path="/pg-product" element={<PGpro />} />
+          <Route path="/commercial-product" element={<Commpro />} />
+          <Route path="/manage" element={<Manage />} />
         </Routes>
       </Router>
     </>
