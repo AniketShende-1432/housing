@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Profilenav from '../../profilenav/Profilenav';
 import { FaRupeeSign } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from "react-helmet-async";
 
 const Commercial = () => {
 
@@ -143,23 +144,29 @@ const Commercial = () => {
 
   return (
     <div className="rent-cont" style={{ backgroundColor: "#FFF5EE" }}>
+      <Helmet>
+        <title>Profile Property User</title>
+        <meta name="description" content="Find a commercial real estate agent and explore business property for sale, office to let, and commercial space for sale. Search for shop for rent, business space for rent near me, and commercial rentals near me. Discover business property for rent and the best commercial real estate options near you." />
+        <meta name="keywords" content="commercial real estate agent,shop for rent,business space for rent near me,commercial rentals near me,business property for sale
+        office to let,commercial space for sale,business property for rent" />
+      </Helmet>
       <Profilenav select="Commercial" />
       <div className='container rent-main-box w-50'>
         <div className='rent-main2-box bg-white p-4'>
           <div className='rent-head'><h3>Commercial Property</h3></div>
           <div className='mt-4'>
             <div className='mb-2'>Property Type</div>
-            <div class="dropdown d-flex rent-drop">
-              <button class="btn btn-secondary dropdown-toggle bg-white text-dark d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div className="dropdown d-flex rent-drop">
+              <button className="btn btn-secondary dropdown-toggle bg-white text-dark d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <span>{CommData.propertyType || 'Select Property type'}</span>
                 <span className="dropdown-arrow"></span>
               </button>
-              <ul class="dropdown-menu rent-drop-menu">
-                <li><a class="dropdown-item" onClick={() => changedropcomm("Office")} href="#">Office</a></li>
-                <li><a class="dropdown-item" onClick={() => changedropcomm("Shop")} href="#">Shop</a></li>
-                <li><a class="dropdown-item" onClick={() => changedropcomm("Retail")} href="#">Retail</a></li>
-                <li><a class="dropdown-item" onClick={() => changedropcomm("Godam")} href="#">Godown</a></li>
-                <li><a class="dropdown-item" onClick={() => changedropcomm("Industry")} href="#">Industry</a></li>
+              <ul className="dropdown-menu rent-drop-menu">
+                <li><a role="button" className="dropdown-item" onClick={() => changedropcomm("Office")} href="#">Office</a></li>
+                <li><a role="button" className="dropdown-item" onClick={() => changedropcomm("Shop")} href="#">Shop</a></li>
+                <li><a role="button" className="dropdown-item" onClick={() => changedropcomm("Retail")} href="#">Retail</a></li>
+                <li><a role="button" className="dropdown-item" onClick={() => changedropcomm("Godam")} href="#">Godown</a></li>
+                <li><a role="button" className="dropdown-item" onClick={() => changedropcomm("Industry")} href="#">Industry</a></li>
               </ul>
             </div>
             {errors.type && <div className="text-danger error-txt">{errors.type}</div>}
@@ -226,11 +233,11 @@ const Commercial = () => {
                 onChange={handleCommAreaInput} />
               <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> {CommData.areaUnit || "Select Unit"}</button>
               <ul className="dropdown-menu dropdown-menu-end">
-                <li><a className="dropdown-item" onClick={(e) => changecommarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
-                <li><a className="dropdown-item" onClick={(e) => changecommarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
-                <li><a className="dropdown-item" onClick={(e) => changecommarea(e, "Sq-m")} href="#">Sq-m</a></li>
-                <li><a className="dropdown-item" onClick={(e) => changecommarea(e, "Acre")} href="#">Acre</a></li>
-                <li><a className="dropdown-item" onClick={(e) => changecommarea(e, "Bigha")} href="#">Bigha</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changecommarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changecommarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changecommarea(e, "Sq-m")} href="#">Sq-m</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changecommarea(e, "Acre")} href="#">Acre</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changecommarea(e, "Bigha")} href="#">Bigha</a></li>
               </ul>
             </div>
             {errors.carea && <div className="text-danger error-txt">{errors.carea}</div>}

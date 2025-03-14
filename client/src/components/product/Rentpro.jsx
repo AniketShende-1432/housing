@@ -33,6 +33,7 @@ import { useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Slider from './Slider';
+import { Helmet } from "react-helmet-async";
 
 const Rentpro = () => {
   const location = useLocation();
@@ -161,6 +162,13 @@ const Rentpro = () => {
 
   return (
     <div style={{ backgroundColor: "aliceblue" }}>
+      <Helmet>
+        <title>Housing</title>
+        <meta name="description" content="Find affordable homes for sale in Thane, Mumbai, and Navi Mumbai. 
+        Explore 2 BHK apartments in Mumbai under 80 lakhs, houses for rent near you with no broker, and fully furnished apartments in Thane.
+        Discover studio apartments, 2 BHK rentals under 15K in Navi Mumbai, office spaces for rent in Thane, and commercial properties in Thane and Kalyan. 
+        Find the best coworking spaces near you for your business needs." />
+      </Helmet>
       <ToastContainer />
       <div className='container-fluid pro-nav-cont' id='navbar'>
         <div className='d-flex p-1 p-sm-3 pb-sm-0'>
@@ -249,7 +257,7 @@ const Rentpro = () => {
                 </div>
               </div>
               <div className='d-flex pro-status'>
-              <div className='d-flex flex-column d-sm-none'>
+                <div className='d-flex flex-column d-sm-none'>
                   <label className='fw-bold fs-6 text-nowrap'>Available From</label>
                   <label>{new Date(property.availableFrom).toLocaleDateString()}</label>
                 </div>

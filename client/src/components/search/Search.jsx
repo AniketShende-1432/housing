@@ -20,6 +20,7 @@ import { FcFilledFilter } from "react-icons/fc";
 import { coinActions } from '../../store/Slice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Helmet } from "react-helmet-async";
 
 const Search = () => {
 
@@ -355,19 +356,25 @@ const Search = () => {
     return (
         <>
             <nav className="navbar navbar-expand-lg border search-nav">
+            <Helmet>
+                <title>Search Best property to Buy</title>
+                <meta name="description" content="Explore new construction homes and learn how to buy a house, whether it's a duplex, vacation home, or foreclosed property. Compare renting vs buying a house and buying vs building a house. Get insights into multiple listing services, how often contingent offers fall through, and how to get preapproved for a home loan." />
+                <meta name="keywords" content="New construction homes ,How to buy a house ,Buying a duplex ,Buying a vacation home ,Buy realestate ,Buy home,Multiple listing services,Renting vs buying a house
+                Buying a foreclosed home,Buying vs building a house,How often do contingent offers fall through,How to get preapproved for a home loan" />
+            </Helmet>
                 <ToastContainer />
                 <div className="container-fluid justify-content-lg-evenly search-cont">
-                    <a className="navbar-brand text-white s-logo fs-3" href="#">ShelterBIG</a>
+                    <a role="button" className="navbar-brand text-white s-logo fs-3" href="#">ShelterBIG</a>
                     <div className="dropdown d-flex w-50 resp-drop">
                         <button className="btn btn-secondary dropdown-toggle bg-white text-dark search-drop" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {Filter.tab}
                         </button>
                         <ul className="dropdown-menu" style={{ cursor: "pointer" }}>
-                            <li><a className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Buy" })}>Buy</a></li>
-                            <li><a className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Rent" })} >Rent</a></li>
-                            <li><a className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "PG" })} >PG</a></li>
-                            <li><a className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Plot/Land" })} >Plot/Land</a></li>
-                            <li><a className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Commercial" })} >Commercial</a></li>
+                            <li><a role="button" className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Buy" })}>Buy</a></li>
+                            <li><a role="button" className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Rent" })} >Rent</a></li>
+                            <li><a role="button" className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "PG" })} >PG</a></li>
+                            <li><a role="button" className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Plot/Land" })} >Plot/Land</a></li>
+                            <li><a role="button" className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Commercial" })} >Commercial</a></li>
                         </ul>
                         <input type="text" className="form-control search-input" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"
                             value={filterdata.city}
@@ -376,7 +383,7 @@ const Search = () => {
                             onClick={() => setSearchTrigger((prev) => !prev)}>Search</button>
                         <div className='d-flex align-items-center ms-1 ms-sm-4'>
                             <img src={coin} alt="coin" className='search-coin' />
-                            <div className='ms-1'>{coins}</div>
+                            <div className='ms-1'>{coins || '0'}</div>
                         </div>
                     </div>
                 </div>

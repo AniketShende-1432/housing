@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { authActions } from '../../store/Slice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Helmet } from "react-helmet-async";
 
 const Login = () => {
 
@@ -126,6 +127,12 @@ const Login = () => {
 
     return (
         <div style={{ backgroundColor: "aliceblue" }}>
+            <Helmet>
+                <title>Agent/Builder/Buyer Login</title>
+                <meta name="description" content="Find the best property for sale, rent, or resale, including ready possession flats, plots, and land. Buy houses online and explore homes for sale with ease." />
+                <meta name="keywords" content="property,ready possession,flat,rent,plot,land,flat for resale,resale flat,houses for sale
+                ,homes for sale,buy property online,buy house,property for sale" />
+            </Helmet>
             <ToastContainer />
             <div className='container d-flex justify-content-center align-items-center log-cont pt-2'>
                 <div className='log-cont-box bg-white p-4'>

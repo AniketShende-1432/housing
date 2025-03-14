@@ -29,6 +29,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Product.css'
 import Slider from './Slider';
+import { Helmet } from "react-helmet-async";
 
 const Plotpro = () => {
   const location = useLocation();
@@ -160,6 +161,12 @@ const Plotpro = () => {
 
   return (
     <div style={{ backgroundColor: "aliceblue" }}>
+      <Helmet>
+        <title>Plot,land for sale</title>
+        <meta name="description" content="Find residential plots for sale in Thane, Navi Mumbai, and Mumbai. 
+        Explore farm land for sale near Thane and agricultural land for sale at prime locations. Buy NA plots in Karjat and gated community plots in Thane. 
+        Discover the best investment plots for sale in Thane, open plots for sale, and commercial land for sale in Pune. Invest in high-potential plots near you today!" />
+      </Helmet>
       <ToastContainer />
       <div className='container-fluid pro-nav-cont' id='navbar'>
         <div className='d-flex p-3 pb-0 text-nowrap'>
@@ -223,7 +230,7 @@ const Plotpro = () => {
                   <label className='fw-bold fs-6'><FaBuilding className='pb-1 fs-5' /> Floors Allowed</label>
                   <label>{property.features.floorAllowed} Floors</label>
                 </div>
-                <div className='d-flex flex-column text-nowrap'>
+                <div className='d-flex d-sm-none d-lg-flex flex-column text-nowrap'>
                   <label className='fw-bold fs-6'>No Of Open Sides</label>
                   <label>{property.features.openSides}</label>
                 </div>

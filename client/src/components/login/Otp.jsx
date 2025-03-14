@@ -8,6 +8,7 @@ import { authActions } from '../../store/Slice';
 import Otpimage from "../../assets/otp.png";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Helmet } from "react-helmet-async";
 
 const Otp = () => {
     
@@ -66,6 +67,12 @@ const Otp = () => {
 
     return (
         <div style={{ backgroundColor: "aliceblue" }}>
+             <Helmet>
+                <title>Housing Owner OTP</title>
+                <meta name="description" content="Explore new houses for sale on top house selling websites. Buy or sell property easily with realtor sites, MLS listings, and property selling platforms." />
+                <meta name="keywords" content="new houses for sale,house selling websites,sell property,buy property,realtor sites,property selling sites,house sale websites
+                ,mls listing,mls properties,mls service" />
+            </Helmet>
             <div className='container d-flex justify-content-center align-items-center log-cont pt-2'>
                 <div className='log-cont-box bg-white mb-5 p-4 d-flex justify-content-center align-items-center flex-column'>
                     <img src={Otpimage} alt="otp" className='otp-img' />

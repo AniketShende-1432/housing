@@ -29,7 +29,7 @@ const Slider = () => {
         <div>
             <Swiper
                 slidesPerView={slides}
-                spaceBetween={30}
+                spaceBetween={20}
                 freeMode={true}
                 pagination={{
                     clickable: true,

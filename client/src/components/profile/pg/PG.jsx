@@ -1,9 +1,10 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Profilenav from '../../profilenav/Profilenav';
 import DatePicker from 'react-datepicker';
 import { FaRupeeSign } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { Helmet } from "react-helmet-async";
 
 const PG = () => {
 
@@ -51,13 +52,13 @@ const PG = () => {
 
   const [errors, setErrors] = useState({});
   useEffect(() => {
-          if (mode === 'edit' && property) {
-              setpgData({
-                  ...pgData, // Spread initial form data to maintain structure
-                  ...property, // Override with property-specific data
-              });
-          }
-      }, [mode, property]);
+    if (mode === 'edit' && property) {
+      setpgData({
+        ...pgData, // Spread initial form data to maintain structure
+        ...property, // Override with property-specific data
+      });
+    }
+  }, [mode, property]);
 
   const changepg = (value) => {
     setpgData((prevState) => ({
@@ -218,11 +219,17 @@ const PG = () => {
       setErrors(formErrors);
       return; // Stop the form submission if there are errors
     }
-    navigate('/profile/pg-property', { state: {pgData,mode} });
+    navigate('/profile/pg-property', { state: { pgData, mode } });
   }
 
   return (
     <div className="rent-cont" style={{ backgroundColor: "#FFF5EE" }}>
+      <Helmet>
+        <title>PG for Boys/Girls</title>
+        <meta name="description" content="Find the best PG near me, including coliving PG and paying guest options. Explore Colive near me, Stanza Living, ladies PG near me, and mens PG near me. Discover PG near me for male, Colive PG near me, and top-rated PG accommodations." />
+        <meta name="keywords" content="pg,pg near me,colive near me,paying guest near me,coliving pg near me,co living pg near me,stanza living near me,ladies pg near me
+        pg near me for male,colive pg near me,best pg near me,mens pg near me" />
+      </Helmet>
       <Profilenav select="PG" />
       <div className='container rent-main-box w-50'>
         <div className='rent-main2-box bg-white p-4'>
@@ -234,12 +241,12 @@ const PG = () => {
                 <span>{pgData.propertyType || 'Select Property type'}</span>
                 <span className="dropdown-arrow"></span>
               </button>
-              <ul class="dropdown-menu rent-drop-menu">
-                <li><a class="dropdown-item" onClick={() => changepg("Flat")} href="#">Flat</a></li>
-                <li><a class="dropdown-item" onClick={() => changepg("Residential House")} href="#">Residential House</a></li>
-                <li><a class="dropdown-item" onClick={() => changepg("Villa")} href="#">Villa</a></li>
-                <li><a class="dropdown-item" onClick={() => changepg("Penthouse")} href="#">Penthouse</a></li>
-                <li><a class="dropdown-item" onClick={() => changepg("Builder Floor Ready")} href="#">Builder Floor Ready to Move</a></li>
+              <ul className="dropdown-menu rent-drop-menu">
+                <li><a role="button" className="dropdown-item" onClick={() => changepg("Flat")} href="#">Flat</a></li>
+                <li><a role="button" className="dropdown-item" onClick={() => changepg("Residential House")} href="#">Residential House</a></li>
+                <li><a role="button" className="dropdown-item" onClick={() => changepg("Villa")} href="#">Villa</a></li>
+                <li><a role="button" className="dropdown-item" onClick={() => changepg("Penthouse")} href="#">Penthouse</a></li>
+                <li><a role="button" className="dropdown-item" onClick={() => changepg("Builder Floor Ready")} href="#">Builder Floor Ready to Move</a></li>
               </ul>
             </div>
             {errors.type && <div className="text-danger error-txt">{errors.type}</div>}
@@ -268,9 +275,9 @@ const PG = () => {
             <div><h5>Room Type</h5></div>
             <div className='d-flex'>
               <button className='btn btn-light border' onClick={() => handlepgtype("share")}
-                style={ pgData.roomType === 'Shared' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Shared</button>
+                style={pgData.roomType === 'Shared' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Shared</button>
               <button className='btn btn-light border ms-3' onClick={() => handlepgtype("prv")}
-                style={ pgData.roomType === 'Private' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Private</button>
+                style={pgData.roomType === 'Private' ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Private</button>
             </div>
             {errors.room && <div className="text-danger error-txt">{errors.room}</div>}
           </div>
@@ -290,11 +297,11 @@ const PG = () => {
                 onChange={handlePgareainput} />
               <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{pgData.areaUnit || 'Select Area'}</button>
               <ul className="dropdown-menu dropdown-menu-end">
-                <li><a className="dropdown-item" onClick={(e) => changepgarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
-                <li><a className="dropdown-item" onClick={(e) => changepgarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
-                <li><a className="dropdown-item" onClick={(e) => changepgarea(e, "Sq-m")} href="#">Sq-m</a></li>
-                <li><a className="dropdown-item" onClick={(e) => changepgarea(e, "Acre")} href="#">Acre</a></li>
-                <li><a className="dropdown-item" onClick={(e) => changepgarea(e, "Bigha")} href="#">Bigha</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changepgarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changepgarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changepgarea(e, "Sq-m")} href="#">Sq-m</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changepgarea(e, "Acre")} href="#">Acre</a></li>
+                <li><a role="button" className="dropdown-item" onClick={(e) => changepgarea(e, "Bigha")} href="#">Bigha</a></li>
               </ul>
             </div>
             {errors.carea && <div className="text-danger error-txt">{errors.carea}</div>}

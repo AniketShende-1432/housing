@@ -109,6 +109,21 @@
     height: 50% !important;
     border-radius: 0px !important;
 }
+.footer{
+    background-color: black;
+}
+.company-n{
+    color: darkorange;
+    -webkit-text-stroke: 0.5px gold;
+}
+.foot-head{
+    border-bottom: 1px solid darkorange;
+    width:130px;
+}
+.follow-icon{
+    width:2rem;
+    height:2rem;
+}
 
 @media (min-width: 768px) and (max-width: 991px) {
     .main-hcont{
@@ -131,9 +146,35 @@
     }
 }
 @media (min-width: 300px) and (max-width: 750px) {
+    .h-adv-image{
+        height:150px !important;
+    }
+    .carousel-control-next{
+        margin-top: 4rem !important;
+        height:1.5rem !important;
+        width: 1.5rem !important;
+    }
+    .carousel-control-prev{
+        margin-top: 4rem !important;
+        height:1.5rem !important;
+        width: 1.5rem !important;
+    }
+    .res-adv-img{
+        height: 3rem;
+        width: 6rem;
+        object-fit: contain;
+    }
+    .mySwipers{
+        .swiper-wrapper{
+            .swiper-slide{
+                margin-right: 30px !important;
+            }
+        }
+    }
     .s-cont{
         width:100%; 
         justify-content: start !important;
+        top: 10px;
     }
     .s-cont-box{
         width:100% !important;

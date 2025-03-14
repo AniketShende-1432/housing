@@ -53,6 +53,13 @@ const rootReducer = combineReducers({
 // Configure store
 export const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST"], // Ignore Redux Persist actions
+        ignoredPaths: ["coin.register"], // Ignore specific non-serializable paths
+      },
+    }),
 });
 // Persistor for persisting store
 export const persistor = persistStore(store);

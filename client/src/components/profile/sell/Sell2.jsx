@@ -23,6 +23,7 @@ import water from "../../../assets/water.png";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Sell.css";
+import { Helmet } from "react-helmet-async";
 
 const Sell2 = () => {
 
@@ -317,6 +318,13 @@ const Sell2 = () => {
 
     return (
         <div className="parent-cont" style={{ backgroundColor: "#FFF5EE" }}>
+            <Helmet>
+                <title>Sell Flat/studio/apartment</title>
+                <meta name="description" content="Find small office space for rent near you! Browse office rentals, commercial properties for lease, commercial office spaces, and buildings for sale. Discover shops for rent, office spaces for rent near you, and the best commercial property deals." />
+                <meta name="keywords" content="small office space for rent near me,office space for rent near me,commercial property for rent,
+                commercial property for lease,commercial office space for rent,commercial buildings for sale,
+                shops for rent near me,commercial property for rent near me,office rentals near me" />
+            </Helmet>
             <Profilenav select="Sell" />
             <div className='container main-box w-50'>
                 <div className='main2-box bg-white p-4'>
@@ -392,11 +400,11 @@ const Sell2 = () => {
                                 onChange={handlesocietyAreaInput} />
                             <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> {formdata.societyAreaUnit || "Select Unit"}</button>
                             <ul className="dropdown-menu dropdown-menu-end">
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Sq-ft")} >Sq-ft</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Sq-yrd")} >Sq-yrd</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Sq-m")} >Sq-m</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Acre")} >Acre</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Bigha")} >Bigha</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Sq-ft")} >Sq-ft</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Sq-yrd")} >Sq-yrd</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Sq-m")} >Sq-m</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Acre")} >Acre</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Bigha")} >Bigha</a></li>
                             </ul>
                         </div>
                         {errors.socarea && <div className="text-danger error-txt">{errors.socarea}</div>}

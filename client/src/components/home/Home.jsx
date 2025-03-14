@@ -1,15 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Home.css'
 import Navbar from '../navbar/Navbar';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import build1 from "../../assets/building1.jpg";
 import build2 from "../../assets/building2.webp";
+import face from '../../assets/facebook.png';
+import twit from '../../assets/twitter.png';
+import insta from '../../assets/instagram.png';
+import linkd from '../../assets/linkedin.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay'; // Autoplay styles
 import { Pagination, Autoplay } from 'swiper/modules';
 import { FaSearch } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 
 const Home = () => {
 
@@ -22,8 +27,8 @@ const Home = () => {
         PG: ["Flat", "Villa", "Penthouse", "Residential House", "Builder Floor Ready"],
         Commercial: ["Office", "Shop", "Retail", "Godam", "Industry"],
     };
-    const [filter,setfilter] = useState({
-        tab:'Buy',city:'',location:'',property:''
+    const [filter, setfilter] = useState({
+        tab: 'Buy', city: '', location: '', property: ''
     });
     const navigate = useNavigate();
 
@@ -34,7 +39,7 @@ const Home = () => {
         localStorage.removeItem('filterTab'); // Removes the item with the key 'filterTab'
     }, [location]);
 
-    const changetab =(value)=>{
+    const changetab = (value) => {
         setSelectedTab(value);
         setfilter((prevState) => ({
             ...prevState,
@@ -47,7 +52,7 @@ const Home = () => {
             city: value, // Update formData with the selected unit
         }));
     }
-    const handlelocation = (e)=>{
+    const handlelocation = (e) => {
         const value = e.target.value;
         setfilter((prevState) => ({
             ...prevState,
@@ -63,12 +68,19 @@ const Home = () => {
     const sellnav = () => {
         navigate('/profile', { state: { tab: 'Sell' } })
     };
-    const handleSearch = ()=>{
-        navigate('/search',{state:filter});
+    const handleSearch = () => {
+        navigate('/search', { state: filter });
     }
 
     return (
         <>
+            <Helmet>
+                <title>Housing</title>
+                <meta name="description" content="Top real estate agents near me,Hiring a real estate agent,Realtor reviews,Selling my house quickly,House selling process,
+                Sell your home for cash,Real estate market analysis" />
+                <meta name="keywords" content="home,realtor,houses for sale,houses for rent,mls,property,property for sale,homes for rent,
+                land for sale,for sale by owner,apartments for rent near me,mls listings,condos for sale" />
+            </Helmet>
             <Navbar back="profile-bg" />
             <div className='d-flex'>
                 <div className='main-hcont'>
@@ -93,6 +105,27 @@ const Home = () => {
                             <span className="visually-hidden">Next</span>
                         </button>
                     </div>
+                    <div className='d-sm-none'>
+                        <Swiper
+                            slidesPerView={3}
+                            spaceBetween={40}
+                            autoplay={{
+                                delay: 3000, // Time in milliseconds before the next slide
+                                disableOnInteraction: false, // Autoplay will continue even after user interaction
+                            }}
+                            modules={[Autoplay]}
+                            className="mySwipers"
+                            style={{
+                                height: '45px', // Set the height of the carousel container
+                                width: '25rem',
+                            }}
+                        >
+                            <SwiperSlide style={{ marginLeft: '20px', marginTop: '4px' }}><div><img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/249_Logo.png" className="res-adv-img" alt="img" /></div></SwiperSlide>
+                            <SwiperSlide><div><img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/91_Logo.png" className="res-adv-img" alt="img" /></div></SwiperSlide>
+                            <SwiperSlide style={{ marginTop: '4px' }}><div><img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/249_Logo.png" className="res-adv-img" alt="img" /></div></SwiperSlide>
+                            <SwiperSlide><div> <img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/177_Logo.png" className="res-adv-img" alt="img" /></div></SwiperSlide>
+                        </Swiper>
+                    </div>
                     <div className='s-cont d-flex res-cont justify-content-center'>
                         <div className='s-cont-box'>
                             <div className='s-cont-box1 d-flex'>
@@ -116,26 +149,26 @@ const Home = () => {
                                             {filter.city || 'Select City'}
                                         </button>
                                         <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" onClick={() => change1("Mumbai")} >Mumbai</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Western Mumbai")} >Western Mumbai</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Central Mumbai")} >Central Mumbai</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Navi Mumbai")} >Navi Mumbai</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Thane")} >Thane</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Beyond Thane")} >Beyond Thane</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Pune")} >Pune</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Nashik")} >Nashik</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Mumbai")} >Mumbai</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Western Mumbai")} >Western Mumbai</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Central Mumbai")} >Central Mumbai</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Navi Mumbai")} >Navi Mumbai</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Thane")} >Thane</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Beyond Thane")} >Beyond Thane</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Pune")} >Pune</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Nashik")} >Nashik</a></li>
                                         </ul>
                                     </div>
-                                    <input type="text" className="s-cont-input" placeholder='Location' 
-                                    value={filter.location}
-                                    onChange={handlelocation}/>
+                                    <input type="text" className="s-cont-input" placeholder='Location'
+                                        value={filter.location}
+                                        onChange={handlelocation} />
                                 </form>
                                 <div className='d-flex align-items-center s-drop'>
                                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         {filter.property || 'Property Type'}
                                     </a>
                                     <ul className="dropdown-menu">
-                                        {propertyTypes[selectedTab].map((type,index) => (
+                                        {propertyTypes[selectedTab].map((type, index) => (
                                             <li key={index}>
                                                 <a
                                                     className="dropdown-item"
@@ -175,19 +208,19 @@ const Home = () => {
                                             {filter.city || 'Select City'}
                                         </button>
                                         <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" onClick={() => change1("Mumbai")} >Mumbai</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Western Mumbai")} >Western Mumbai</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Central Mumbai")} >Central Mumbai</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Navi Mumbai")} >Navi Mumbai</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Thane")} >Thane</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Beyond Thane")} >Beyond Thane</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Pune")} >Pune</a></li>
-                                            <li><a className="dropdown-item" onClick={() => change1("Nashik")} >Nashik</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Mumbai")} >Mumbai</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Western Mumbai")} >Western Mumbai</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Central Mumbai")} >Central Mumbai</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Navi Mumbai")} >Navi Mumbai</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Thane")} >Thane</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Beyond Thane")} >Beyond Thane</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Pune")} >Pune</a></li>
+                                            <li><a role="button" className="dropdown-item" onClick={() => change1("Nashik")} >Nashik</a></li>
                                         </ul>
                                     </div>
-                                    <input type="text" className="s-cont-input" placeholder='Location' 
-                                    value={filter.location}
-                                    onChange={handlelocation}/>
+                                    <input type="text" className="s-cont-input" placeholder='Location'
+                                        value={filter.location}
+                                        onChange={handlelocation} />
                                 </form>
                                 <div className='d-flex align-items-center ms-auto'>
                                     <button className='btn search-btn text-white' onClick={handleSearch}><FaSearch /></button>
@@ -261,7 +294,7 @@ const Home = () => {
                     </Swiper>
                 </div>
             </div>
-            <div className='container-lg container-fluid'>
+            <div className='container-lg container-fluid mt-4 mt-sm-0'>
                 <div className='mb-4'><h4>Projects On High Demand</h4></div>
                 <div className='d-flex demand-card' style={{ gap: "1rem" }}>
                     <div className="card" style={{ width: "18rem" }}>
@@ -306,6 +339,46 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+            <footer className='footer mt-4'>
+                <section className='p-2 p-sm-3'>
+                    <div className='company-n fw-bold fs-2'>ShelterBIG</div>
+                </section>
+                <section className='container text-white'>
+                    <div className='row'>
+                    <div className='col-5 col-sm-3'>
+                            <div className='fw-bold fs-5 foot-head'>Our Services</div>
+                            <div>Search Property</div>
+                            <div>Post Property</div>
+                            <div>Buy Property</div>
+                            <div>Rent Property</div>
+                        </div>
+                        <div className='col-7 col-sm-3'>
+                            <div className='fw-bold fs-5 foot-head'>Company</div>
+                            <div>About Us</div>
+                            <div>Contact Us</div>
+                            <div>Blogs</div>
+                        </div>
+                        <div className='col-5 col-sm-3 mt-2 mt-sm-0'>
+                            <div className='fw-bold fs-5 foot-head'>Help</div>
+                            <div>Support</div>
+                            <div>FAQs</div>
+                            <div>Privacy Policy</div>
+                        </div>
+                        <div className='col-7 col-sm-3 mt-2'>
+                            <div className='fw-bold fs-5'>Follow Us</div>
+                            <div className='row'>
+                                <div className='col-3 col-sm-3 col-lg-2'><img src={face} alt="img" className='follow-icon' /></div>
+                                <div className='col-3 col-sm-3 col-lg-2'><img src={twit} alt="img" className='follow-icon border' /></div>
+                                <div className='col-3 col-sm-3 col-lg-2'><img src={insta} alt="img" className='follow-icon' /></div>
+                                <div className='col-3 col-sm-3 col-lg-2'><img src={linkd} alt="img" className='follow-icon' /></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section className='text-white text-align-center pb-2 pt-2 border-top mt-2'>
+                    <div className='text-center'>Copyright © 2025 ShelterBIG. All Rights Reserved</div>
+                </section>
+            </footer>
         </>
     )
 }

@@ -17,6 +17,7 @@ import { MdOutlineSportsCricket } from "react-icons/md";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Plot.css";
+import { Helmet } from "react-helmet-async";
 
 const Plot2 = () => {
 
@@ -207,6 +208,11 @@ const Plot2 = () => {
 
     return (
         <div className="parent-cont" style={{ backgroundColor: "#FFF5EE" }}>
+            <Helmet>
+                <title>plot/land/commercial plots</title>
+                <meta name="description" content="Find NA plots near me, villa plots, and residential plots for sale. Explore M3M SCO 113, authority plots in Greater Noida, and commercial plots. Search for NA plot options and the best plot sale near me for investment." />
+                <meta name="keywords" content="na plots near me,villa plots,m3m sco 113,plot sale near me,na plot,authority plots in greater noida,residential plots,commercial plot" />
+            </Helmet>
             <Profilenav select="Plot/Land" />
             <div className='container main-box w-50'>
                 <div className='main2-box bg-white p-4'>

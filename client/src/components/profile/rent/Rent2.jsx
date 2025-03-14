@@ -23,6 +23,7 @@ import water from "../../../assets/water.png";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Rent.css";
+import { Helmet } from "react-helmet-async";
 
 const Rent2 = () => {
 
@@ -282,6 +283,13 @@ const Rent2 = () => {
 
     return (
         <div className="parent-cont" style={{ backgroundColor: "#FFF5EE" }}>
+            <Helmet>
+                <title>Rent Flat/studio/office/shop</title>
+                <meta name="description" content="Find rental properties, apartment complexes near me, and furnished apartments for rent. Explore monthly rentals near me, apartments for lease near me, 4 bedroom apartments, 4 bedroom house for rent, cheap apartments for rent near me, 2 bedroom house for rent, and service apartments near me. Discover fully furnished apartments and one-bedroom apartments for rent near me." />
+                <meta name="keywords" content="rental properties,apartment complexes near me,furnished apartments for rent,
+                monthly rentals near me,apartments for lease near me,4 bedroom apartments,4 bedroom house for rent,cheap apartments for rent near me,2 bedroom house for rent,service apartments near me,
+                fully furnished apartments,one bedroom apartment for rent near me" />
+            </Helmet>
             <Profilenav select="Rent" />
             <div className='container main-box w-50'>
                 <div className='main2-box bg-white p-4'>
@@ -364,7 +372,7 @@ const Rent2 = () => {
                             <ul class="dropdown-menu rent-drop-menu">
                                 {Durationoptions.map((option, index) => (
                                     <li key={index}>
-                                        <a class="dropdown-item" onClick={() => changeduardrop(option)}>{option}</a>
+                                        <a role="button" class="dropdown-item" onClick={() => changeduardrop(option)}>{option}</a>
                                     </li>
                                 ))}
                             </ul>

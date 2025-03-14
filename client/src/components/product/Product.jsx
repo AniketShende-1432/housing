@@ -34,6 +34,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from './Modal';
 import Slider from './Slider';
+import { Helmet } from "react-helmet-async";
 
 const Product = () => {
   const location = useLocation();
@@ -163,6 +164,13 @@ const Product = () => {
 
   return (
     <div style={{ backgroundColor: "aliceblue" }}>
+      <Helmet>
+        <title>Buy Flat,apartment Property</title>
+        <meta name="description" content="Find top real estate agents near you for buying a new home. 
+        Hire a licensed Realtor and explore affordable 2 BHK apartments in Mumbai suburbs. 
+        Discover real estate agent fees, Realtor services, and top real estate agents in Mumbai. 
+        Check out affordable housing schemes in Thane under 60 lakhs today!" />
+      </Helmet>
       <ToastContainer />
       <div className='container-fluid pro-nav-cont text-nowrap' id='navbar'>
         <div className='d-flex p-1 ps-2 p-sm-3 pb-sm-0'>
@@ -359,80 +367,6 @@ const Product = () => {
           </div>
           <div className='mt-4' id='recommid'>
             <h5>Similar Properties</h5>
-            {/* <div id="carouselExample" class="carousel carousel-dark slide">
-              <div class="carousel-inner p-3">
-                <div class="carousel-item active">
-                  <div className='card-wrapper d-flex'>
-                    <div className="card recomm-card" style={{ width: "18rem" }}>
-                      <img src={build1} className="card-img-top h-50" alt="img" />
-                      <div className="card-body">
-                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                        <div className='fw-bold'>Om Palace</div>
-                        <div>Vile Parle East, Mumbai</div>
-                        <a href="#" className="btn view-btn mt-2">Enquire Now</a>
-                      </div>
-                    </div>
-                    <div className="card recomm-card d-none d-sm-block" style={{ width: "18rem" }}>
-                      <img src={build2} className="card-img-top h-50" alt="img" />
-                      <div className="card-body">
-                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                        <div className='fw-bold'>Om Palace</div>
-                        <div>Vile Parle East, Mumbai</div>
-                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
-                      </div>
-                    </div>
-                    <div className="card recomm-card me-0 d-none d-sm-block" style={{ width: "18rem" }}>
-                      <img src={build1} className="card-img-top h-50" alt="img" />
-                      <div className="card-body">
-                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                        <div className='fw-bold'>Om Palace</div>
-                        <div>Vile Parle East, Mumbai</div>
-                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div className='card-wrapper d-flex'>
-                    <div className="card recomm-card" style={{ width: "18rem" }}>
-                      <img src={build1} className="card-img-top h-50" alt="img" />
-                      <div className="card-body">
-                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                        <div className='fw-bold'>Om Palace</div>
-                        <div>Vile Parle East, Mumbai</div>
-                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
-                      </div>
-                    </div>
-                    <div className="card recomm-card" style={{ width: "18rem" }}>
-                      <img src={build2} className="card-img-top h-50" alt="img" />
-                      <div className="card-body">
-                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                        <div className='fw-bold'>Om Palace</div>
-                        <div>Vile Parle East, Mumbai</div>
-                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
-                      </div>
-                    </div>
-                    <div className="card recomm-card me-0" style={{ width: "18rem" }}>
-                      <img src={build1} className="card-img-top h-50" alt="img" />
-                      <div className="card-body">
-                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                        <div className='fw-bold'>Om Palace</div>
-                        <div>Vile Parle East, Mumbai</div>
-                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div> */}
             <Slider />
           </div>
         </div>
@@ -445,25 +379,25 @@ const Product = () => {
           <div className='mt-4 d-flex flex-column align-items-center'>
             <div><h5>Home Loans Offers</h5></div>
             <div>
-              <div className="card p-2 m-2 d-flex flex-column align-items-center">
+              <div className="card p-2 m-2 d-flex flex-column align-items-center loan-card">
                 <img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/177_Logo.png" className="card-img-top w-50 h-50" alt="img" />
                 <div className="card-body p-2">
                   <p className="card-text fw-bold">LIC Housing Finance</p>
                 </div>
               </div>
-              <div className="card p-2 m-2 d-flex flex-column align-items-center">
+              <div className="card p-2 m-2 d-flex flex-column align-items-center loan-card">
                 <img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/91_Logo.png" className="card-img-top w-50 h-50" alt="img" />
                 <div className="card-body p-2">
                   <p className="card-text fw-bold">Bank of India</p>
                 </div>
               </div>
-              <div className="card p-2 m-2 d-flex flex-column align-items-center">
+              <div className="card p-2 m-2 d-flex flex-column align-items-center loan-card">
                 <img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/249_Logo.png" className="card-img-top w-50 h-50" alt="img" />
                 <div className="card-body p-2">
                   <p className="card-text fw-bold">Yes Bank</p>
                 </div>
               </div>
-              <div className="card p-2 m-2 d-flex flex-column align-items-center">
+              <div className="card p-2 m-2 d-flex flex-column align-items-center loan-card">
                 <img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/205_Logo.png" className="card-img-top w-50 h-50" alt="img" />
                 <div className="card-body p-2">
                   <p className="card-text fw-bold">Reliance</p>

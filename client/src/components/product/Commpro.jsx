@@ -155,6 +155,12 @@ const Commpro = () => {
 
     return (
         <div style={{ backgroundColor: "aliceblue" }}>
+            <Helmet>
+                <title>Commercial Property - Office,Shop,Godham,Industry</title>
+                <meta name="description" content="Find the best commercial property for sale and rent, including office spaces, shops, and commercial buildings. 
+                Explore commercial property for rent near me, office space for rent, business property for sale, and commercial real estate investment opportunities.
+                Discover prime locations for commercial property in Mumbai, Thane, and Navi Mumbai." />
+            </Helmet>
             <ToastContainer />
             <div className='container-fluid pro-nav-cont' id='navbar'>
                 <div className='d-flex p-3 pb-0 text-nowrap'>

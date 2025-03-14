@@ -33,6 +33,7 @@ import { useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Slider from './Slider';
+import { Helmet } from "react-helmet-async";
 
 const PGpro = () => {
     const location = useLocation();
@@ -162,6 +163,12 @@ const PGpro = () => {
 
     return (
         <div style={{ backgroundColor: "aliceblue" }}>
+            <Helmet>
+                <title>PG for mens,women,girls,boys</title>
+                <meta name="description" content="Find the best PG near me, paying guest near me, and coliving PG near me with top amenities.
+                 Explore PG near me for male, PG near me for female, AC PG near me, luxury PG near me, and single room PG near me. Looking for PG in Mumbai, PG in Navi Mumbai, or PG in Thane? 
+                 Get fully furnished PG near me with food and top-class facilities." />
+            </Helmet>
             <ToastContainer />
             <div className='container-fluid pro-nav-cont' id='navbar'>
                 <div className='d-flex p-3 pb-0'>

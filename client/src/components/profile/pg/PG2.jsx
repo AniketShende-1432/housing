@@ -23,6 +23,7 @@ import water from "../../../assets/water.png";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../sell/Sell.css";
+import { Helmet } from "react-helmet-async";
 
 const PG2 = () => {
 
@@ -241,6 +242,12 @@ const PG2 = () => {
 
     return (
         <div className="parent-cont" style={{ backgroundColor: "#FFF5EE" }}>
+            <Helmet>
+                <title>PG for Mens/Womens Shared bed</title>
+                <meta name="description" content="Find the best PG near me, including PG near me for female, gents PG near me, and unisex PG near me. Explore Zolo PG near me, luxury PG near me, and AC PG near me. Search for PG for ladies near me, single room PG near me, and PG room near me. Discover single sharing PG near me, PG near me ladies, and women PG near me." />
+                <meta name="keywords" content="pg near me for female,gents pg near me,zolo pg near me,pg near by me,luxury pg near me,unisex pg near me,
+                ac pg near me,pg for ladies near me,single room pg near me,pg near me ladies,pg room near me,single sharing pg near me,women pg near me" />
+            </Helmet>
             <Profilenav select="PG" />
             <div className='container main-box w-50'>
                 <div className='main2-box bg-white p-4'>

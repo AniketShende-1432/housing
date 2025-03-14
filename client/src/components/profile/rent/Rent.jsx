@@ -6,6 +6,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import "./Rent.css";
+import { Helmet } from "react-helmet-async";
+
 const Rent = () => {
 
     const navigate = useNavigate();
@@ -194,6 +196,13 @@ const Rent = () => {
 
     return (
         <div className="rent-cont" style={{ backgroundColor: "#FFF5EE" }}>
+            <Helmet>
+                <title>Rent property</title>
+                <meta name="description" content="Find apartments for rent, houses for rent, and rental properties near you. Browse apartments near me, rentals near me, studio apartments near me, cheap apartments near me, luxury apartments near me, 
+                1 bedroom apartments near me, 2 bedroom apartments near me, 3 bedroom apartments near me, and more. Discover the best renting options today!" />
+                <meta name="keywords" content="apartments for rent,houses for rent,rental properties near me,apartments near me,rentals near me,studio apartments near me,cheap apartments near me,luxury apartments near me,
+                1 bedroom apartments near me,2 bedroom apartments near me,3 bedroom apartments near me,renting,studio apartments" />
+            </Helmet>
             <Profilenav select="Rent" />
             <div className='container rent-main-box w-50'>
                 <div className='rent-main2-box bg-white p-4'>
@@ -206,16 +215,16 @@ const Rent = () => {
                                 <span className="dropdown-arrow"></span>
                             </button>
                             <ul class="dropdown-menu rent-drop-menu">
-                                <li><a class="dropdown-item" onClick={() => changedrop("Flat")} href="#">Flat</a></li>
-                                <li><a class="dropdown-item" onClick={() => changedrop("Residential House")} href="#">Residential House</a></li>
-                                <li><a class="dropdown-item" onClick={() => changedrop("Villa")} href="#">Villa</a></li>
-                                <li><a class="dropdown-item" onClick={() => changedrop("Penthouse")} href="#">Penthouse</a></li>
-                                <li><a class="dropdown-item" onClick={() => changedrop("Builder Floor Ready")} href="#">Builder Floor Ready to Move</a></li>
-                                <li><a class="dropdown-item" onClick={() => changedrop("Office")} href="#">Office</a></li>
-                                <li><a class="dropdown-item" onClick={() => changedrop("Shop")} href="#">Shop</a></li>
-                                <li><a class="dropdown-item" onClick={() => changedrop("Retail")} href="#">Retail</a></li>
-                                <li><a class="dropdown-item" onClick={() => changedrop("Godam")} href="#">Godown</a></li>
-                                <li><a class="dropdown-item" onClick={() => changedrop("Industry")} href="#">Industry</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Flat")} href="#">Flat</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Residential House")} href="#">Residential House</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Villa")} href="#">Villa</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Penthouse")} href="#">Penthouse</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Builder Floor Ready")} href="#">Builder Floor Ready to Move</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Office")} href="#">Office</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Shop")} href="#">Shop</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Retail")} href="#">Retail</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Godam")} href="#">Godown</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={() => changedrop("Industry")} href="#">Industry</a></li>
                             </ul>
                         </div>
                         {errors.type && <div className="text-danger error-txt">{errors.type}</div>}
@@ -275,11 +284,11 @@ const Rent = () => {
                                 onChange={handleRentareaInput} />
                             <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> {rentData.areaUnit || 'Select Area'}</button>
                             <ul className="dropdown-menu dropdown-menu-end">
-                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Sq-m")} href="#">Sq-m</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Acre")} href="#">Acre</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Bigha")} href="#">Bigha</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changerentarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changerentarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changerentarea(e, "Sq-m")} href="#">Sq-m</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changerentarea(e, "Acre")} href="#">Acre</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changerentarea(e, "Bigha")} href="#">Bigha</a></li>
                             </ul>
                         </div>
                         {errors.carea && <div className="text-danger error-txt">{errors.carea}</div>}

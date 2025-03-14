@@ -8,6 +8,7 @@ import Mancard from "./Mancard";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Manage.css';
+import { Helmet } from "react-helmet-async";
 const Manage = () => {
 
     const navigate = useNavigate();
@@ -114,6 +115,13 @@ const Manage = () => {
 
     return (
         <div className='main-page'>
+             <Helmet>
+                <title>Housing</title>
+                <meta name="description" content="Buy and sell properties with ease! Explore houses for sale, top house selling websites, 
+                and realtor sites. Sell your flat online or find the best property selling sites for hassle-free transactions. Start your property journey today!" />
+                <meta name="keywords" content="houses for sale,house selling websites,sell property,buy property,realtor sites,
+                property selling sites,house sale websites,sell flat online,flat buy" />
+            </Helmet>
             <Navbar back="profile-bg" />
             <div className="container-lg container-fluid mt-4 d-flex flex-column manage-main">
                 {mproperties.sell?.map((property) => (

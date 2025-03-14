@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { BiShow } from "react-icons/bi";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Helmet } from "react-helmet-async";
 
 const Signup = () => {
 
@@ -95,6 +96,12 @@ const Signup = () => {
 
     return (
         <div style={{ backgroundColor: "aliceblue" }}>
+             <Helmet>
+                <title>Register Agent/Builder</title>
+                <meta name="description" content="Find your dream home with Multiple Listings Service (MLS). Explore ready-to-move flats, under-construction projects near you, and top properties like Rahul Arcus, Godrej Aria, and Tata Primanti Gurgaon. Discover 2 BHK in Airoli and more!" />
+                <meta name="keywords" content="multiple listings service,mls company,rahul arcus,godrej aria,2 bhk in airoli,tata primanti gurgaon,
+                under construction projects near me,ready to move flat,under constructions" />
+            </Helmet>
             <ToastContainer />
             <div className='container d-flex justify-content-center align-items-center signup-cont'>
                 <div className='signup-box p-4 bg-white'>

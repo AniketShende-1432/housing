@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaRupeeSign } from "react-icons/fa";
 import Sell2 from "./Sell2";
 import "./Sell.css";
+import { Helmet } from "react-helmet-async";
 
 const Sell = () => {
 
@@ -258,6 +259,11 @@ const Sell = () => {
 
     return (
         <div className="parent-cont" style={{ backgroundColor: "#FFF5EE" }}>
+            <Helmet>
+                <title>Sell Property</title>
+                <meta name="description" content="Buy or rent commercial property near you! Explore office spaces for rent, commercial real estate for sale, shops for purchase, office spaces for lease, and top-rated commercial property listings. Find the best deals on commercial spaces, offices, and more!" />
+                <meta name="keywords" content="buy shop near me,office buy,commercial property,office space for rent,commercial property for sale,commercial real estate,commercial real estate for sale,commercial space for rent,commercial property for sale near me,office space for lease" />
+            </Helmet>
             <div className='sell-cont-nav'>
                 <Navbar back="profile-bg" login="login-box2" cname="sell-nav" />
                 <div className='sell-cont-box' id='navbar'>
@@ -283,12 +289,12 @@ const Sell = () => {
                                 <span className="dropdown-arrow"></span>
                             </button>
                             <ul class="dropdown-menu sell-drop-menu">
-                                <li><a class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Flat" })} href="#">Flat</a></li>
-                                <li><a class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Residential House" })} href="#">Residential House</a></li>
-                                <li><a class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Villa" })} href="#">Villa</a></li>
-                                <li><a class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Penthouse" })} href="#">Penthouse</a></li>
-                                <li><a class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Builder Floor Ready to Move" })} href="#">Builder Floor Ready to Move</a></li>
-                                <li><a class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Builder Under Construction" })} href="#">Builder Under Construction</a></li>
+                                <li><a role="button" class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Flat" })} href="#">Flat</a></li>
+                                <li><a role="button" class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Residential House" })} href="#">Residential House</a></li>
+                                <li><a role="button" class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Villa" })} href="#">Villa</a></li>
+                                <li><a role="button" class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Penthouse" })} href="#">Penthouse</a></li>
+                                <li><a role="button" class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Builder Floor Ready to Move" })} href="#">Builder Floor Ready to Move</a></li>
+                                <li><a role="button" class="dropdown-item" onClick={() => setFormData({ ...formData, propertyType: "Builder Under Construction" })} href="#">Builder Under Construction</a></li>
                             </ul>
                         </div>
                         {errors.type && <div className="text-danger error-txt">{errors.type}</div>}
@@ -346,11 +352,11 @@ const Sell = () => {
                                 onChange={handleCarpetAreaInput} />
                             <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> {Inputarea || formData.carpetAreaUnit || "Select Unit"}</button>
                             <ul className="dropdown-menu dropdown-menu-end">
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Sq-ft")} href="#">Sq-ft</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Sq-m")} href="#">Sq-m</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Acre")} href="#">Acre</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changearea(e, "Bigha")} href="#">Bigha</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Sq-ft")} href="#">Sq-ft</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Sq-m")} href="#">Sq-m</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Acre")} href="#">Acre</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changearea(e, "Bigha")} href="#">Bigha</a></li>
                             </ul>
                         </div>
                         {errors.carea && <div className="text-danger error-txt">{errors.carea}</div>}
@@ -362,11 +368,11 @@ const Sell = () => {
                                 onChange={handleSuperAreaInput} />
                             <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{Inputsarea || formData.superAreaUnit || "Select Unit"}</button>
                             <ul className="dropdown-menu dropdown-menu-end">
-                                <li><a className="dropdown-item" onClick={(e) => changesarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changesarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changesarea(e, "Sq-m")} href="#">Sq-m</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changesarea(e, "Acre")} href="#">Acre</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changesarea(e, "Bigha")} href="#">Bigha</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changesarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changesarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changesarea(e, "Sq-m")} href="#">Sq-m</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changesarea(e, "Acre")} href="#">Acre</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changesarea(e, "Bigha")} href="#">Bigha</a></li>
                             </ul>
                         </div>
                         {errors.sarea && <div className="text-danger error-txt">{errors.sarea}</div>}

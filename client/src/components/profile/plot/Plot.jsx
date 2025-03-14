@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { FaRupeeSign } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import "./Plot.css";
+import { Helmet } from "react-helmet-async";
 
 const Plot = () => {
 
@@ -386,6 +387,11 @@ const Plot = () => {
 
     return (
         <div className="rent-cont" style={{ backgroundColor: "#FFF5EE" }}>
+            <Helmet>
+                <title>Plot Property</title>
+                <meta name="description" content="Explore plots for investment, plots for sale, and plots near me. Find farm land for sale, agricultural land for sale, and farm land for sale near me. Discover the best plots for sale near me for your next property investment." />
+                <meta name="keywords" content="plot for investment,plot for sale,plots near me,farm land for sale,agricultural land for sale,farm land for sale near me,plots for sale near me" />
+            </Helmet>
             <Profilenav select="Plot/Land" />
             <div className='container rent-main-box w-50'>
                 <div className='rent-main2-box bg-white p-4'>
@@ -419,11 +425,11 @@ const Plot = () => {
                                 onChange={handleAreaChange} />
                             <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{plotData.areaUnit || 'Select Unit'}</button>
                             <ul className="dropdown-menu dropdown-menu-end">
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Sq-m")} href="#">Sq-m</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Acre")} href="#">Acre</a></li>
-                                <li><a className="dropdown-item" onClick={(e) => changeplotarea(e, "Bigha")} href="#">Bigha</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeplotarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeplotarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeplotarea(e, "Sq-m")} href="#">Sq-m</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeplotarea(e, "Acre")} href="#">Acre</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeplotarea(e, "Bigha")} href="#">Bigha</a></li>
                             </ul>
                         </div>
                         {formErrors.parea && <div className="text-danger error-txt">{formErrors.parea}</div>}
@@ -486,16 +492,16 @@ const Plot = () => {
                                 <span className="dropdown-arrow"></span>
                             </button>
                             <ul class="dropdown-menu rent-drop-menu">
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "Immediate")} href="#">Immediate</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "Within 3 Months")} href="#">Within 3 Months</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "Within 6 Months")} href="#">Within 6 Months</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2025")} href="#">By 2025</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2026")} href="#">By 2026</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2027")} href="#">By 2027</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2028")} href="#">By 2028</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2029")} href="#">By 2029</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2030")} href="#">By 2030</a></li>
-                                <li><a class="dropdown-item" onClick={(e) => changeposs(e, "By 2031")} href="#">By 2031</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "Immediate")} href="#">Immediate</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "Within 3 Months")} href="#">Within 3 Months</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "Within 6 Months")} href="#">Within 6 Months</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "By 2025")} href="#">By 2025</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "By 2026")} href="#">By 2026</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "By 2027")} href="#">By 2027</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "By 2028")} href="#">By 2028</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "By 2029")} href="#">By 2029</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "By 2030")} href="#">By 2030</a></li>
+                                <li><a role="button" className="dropdown-item" onClick={(e) => changeposs(e, "By 2031")} href="#">By 2031</a></li>
                             </ul>
                         </div>
                         {formErrors.possession && <div className="text-danger error-txt">{formErrors.possession}</div>}

@@ -50,10 +50,6 @@ function App() {
       try {
         const base_url = import.meta.env.VITE_BASE_URL;
         await axios.get(`${base_url}/api/v1/get-coin`, { withCredentials: true }).then((response) => {
-          if (typeof response.data.coins !== "object" || response.data.coins === null) {
-            console.warn("Invalid coin data received", response.data.coins);
-            return;
-          }
           dispatch(coinActions.setBalance(response.data.coins));
         })
       } catch (error) {

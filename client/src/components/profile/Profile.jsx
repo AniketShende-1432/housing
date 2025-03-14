@@ -7,6 +7,7 @@ import coin from '../../assets/coin.png';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Profile.css"
+import { Helmet } from "react-helmet-async";
 
 const Profile = () => {
 
@@ -174,6 +175,12 @@ const Profile = () => {
 
     return (
         <>
+             <Helmet>
+                <title>Profile Property User</title>
+                <meta name="description" content="Find 1BHK flats for rent or sale near you! Explore MLS real estate listings, top property sites, and the best apartment deals. Buy or rent your perfect home today." />
+                <meta name="keywords" content="1bhk flat near me,apartment for sale,mls real estate,1bhk for rent near me,
+                1bhk near me,1bhk flat for rent near me," />
+            </Helmet>
             <Navbar back="profile-bg" />
             <div className='p-cont-box'>
                 <div className='p-cont-box1 d-flex justify-content-around'>
@@ -226,9 +233,9 @@ const Profile = () => {
                                                 <span className="dropdown-arrow"></span>
                                             </button>
                                             <ul className="dropdown-menu w-75">
-                                                <li><a className="dropdown-item" onClick={() => userchange("Buyer/Owner/Tenant")} href="#">Buyer/Owner/Tenant</a></li>
-                                                <li><a className="dropdown-item" onClick={() => userchange("Agent")} href="#">Agent</a></li>
-                                                <li><a className="dropdown-item" onClick={() => userchange("Builder")} href="#">Builder</a></li>
+                                                <li><a role="button" className="dropdown-item" onClick={() => userchange("Buyer/Owner/Tenant")} href="#">Buyer/Owner/Tenant</a></li>
+                                                <li><a role="button" className="dropdown-item" onClick={() => userchange("Agent")} href="#">Agent</a></li>
+                                                <li><a role="button" className="dropdown-item" onClick={() => userchange("Builder")} href="#">Builder</a></li>
                                             </ul>
                                         </div>
                                         {perrors.usertype && <div className="text-danger perror-txt ms-2">{perrors.usertype}</div>}
