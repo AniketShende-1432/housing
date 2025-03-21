@@ -117,6 +117,34 @@
     position: relative;
     top:-18px;
 }
+.close-vbtn{
+    padding:0px !important;
+    border:1px solid white;
+    border-radius: 6px;
+    box-shadow: 0.5px 0.5px 0.5px;
+    outline:none;
+    width:1rem;
+    height: 1.5rem;
+    font-size: 14px;
+    margin-left:5px;
+}
+/* Full-screen overlay when loading */
+.spinner-overlay {
+    position: fixed;                /* Fixed position to cover entire screen */
+    top: 0;
+    left: 0;
+    width: 100vw;                   /* Full viewport width */
+    height: 100vh;                  /* Full viewport height */
+    background-color: rgba(0, 0, 0, 0.4);  /* Semi-transparent dark background */
+    display: flex;                  /* Flexbox for centering */
+    justify-content: center;        /* Center horizontally */
+    align-items: center;            /* Center vertically */
+    z-index: 1000;                  /* Place on top of other elements */
+  }
+.load-svg{
+    width:10rem;
+    height: 10rem;
+}
 @media (max-width: 991px) { 
     .parent-cont{
         padding-bottom: 2rem;

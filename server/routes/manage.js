@@ -12,13 +12,20 @@ const PG = require("../models/pg");
 const Commercial = require("../models/commercial");
 
 const storage = new CloudinaryStorage({
-    cloudinary: cloudinary, // Use the imported Cloudinary instance
-    params: {
-        folder: 'real-estate-properties', // Cloudinary folder name
-    },
+    cloudinary: cloudinary,
+    params: async (req, file) => {
+        const isImage = file.mimetype.startsWith("image/");
+        return {
+            folder: isImage ? 'real-estate-properties' : 'real-estate-properties/videos',
+            resource_type: isImage ? 'image' : 'video',
+        };
+    }
 });
-
 const upload = multer({ storage });
+const uploadFields = upload.fields([
+    { name: 'newimages', maxCount: 5 },  // Allow up to 5 images
+    { name: 'newvideo', maxCount: 1 }   // Allow only 1 video
+])
 
 router.get('/userproperties', async (req, res) => {
     const token = req.cookies.authToken;
@@ -60,13 +67,14 @@ router.get('/userproperties', async (req, res) => {
     }
 });
 
-router.put("/updateproperty/:propertyId", upload.array('newimages', 5), async (req, res) => {
+router.put("/updateproperty/:propertyId", uploadFields, async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
         const { propertyId } = req.params;
         const images = req.body.images || [];
+        const video = req.body.video || null;
         const features = JSON.parse(JSON.stringify(req.body.features));
         const parsedFeatures = Object.fromEntries(
             Object.entries(features).map(([key, value]) => {
@@ -74,7 +82,8 @@ router.put("/updateproperty/:propertyId", upload.array('newimages', 5), async (r
                 return [key, value === "null" || value === "" ? null : Number(value)];
             })
         );
-        const newImages = req.files.map((file) => file.path);
+        const newImages = req.files?.newimages?.map((file) => file.path) || [];
+        const newVideo = req.files?.newvideo?.[0]?.path || null;
         const imagesArray = Array.isArray(images) ? images : [images];
 
         const property = await Sell.findById(propertyId);
@@ -83,8 +92,19 @@ router.put("/updateproperty/:propertyId", upload.array('newimages', 5), async (r
         if (property.user.toString() !== userId) return res.status(403).json({ message: "Unauthorized" });
 
         const updatedImages = [...imagesArray, ...newImages];
+        let updatedVideo = newVideo || video;
+        if(updatedVideo === 'null' || updatedVideo ===''){
+            updatedVideo= null;
+        }
 
-        Object.assign(property, { ...req.body, features: parsedFeatures, images: updatedImages });
+        const updatedData = { ...req.body, features: parsedFeatures, images: updatedImages, video:updatedVideo };
+        // Ensure lastVisitTime is a valid Date or null
+        if (updatedData.lastVisitTime === "null" || updatedData.lastVisitTime === "") {
+            updatedData.lastVisitTime = null;
+        } else if (updatedData.lastVisitTime) {
+            updatedData.lastVisitTime = new Date(updatedData.lastVisitTime);
+        }
+        Object.assign(property, updatedData);
         await property.save();
 
         res.status(200).json({ message: "Property updated successfully" });
@@ -94,13 +114,14 @@ router.put("/updateproperty/:propertyId", upload.array('newimages', 5), async (r
     }
 });
 
-router.put("/updaterentproperty/:propertyId", upload.array('newimages', 5), async (req, res) => {
+router.put("/updaterentproperty/:propertyId", uploadFields, async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
         const { propertyId } = req.params;
         const images = req.body.images || [];
+        const video = req.body.video || null;
         const features = JSON.parse(JSON.stringify(req.body.features));
         const parsedFeatures = Object.fromEntries(
             Object.entries(features).map(([key, value]) => {
@@ -108,7 +129,8 @@ router.put("/updaterentproperty/:propertyId", upload.array('newimages', 5), asyn
                 return [key, value === "null" || value === "" ? null : Number(value)];
             })
         );
-        const newImages = req.files.map((file) => file.path);
+        const newImages = req.files?.newimages?.map((file) => file.path) || [];
+        const newVideo = req.files?.newvideo?.[0]?.path || null;
         const imagesArray = Array.isArray(images) ? images : [images];
 
         const property = await Rent.findById(propertyId);
@@ -117,8 +139,18 @@ router.put("/updaterentproperty/:propertyId", upload.array('newimages', 5), asyn
         if (property.user.toString() !== userId) return res.status(403).json({ message: "Unauthorized" });
 
         const updatedImages = [...imagesArray, ...newImages];
-
-        Object.assign(property, { ...req.body, features: parsedFeatures, images: updatedImages });
+        let updatedVideo = newVideo || video;
+        if(updatedVideo === 'null' || updatedVideo ===''){
+            updatedVideo= null;
+        }
+        const updatedData = { ...req.body, features: parsedFeatures, images: updatedImages,video:updatedVideo };
+        // Ensure lastVisitTime is a valid Date or null
+        if (updatedData.lastVisitTime === "null" || updatedData.lastVisitTime === "") {
+            updatedData.lastVisitTime = null;
+        } else if (updatedData.lastVisitTime) {
+            updatedData.lastVisitTime = new Date(updatedData.lastVisitTime);
+        }
+        Object.assign(property, updatedData);
         await property.save();
 
         res.status(200).json({ message: "Property updated successfully" });
@@ -128,17 +160,19 @@ router.put("/updaterentproperty/:propertyId", upload.array('newimages', 5), asyn
     }
 });
 
-router.put("/updateplotproperty/:propertyId", upload.array('newimages', 5), async (req, res) => {
+router.put("/updateplotproperty/:propertyId", uploadFields, async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
         const { propertyId } = req.params;
         const images = req.body.images || [];
+        const video = req.body.video || null;
         const features = JSON.parse(JSON.stringify(req.body.features));
         const dimensions = JSON.parse(JSON.stringify(req.body.dimensions));
 
-        const newImages = req.files.map((file) => file.path);
+        const newImages = req.files?.newimages?.map((file) => file.path) || [];
+        const newVideo = req.files?.newvideo?.[0]?.path || null;
         const imagesArray = Array.isArray(images) ? images : [images];
 
         const property = await Plot.findById(propertyId);
@@ -147,8 +181,18 @@ router.put("/updateplotproperty/:propertyId", upload.array('newimages', 5), asyn
         if (property.user.toString() !== userId) return res.status(403).json({ message: "Unauthorized" });
 
         const updatedImages = [...imagesArray, ...newImages];
-
-        Object.assign(property, { ...req.body, features, dimensions, images: updatedImages });
+        let updatedVideo = newVideo || video;
+        if(updatedVideo === 'null' || updatedVideo ===''){
+            updatedVideo= null;
+        }
+        const updatedData = { ...req.body, features: dimensions, images: updatedImages, video:updatedVideo};
+        // Ensure lastVisitTime is a valid Date or null
+        if (updatedData.lastVisitTime === "null" || updatedData.lastVisitTime === "") {
+            updatedData.lastVisitTime = null;
+        } else if (updatedData.lastVisitTime) {
+            updatedData.lastVisitTime = new Date(updatedData.lastVisitTime);
+        }
+        Object.assign(property, updatedData);
         await property.save();
 
         res.status(200).json({ message: "Property updated successfully" });
@@ -158,13 +202,14 @@ router.put("/updateplotproperty/:propertyId", upload.array('newimages', 5), asyn
     }
 });
 
-router.put("/updatepgproperty/:propertyId", upload.array('newimages', 5), async (req, res) => {
+router.put("/updatepgproperty/:propertyId", uploadFields, async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
         const { propertyId } = req.params;
         const images = req.body.images || [];
+        const video = req.body.video || null;
         const features = JSON.parse(JSON.stringify(req.body.features));
         const parsedFeatures = Object.fromEntries(
             Object.entries(features).map(([key, value]) => {
@@ -172,7 +217,8 @@ router.put("/updatepgproperty/:propertyId", upload.array('newimages', 5), async 
                 return [key, value === "null" || value === "" ? null : Number(value)];
             })
         );
-        const newImages = req.files.map((file) => file.path);
+        const newImages = req.files?.newimages?.map((file) => file.path) || [];
+        const newVideo = req.files?.newvideo?.[0]?.path || null;
         const imagesArray = Array.isArray(images) ? images : [images];
 
         const property = await PG.findById(propertyId);
@@ -181,8 +227,19 @@ router.put("/updatepgproperty/:propertyId", upload.array('newimages', 5), async 
         if (property.user.toString() !== userId) return res.status(403).json({ message: "Unauthorized" });
 
         const updatedImages = [...imagesArray, ...newImages];
+        let updatedVideo = newVideo || video;
+        if(updatedVideo === 'null' || updatedVideo ===''){
+            updatedVideo= null;
+        }
 
-        Object.assign(property, { ...req.body, features: parsedFeatures, images: updatedImages });
+        const updatedData = { ...req.body, features: parsedFeatures, images: updatedImages, video:updatedVideo };
+        // Ensure lastVisitTime is a valid Date or null
+        if (updatedData.lastVisitTime === "null" || updatedData.lastVisitTime === "") {
+            updatedData.lastVisitTime = null;
+        } else if (updatedData.lastVisitTime) {
+            updatedData.lastVisitTime = new Date(updatedData.lastVisitTime);
+        }
+        Object.assign(property, updatedData);
         await property.save();
 
         res.status(200).json({ message: "Property updated successfully" });
@@ -192,13 +249,14 @@ router.put("/updatepgproperty/:propertyId", upload.array('newimages', 5), async 
     }
 });
 
-router.put("/updatecommproperty/:propertyId", upload.array('newimages', 5), async (req, res) => {
+router.put("/updatecommproperty/:propertyId", uploadFields, async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
         const { propertyId } = req.params;
         const images = req.body.images || [];
+        const video = req.body.video || null;
         const features = JSON.parse(JSON.stringify(req.body.features));
         const parsedFeatures = Object.fromEntries(
             Object.entries(features).map(([key, value]) => {
@@ -206,7 +264,8 @@ router.put("/updatecommproperty/:propertyId", upload.array('newimages', 5), asyn
                 return [key, value === "null" || value === "" ? null : Number(value)];
             })
         );
-        const newImages = req.files.map((file) => file.path);
+        const newImages = req.files?.newimages?.map((file) => file.path) || [];
+        const newVideo = req.files?.newvideo?.[0]?.path || null;
         const imagesArray = Array.isArray(images) ? images : [images];
 
         const property = await Commercial.findById(propertyId);
@@ -215,8 +274,18 @@ router.put("/updatecommproperty/:propertyId", upload.array('newimages', 5), asyn
         if (property.user.toString() !== userId) return res.status(403).json({ message: "Unauthorized" });
 
         const updatedImages = [...imagesArray, ...newImages];
-
-        Object.assign(property, { ...req.body, features: parsedFeatures, images: updatedImages });
+        let updatedVideo = newVideo || video;
+        if(updatedVideo === 'null' || updatedVideo ===''){
+            updatedVideo= null;
+        }
+        const updatedData = { ...req.body, features: parsedFeatures, images: updatedImages, video:updatedVideo };
+        // Ensure lastVisitTime is a valid Date or null
+        if (updatedData.lastVisitTime === "null" || updatedData.lastVisitTime === "") {
+            updatedData.lastVisitTime = null;
+        } else if (updatedData.lastVisitTime) {
+            updatedData.lastVisitTime = new Date(updatedData.lastVisitTime);
+        }
+        Object.assign(property, updatedData);
         await property.save();
 
         res.status(200).json({ message: "Property updated successfully" });

@@ -19,7 +19,7 @@ import park from "../../assets/garden.png";
 import pool from "../../assets/swim.png";
 import club from "../../assets/club.png";
 import road from "../../assets/road.png"
-import backcard from "../../assets/backcard.png";
+import backcard from "../../assets/backcard.jpg";
 import { FaBuilding } from "react-icons/fa";
 import Modal from './Modal';
 import { useSelector } from 'react-redux';
@@ -29,6 +29,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Product.css'
 import Slider from './Slider';
+import Pslider from '../search/Pslider';
 import { Helmet } from "react-helmet-async";
 
 const Plotpro = () => {
@@ -195,7 +196,8 @@ const Plotpro = () => {
         <div>
           <div className='card1 d-flex flex-column flex-sm-row mt-4 bg-white' id="overid">
             <div className='item-box1'>
-              <img src={property.images && property.images[0] ? property.images[0] : backcard} alt="image" className='rent-s-img' />
+              {/* <img src={property.images && property.images[0] ? property.images[0] : backcard} alt="image" className='rent-s-img' /> */}
+              <Pslider propimg={property.images && property.images[0] ? property.images : []} propvideo={property.video || null } cardcss="productSwiper"/>
             </div>
             <div className='item-box2 p-3'>
               <div className='d-flex'>
@@ -209,20 +211,20 @@ const Plotpro = () => {
               </div>
               <div className='mt-2 d-flex'>
                 <div className='d-flex flex-column m-3 ms-0'>
-                  <div className='d-flex fw-bold fs-5'>₹ {formatPrice(property.price)}</div>
+                  <div className='d-flex fw-bold fs-5 text-nowrap'>₹ {formatPrice(property.price)}</div>
                   <label className='deposit-price'>{Math.floor(property.price / property.plotArea)}/{property.areaUnit}</label>
                 </div>
                 <div className='d-flex flex-column m-3 ms-0 ps-3 item-bd'>
-                  <label className='fw-bold fs-6'>{property.plotArea} {property.areaUnit}</label>
+                  <label className='fw-bold fs-6 text-nowrap'>{property.plotArea} {property.areaUnit}</label>
                   <label className='mt-1'>Plot Area</label>
                 </div>
                 <div className='d-none d-sm-flex flex-column m-3 ms-0 ps-3 item-bd'>
                   <label className='fw-bold fs-6'>Approved By</label>
-                  <label className='mt-1'>{property.approvedBy}</label>
+                  <label className='mt-1 text-nowrap'>{property.approvedBy}</label>
                 </div>
                 <div className='d-none d-lg-flex flex-column m-3 ms-0 ps-3 item-bd '>
                   <label className='fw-bold fs-6'>Ownership</label>
-                  <label className='mt-1'>{property.ownershipType}</label>
+                  <label className='mt-1 text-nowrap'>{property.ownershipType}</label>
                 </div>
               </div>
               <div className='d-flex pro-status'>

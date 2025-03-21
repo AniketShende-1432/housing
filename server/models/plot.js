@@ -11,6 +11,8 @@ const plotSchema = new mongoose.Schema({
     possessionBy: { type: String, required: true }, // e.g., Immediate, Within 6 Months
     ownershipType: { type: String, required: true }, // e.g., Freehold, Leasehold
     approvedBy: { type: String }, // e.g., N.A(Non-Agricultural), Corporation Approved
+    reraApproved:{type:String},
+    reraNumber:{type:String},
     dimensions: {
         length: { type: String, required: true },
         breadth: { type: String, required: true },
@@ -23,6 +25,7 @@ const plotSchema = new mongoose.Schema({
     amenities: { type: [String] }, // Array of amenities (e.g., Water Storage, Rain Water Harvesting)
     overlooking: { type: [String] }, // Array of views (e.g., Pool, Park, Main Road)
     images: { type: [String] }, // Array of image URLs
+    video:{type: String},
     propertyId: { type: String },
     visits: { type: Number, default: 0 },
     lastVisitTime: { type: Date, default: null },

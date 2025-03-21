@@ -24,6 +24,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Sell.css";
 import { Helmet } from "react-helmet-async";
+import load from "../../../assets/bouncing-circles.svg";
 
 const Sell2 = () => {
 
@@ -34,7 +35,10 @@ const Sell2 = () => {
     const [images, setImages] = useState(formdata?.images || []); // State to store image previews
     const [selectImage, setselectImage] = useState([]);
     const isLoggedin = useSelector((state) => state.auth.isLoggedIn);
-    const [simage,setsimage] = useState([]);
+    const [simage, setsimage] = useState([]);
+    const [video, setVideo] = useState(formdata?.video || null);
+    const [selectVideo, setselectVideo] = useState(null);
+    const [loading, setLoading] = useState(false);
     console.log(formdata);
     console.log(mode);
 
@@ -65,7 +69,7 @@ const Sell2 = () => {
         else {
             // Find the file corresponding to the temporary URL in selectImage
             const fileIndex = simage.findIndex((file) => file.url === imageToRemove);
-    
+
             // Remove from selectImage (newly uploaded files)
             if (fileIndex !== -1) {
                 URL.revokeObjectURL(simage[fileIndex].url);
@@ -73,9 +77,40 @@ const Sell2 = () => {
                 setselectImage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
             }
         }
-    
+
         // Remove from the image preview array (this is common for both cases)
         setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    };
+    const handleVideoChange = (event) => {
+        if (!event.target.files.length) return;
+
+        const file = event.target.files[0];
+
+        // Check if the uploaded file is a video
+        if (!file.type.startsWith("video/")) {
+            alert("Please upload a valid video file.");
+            return;
+        }
+
+        const videoUrl = URL.createObjectURL(file);
+        setVideo(videoUrl);
+        setselectVideo(file);
+        event.target.value = ""; // Reset input value
+    };
+
+    const handleRemoveVideo = () => {
+        if (video) {
+            URL.revokeObjectURL(video);
+        }
+        if (formdata?.video && formdata.video === video) {
+            // Remove from formData if it's an existing Cloudinary video
+            setformdata((prevFormData) => ({
+                ...prevFormData,
+                video: null,
+            }));
+        }
+        setVideo(null);
+        setselectVideo(null);
     };
     const [errors, setErrors] = useState({
         developer: '',
@@ -197,6 +232,7 @@ const Sell2 = () => {
             return; // Stop the form submission if there are errors
         }
         try {
+            setLoading(true);
             const base_url = import.meta.env.VITE_BASE_URL;
             const fdata = { ...formdata, type: "sell" };
             const frmData = new FormData();
@@ -215,9 +251,10 @@ const Sell2 = () => {
                 }
             }
             selectImage.forEach((image) => frmData.append("images", image))
+            frmData.append("video", selectVideo);
             frmData.forEach((value, key) => {
                 console.log(key, value);
-              });
+            });
             if (isLoggedin) {
                 await axios.post(`${base_url}/api/v2/sellproperty`, frmData, { withCredentials: true })
                     .then((response) => {
@@ -252,6 +289,8 @@ const Sell2 = () => {
         } catch (error) {
             toast.error("Something went wrong. Please try again.");
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
     const handlePupdate = async (e) => {
@@ -272,6 +311,7 @@ const Sell2 = () => {
             return; // Stop the form submission if there are errors
         }
         try {
+            setLoading(true);
             const base_url = import.meta.env.VITE_BASE_URL;
             const fdata = { ...formdata, type: "sell" };
             console.log(fdata);
@@ -291,9 +331,10 @@ const Sell2 = () => {
                 }
             }
             selectImage.forEach((image) => frmData.append("newimages", image))
+            frmData.append("newvideo", selectVideo);
             frmData.forEach((value, key) => {
                 console.log(key, value);
-              });
+            });
             // Send the update request
             const response = await axios.put(`${base_url}/api/v4/updateproperty/${fdata._id}`, frmData,
                 { withCredentials: true }
@@ -313,6 +354,8 @@ const Sell2 = () => {
         } catch (error) {
             console.error("Error updating property:", error);
             toast.error("Error updating property");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -410,6 +453,10 @@ const Sell2 = () => {
                         {errors.socarea && <div className="text-danger error-txt">{errors.socarea}</div>}
                         {errors.socunit && <div className="text-danger error-txt">{errors.socunit}</div>}
                     </div>
+                    <div>
+                        <div>RERA Approved</div>
+                        
+                    </div>
                     <div className={errors.socarea || errors.socunit ? 'mt-3' : 'mt-5'}>
                         <div><h5>Add Amenities</h5></div>
                         <div>
@@ -477,10 +524,35 @@ const Sell2 = () => {
                             </div>
                         </div>
                     </div>
+                    <div className='mt-2'>
+                        <div><h5>Video Property</h5></div>
+                        <div>
+                            <label htmlFor="videoUpload" className="photo-btn text-white fw-bold text-center mt-2 p-2 w-100">Upload Video</label>
+                            <input
+                                type="file"
+                                id="videoUpload"
+                                accept="video/*"
+                                style={{ display: "none" }}
+                                onChange={handleVideoChange}
+                            />
+                            {/* Video Preview */}
+                            {video && (
+                                <div className="mt-1 d-flex">
+                                    <video src={video} controls className="img-thumbnail" style={{ maxWidth: "200px", maxHeight: "200px" }} />
+                                    <button className="close-vbtn" onClick={handleRemoveVideo}>X</button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                     {(mode ?? '') !== 'edit' && (<button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handlePSubmit}>Submit Property</button>)}
                     {mode === 'edit' && (<button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handlePupdate}>Save Changes</button>)}
                 </div>
             </div>
+            {loading && (
+                <div className="spinner-overlay">
+                    <img src={load} className='load-svg' alt="load" />
+                </div>
+            )}
         </div>
     )
 }

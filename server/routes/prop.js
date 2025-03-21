@@ -12,14 +12,36 @@ const Plot = require("../models/plot");
 const PG = require("../models/pg");
 const Commercial = require("../models/commercial");
 
+// const imageStorage = new CloudinaryStorage({
+//     cloudinary: cloudinary, // Use the imported Cloudinary instance
+//     params: {
+//         folder: 'real-estate-properties', // Cloudinary folder name
+//         resource_type: 'image', // This is required for video uploads
+//     },
+// });
+// const videoStorage = new CloudinaryStorage({
+//     cloudinary: cloudinary,
+//     params: {
+//         folder: 'real-estate-properties/videos',
+//         resource_type: 'video', // This is required for video uploads
+//     },
+// });
 const storage = new CloudinaryStorage({
-    cloudinary: cloudinary, // Use the imported Cloudinary instance
-    params: {
-        folder: 'real-estate-properties', // Cloudinary folder name
-    },
+    cloudinary: cloudinary,
+    params: async (req, file) => {
+        const isImage = file.mimetype.startsWith("image/");
+        return {
+            folder: isImage ? 'real-estate-properties' : 'real-estate-properties/videos',
+            resource_type: isImage ? 'image' : 'video',
+        };
+    }
 });
-
 const upload = multer({ storage });
+const uploadFields = upload.fields([
+    { name: 'images', maxCount: 5 },  // Allow up to 5 images
+    { name: 'video', maxCount: 1 }   // Allow only 1 video
+])
+// const uploadVideo = multer({ storage: videoStorage });
 
 const generateUniquePropertyId = async (prefix) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -48,12 +70,15 @@ const generateUniquePropertyId = async (prefix) => {
     return uniqueId;
 };
 
-router.post("/sellproperty", upload.array('images', 5), async (req, res) => {
+router.post("/sellproperty",uploadFields,async (req, res) => {        
     try {
         const token = req.cookies.authToken;
         const { price,type,propertyType,city,locality,society,bhk,furnishedType,carpetArea,carpetAreaUnit,superArea,
             superAreaUnit,possessionStatus,developer,societyArea,societyAreaUnit,amenities } = req.body;
-            const images = req.files.map(file => file.path);
+            // const images = req.files.map(file => file.path);
+            const images = req.files['images'] ? req.files['images'].map(file => file.path) : [];
+            // const video = req.file.path;
+            const video = req.files['video'] ? req.files['video'][0].path:null;
             const features = JSON.parse(JSON.stringify(req.body.features));
         
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -64,7 +89,7 @@ router.post("/sellproperty", upload.array('images', 5), async (req, res) => {
         const propertyId = await generateUniquePropertyId(prefix);
         if(existingUser){
             const sell = new Sell({ price,type,propertyType,city,locality,society,bhk,furnishedType,carpetArea,carpetAreaUnit,superArea,
-                superAreaUnit,possessionStatus,features,developer,societyArea,societyAreaUnit,amenities,images,propertyId,user:userId });
+                superAreaUnit,possessionStatus,features,developer,societyArea,societyAreaUnit,amenities,images,video,propertyId,user:userId });
             
             await sell.save().then(()=>res.status(200).json({ message: 'Property posted successfully'}));
             
@@ -77,11 +102,12 @@ router.post("/sellproperty", upload.array('images', 5), async (req, res) => {
 
 });
 
-router.post("/rentproperty", upload.array('images', 5), async (req, res) => {
+router.post("/rentproperty", uploadFields, async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const rentData = {...req.body};
-        const images = req.files.map(file => file.path);
+        const images = req.files['images'] ? req.files['images'].map(file => file.path) : [];
+        const video = req.files['video'] ? req.files['video'][0].path:null;
         const features = JSON.parse(JSON.stringify(req.body.features));
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -91,7 +117,7 @@ router.post("/rentproperty", upload.array('images', 5), async (req, res) => {
         const prefix = rentData.propertyType.substring(0, 3).toUpperCase(); // Use first 3 letters of propertyType
         const propertyId = await generateUniquePropertyId(prefix);
         if(existingUser){
-            const rent = new Rent({ ...rentData,images,features,propertyId,user:userId });
+            const rent = new Rent({ ...rentData,images,video,features,propertyId,user:userId });
             
             await rent.save().then(()=>res.status(200).json({ message: 'Rent Property posted successfully'}));
             
@@ -104,11 +130,12 @@ router.post("/rentproperty", upload.array('images', 5), async (req, res) => {
 
 });
 
-router.post("/plotproperty",upload.array('images', 5), async (req, res) => {
+router.post("/plotproperty",uploadFields, async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const plotData = {...req.body};
-        const images = req.files.map(file => file.path);
+        const images = req.files['images'] ? req.files['images'].map(file => file.path) : [];
+        const video = req.files['video'] ? req.files['video'][0].path:null;
         const features = JSON.parse(JSON.stringify(req.body.features));
         const dimensions = JSON.parse(JSON.stringify(req.body.dimensions));
 
@@ -119,7 +146,7 @@ router.post("/plotproperty",upload.array('images', 5), async (req, res) => {
         const prefix = 'PLT' // Use first 3 letters of propertyType
         const propertyId = await generateUniquePropertyId(prefix);
         if(existingUser){
-            const plot = new Plot({ ...plotData,images,features,dimensions,propertyId,user:userId });
+            const plot = new Plot({ ...plotData,images,video,features,dimensions,propertyId,user:userId });
             
             await plot.save().then(()=>res.status(200).json({ message: 'Plot Property posted successfully'}));
             
@@ -132,11 +159,12 @@ router.post("/plotproperty",upload.array('images', 5), async (req, res) => {
 
 });
 
-router.post("/pgproperty",upload.array('images', 5), async (req, res) => {
+router.post("/pgproperty",uploadFields, async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const pgData = {...req.body};
-        const images = req.files.map(file => file.path);
+        const images = req.files['images'] ? req.files['images'].map(file => file.path) : [];
+        const video = req.files['video'] ? req.files['video'][0].path:null;
         const features = JSON.parse(JSON.stringify(req.body.features));
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -146,7 +174,7 @@ router.post("/pgproperty",upload.array('images', 5), async (req, res) => {
         const prefix = pgData.propertyType.substring(0, 3).toUpperCase(); // Use first 3 letters of propertyType
         const propertyId = await generateUniquePropertyId(prefix);
         if(existingUser){
-            const pg = new PG({ ...pgData,images,features,propertyId,user:userId });
+            const pg = new PG({ ...pgData,images,video,features,propertyId,user:userId });
             
             await pg.save().then(()=>res.status(200).json({ message: 'PG Property posted successfully'}));
             
@@ -159,11 +187,12 @@ router.post("/pgproperty",upload.array('images', 5), async (req, res) => {
 
 });
 
-router.post("/commercialproperty",upload.array('images', 5), async (req, res) => {
+router.post("/commercialproperty",uploadFields, async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const commData = {...req.body};
-        const images = req.files.map(file => file.path);
+        const images = req.files['images'] ? req.files['images'].map(file => file.path) : [];
+        const video = req.files['video'] ? req.files['video'][0].path:null;
         const features = JSON.parse(JSON.stringify(req.body.features));
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -173,7 +202,7 @@ router.post("/commercialproperty",upload.array('images', 5), async (req, res) =>
         const prefix = commData.propertyType.substring(0, 3).toUpperCase(); // Use first 3 letters of propertyType
         const propertyId = await generateUniquePropertyId(prefix);
         if(existingUser){
-            const comm = new Commercial({ ...commData,images,features,propertyId,user:userId });
+            const comm = new Commercial({ ...commData,images,video,features,propertyId,user:userId });
             
             await comm.save().then(()=>res.status(200).json({ message: 'Commercial Property posted successfully'}));
             

@@ -376,7 +376,7 @@ const Search = () => {
                             <li><a role="button" className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Plot/Land" })} >Plot/Land</a></li>
                             <li><a role="button" className="dropdown-item" onClick={() => setFilter({ ...Filter, tab: "Commercial" })} >Commercial</a></li>
                         </ul>
-                        <input type="text" className="form-control search-input" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"
+                        <input type="text" className="form-control search-input" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder='Enter City'
                             value={filterdata.city}
                             onChange={handlecity} />
                         <button className='btn s-nav-btn bg-white ms-2'

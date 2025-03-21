@@ -29,6 +29,8 @@ const Commercial2 = () => {
     const [selectcommImage, setselectcommImage] = useState([]);
     const isLoggedin = useSelector((state) => state.auth.isLoggedIn);
     const [simage, setsimage] = useState([]);
+    const [videoc, setVideoc] = useState(commdata?.video || null);
+    const [selectVideoc, setselectVideoc] = useState(null);
 
     const Bathroomoptionscomm = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const Floornooptionscomm = [];
@@ -119,6 +121,37 @@ const Commercial2 = () => {
         // Remove from the image preview array (this is common for both cases)
         setImagescomm((prevImages) => prevImages.filter((_, i) => i !== index));
     };
+    const handleVideoChange = (event) => {
+        if (!event.target.files.length) return;
+
+        const file = event.target.files[0];
+
+        // Check if the uploaded file is a video
+        if (!file.type.startsWith("video/")) {
+            alert("Please upload a valid video file.");
+            return;
+        }
+
+        const videoUrl = URL.createObjectURL(file);
+        setVideoc(videoUrl);
+        setselectVideoc(file);
+        event.target.value = ""; // Reset input value
+    };
+
+    const handleRemoveVideo = () => {
+        if (videoc) {
+            URL.revokeObjectURL(videoc);
+        }
+        if (commdata?.video && commdata.video === videoc) {
+            // Remove from formData if it's an existing Cloudinary video
+            setcommdata((prevFormData) => ({
+                ...prevFormData,
+                video: null,
+            }));
+        }
+        setVideoc(null);
+        setselectVideoc(null);
+    };
     const handlecommSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -140,6 +173,7 @@ const Commercial2 = () => {
                 }
             }
             selectcommImage.forEach((image) => commData.append("images", image));
+            commData.append("video", selectVideoc);
             if (isLoggedin) {
                 await axios.post(`${base_url}/api/v2/commercialproperty`, commData, { withCredentials: true })
                     .then((response) => {
@@ -195,6 +229,7 @@ const Commercial2 = () => {
                 }
             }
             selectcommImage.forEach((image) => commData.append("newimages", image));
+            commData.append("newvideo", selectVideoc);
             //Send the update request
             const response = await axios.put(`${base_url}/api/v4/updatecommproperty/${cdata._id}`, commData,
                 { withCredentials: true }
@@ -316,6 +351,26 @@ const Commercial2 = () => {
                                         </div>
                                     ))}
                                 </div>
+                            </div>
+                        </div>
+                        <div className='mt-2'>
+                            <div><h5>Video Property</h5></div>
+                            <div>
+                                <label htmlFor="videoUpload" className="photo-btn text-white fw-bold text-center mt-2 p-2 w-100">Upload Video</label>
+                                <input
+                                    type="file"
+                                    id="videoUpload"
+                                    accept="video/*"
+                                    style={{ display: "none" }}
+                                    onChange={handleVideoChange}
+                                />
+                                {/* Video Preview */}
+                                {videoc && (
+                                    <div className="mt-1 d-flex">
+                                        <video src={videoc} controls className="img-thumbnail" style={{ maxWidth: "200px", maxHeight: "200px" }} />
+                                        <button className="close-vbtn" onClick={handleRemoveVideo}>X</button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         {(mode ?? '') !== 'edit' && (<button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handlecommSubmit}>Submit Property</button>)}

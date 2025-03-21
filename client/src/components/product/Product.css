@@ -51,7 +51,18 @@
     border-top-left-radius: 14px;
     border-bottom-left-radius: 14px;
 }
-
+.sr-img {
+    height: 100%;
+    width: 18rem;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+}
+.sr-demo-img {
+    height: 100%;
+    width: 18rem;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+}
 .rent-s-img {
     height: 100%;
     width: 18rem;
@@ -65,7 +76,6 @@
     border-top-left-radius: 14px;
     border-bottom-left-radius: 14px;
 }
-
 .head {
     font-weight: 600;
 }
@@ -95,7 +105,6 @@
 .card1 {
     border: 1px solid gray;
     border-radius: 14px;
-    width: 100%;
 }
 
 .pro-img {
@@ -229,11 +238,16 @@
     .mySwiper{
         width:97vw !important;
     }
-    .swiper-slide{
-        margin-right: 26px !important;
+    .productSwiper {
+        width: 15rem !important;
     }
 }
 @media (max-width: 750px){
+    .s-img{
+        width:100% !important;
+        border-bottom-left-radius: 0px !important;
+        border-top-right-radius: 14px !important;
+    }
     .rent-s-img{
         width:100%;
         border-bottom-left-radius: 0px !important;
@@ -247,6 +261,7 @@
     .pro-status{
         gap:1.5rem;
     }
+
 }
 @media (max-width: 400px){
     .pro-nav-cont {
@@ -291,6 +306,12 @@
     .recomm-card {
         max-width: 11rem !important;
     }
+    .productSwiper {
+        width: 94vw !important;
+        border-top-left-radius: 14px;
+        border-bottom-left-radius: 0px !important;
+        border-top-right-radius: 14px !important;
+    }
 }
 @media (min-width: 400px) and (max-width: 750px) {
     .pro-nav-cont {
@@ -327,5 +348,12 @@
     .recomm-card {
         max-width: 12.8rem !important;
     }
+    .productSwiper {
+        width: 94vw !important;
+        border-top-left-radius: 14px;
+        border-bottom-left-radius: 0px !important;
+        border-top-right-radius: 14px !important;
+    }
 }
+
 

@@ -17,6 +17,8 @@ const SellpropertySchema = new mongoose.Schema({
     carpetAreaUnit: { type: String, required: true }, // Unit for carpet area, e.g., Sq-ft, Sq-yrd
     superArea: { type: Number }, // Super area
     superAreaUnit: { type: String }, // Unit for super area, e.g., Sq-ft, Sq-yrd
+    reraApproved:{type:String},
+    reraNumber:{type:String},
     features: {
         bedrooms: { type: Number }, // Number of bedrooms
         bathrooms: { type: Number }, // Number of bathrooms
@@ -30,6 +32,7 @@ const SellpropertySchema = new mongoose.Schema({
     societyAreaUnit: { type: String },
     amenities: { type: [String] }, // Array of selected amenities (e.g., ['Parking', 'Gym', 'Wi-Fi'])
     images: { type: [String] },
+    video:{type: String},
     propertyId: { type: String },
     visits: { type: Number, default: 0 },
     lastVisitTime: { type: Date, default: null },

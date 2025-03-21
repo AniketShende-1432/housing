@@ -2,7 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
-import backcard from "../../assets/backcard.png";
+import backcard from "../../assets/backcard.jpg";
+import Pslider from './Pslider';
 import "./Search.css";
 
 const Commcard = ({ property, onViewNumber, handleSendsms, handlevisits }) => {
@@ -24,7 +25,7 @@ const Commcard = ({ property, onViewNumber, handleSendsms, handlevisits }) => {
       <Link className="nav-link active small" aria-current="page" to="/commercial-product" state={{ property }} onClick={() => { handlevisits(property._id, property.type) }}>
         <div className='cardsec d-flex flex-column flex-sm-row bg-white'>
           <div className='item-box1'>
-            <img src={property.images && property.images[0] ? property.images[0] : backcard} alt="image" className='s-img' />
+            <Pslider propimg={property.images && property.images[0] ? property.images : []} propvideo={property.video || null } cardcss="searchSwiper"/>
           </div>
           <div className='item-box2 p-3 pt-2 p-sm-4'>
             <div className='card-head d-flex flex-column'>

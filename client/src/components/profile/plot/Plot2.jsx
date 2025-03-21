@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Profilenav from '../../profilenav/Profilenav';
 import water from "../../../assets/water.png";
 import storage from "../../../assets/storage.png";
@@ -23,12 +23,14 @@ const Plot2 = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const {plotData, mode} = location.state || {};
+    const { plotData, mode } = location.state || {};
     const [plotdata, setplotdata] = useState(plotData);
     const isLoggedin = useSelector((state) => state.auth.isLoggedIn);
     const [imagesplot, setImagesplot] = useState(plotdata?.images || []); // State to store image previews
-    const [selectedImage,setselectedImage] = useState([]);
-    const [simage,setsimage] = useState([]);
+    const [selectedImage, setselectedImage] = useState([]);
+    const [simage, setsimage] = useState([]);
+    const [videop, setVideop] = useState(plotdata?.video || null);
+    const [selectVideop, setselectVideop] = useState(null);
     console.log(imagesplot);
     console.log(selectedImage);
 
@@ -68,9 +70,40 @@ const Plot2 = () => {
                 setselectedImage((prevFiles) => prevFiles.filter((_, i) => i !== fileIndex));
             }
         }
-    
+
         // Remove from the image preview array (this is common for both cases)
         setImagesplot((prevImages) => prevImages.filter((_, i) => i !== index));
+    };
+    const handleVideoChange = (event) => {
+        if (!event.target.files.length) return;
+
+        const file = event.target.files[0];
+
+        // Check if the uploaded file is a video
+        if (!file.type.startsWith("video/")) {
+            alert("Please upload a valid video file.");
+            return;
+        }
+
+        const videoUrl = URL.createObjectURL(file);
+        setVideop(videoUrl);
+        setselectVideop(file);
+        event.target.value = ""; // Reset input value
+    };
+
+    const handleRemoveVideo = () => {
+        if (videop) {
+            URL.revokeObjectURL(videop);
+        }
+        if (plotdata?.video && plotdata.video === videop) {
+            // Remove from formData if it's an existing Cloudinary video
+            setplotdata((prevFormData) => ({
+                ...prevFormData,
+                video: null,
+            }));
+        }
+        setVideop(null);
+        setselectVideop(null);
     };
     const handleamenity = (amenity) => {
         setplotdata((prevState) => {
@@ -104,7 +137,7 @@ const Plot2 = () => {
             return { ...prevState, overlooking };
         });
     };
-    const handleplotSubmit = async(e)=>{
+    const handleplotSubmit = async (e) => {
         e.preventDefault();
         try {
             const base_url = import.meta.env.VITE_BASE_URL;
@@ -125,13 +158,14 @@ const Plot2 = () => {
                 }
             }
             selectedImage.forEach((image) => pltData.append("images", image))
+            pltData.append("video", selectVideop);
             if (isLoggedin) {
-                await axios.post(`${base_url}/api/v2/plotproperty`, pltData,{withCredentials:true})
+                await axios.post(`${base_url}/api/v2/plotproperty`, pltData, { withCredentials: true })
                     .then((response) => {
                         if (response.data.message === "Error posting property") {
                             toast.error(response.data.message);
                         } else {
-                            toast.success(response.data.message,{
+                            toast.success(response.data.message, {
                                 onClose: () => {
                                     // Reset form data and navigate after success toast closes
                                     setplotdata({
@@ -184,6 +218,7 @@ const Plot2 = () => {
                 }
             }
             selectedImage.forEach((image) => pltData.append("newimages", image))
+            pltData.append("newvideo", selectVideop);
             // Send the update request
             const response = await axios.put(`${base_url}/api/v4/updateplotproperty/${pdata._id}`, pltData,
                 { withCredentials: true }
@@ -229,7 +264,7 @@ const Plot2 = () => {
                                 <button className='btn btn-light border' onClick={() => handleamenity("Vastu Compliant")}
                                     style={plotdata.amenities.includes('Vastu Compliant') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={vastu} alt="img" className='flat-img' />Vastu Compliant</button>
                                 <button className='btn btn-light border' onClick={() => handleamenity("Rain Water Harvesting")}
-                                    style={plotdata.amenities.includes('Rain Water Harvesting')? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={rain} alt="img" className='flat-img' />Rain Water Harvesting</button>
+                                    style={plotdata.amenities.includes('Rain Water Harvesting') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={rain} alt="img" className='flat-img' />Rain Water Harvesting</button>
                                 <button className='btn btn-light btn-flatimg border' onClick={() => handleamenity("Electricity Supply")}
                                     style={plotdata.amenities.includes('Electricity Supply') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={electric} alt="img" className='flat-img' />Electricity Supply</button>
                             </div>
@@ -271,6 +306,26 @@ const Plot2 = () => {
                                         </div>
                                     ))}
                                 </div>
+                            </div>
+                        </div>
+                        <div className='mt-2'>
+                            <div><h5>Video Property</h5></div>
+                            <div>
+                                <label htmlFor="videoUpload" className="photo-btn text-white fw-bold text-center mt-2 p-2 w-100">Upload Video</label>
+                                <input
+                                    type="file"
+                                    id="videoUpload"
+                                    accept="video/*"
+                                    style={{ display: "none" }}
+                                    onChange={handleVideoChange}
+                                />
+                                {/* Video Preview */}
+                                {videop && (
+                                    <div className="mt-1 d-flex">
+                                        <video src={videop} controls className="img-thumbnail" style={{ maxWidth: "200px", maxHeight: "200px" }} />
+                                        <button className="close-vbtn" onClick={handleRemoveVideo}>X</button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         {(mode ?? '') !== 'edit' && (<button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handleplotSubmit}>Submit Property</button>)}

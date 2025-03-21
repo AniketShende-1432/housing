@@ -26,7 +26,7 @@ import tv from "../../assets/tv.png";
 import geyser from "../../assets/geyser.png";
 import swim from "../../assets/swim.png";
 import water from "../../assets/water.png";
-import backcard from "../../assets/backcard.png";
+import backcard from "../../assets/backcard.jpg";
 import { useSelector } from 'react-redux';
 import { coinActions } from '../../store/Slice';
 import { useDispatch } from 'react-redux';
@@ -35,6 +35,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Modal from './Modal';
 import Slider from './Slider';
 import { Helmet } from "react-helmet-async";
+import Pslider from '../search/Pslider';
 
 const Product = () => {
   const location = useLocation();
@@ -222,7 +223,7 @@ const Product = () => {
         <div>
           <div className='card1 d-flex flex-column flex-sm-row mt-4 bg-white' id="overid">
             <div className='item-box1'>
-              <img src={property.images && property.images[0] ? property.images[0] : backcard} alt="image" className='s-img' />
+              <Pslider propimg={property.images && property.images[0] ? property.images : []} propvideo={property.video || null } cardcss="productSwiper"/>
             </div>
             <div className='item-box2 p-3'>
               <div className='d-flex'>
@@ -245,11 +246,11 @@ const Product = () => {
                 </div>
                 <div className='d-none d-sm-flex flex-column m-3 ms-0 ps-3 item-bd'>
                   <label className='fw-bold fs-6'>{property.bhk} ({property.features.bathrooms || '-'} Baths)</label>
-                  <label>{property.possessionStatus}</label>
+                  <label className='text-nowrap'>{property.possessionStatus}</label>
                 </div>
                 <div className='d-none d-lg-flex flex-column m-3 ms-0 ps-3 item-bd'>
                   <label className='fw-bold fs-6'>Developer</label>
-                  <label>{property.developer || '-'}</label>
+                  <label className='text-nowrap'>{property.developer || '-'}</label>
                 </div>
               </div>
               <div className='d-flex pro-status'>

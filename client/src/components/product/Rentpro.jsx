@@ -25,7 +25,7 @@ import tv from "../../assets/tv.png";
 import geyser from "../../assets/geyser.png";
 import swim from "../../assets/swim.png";
 import water from "../../assets/water.png";
-import backcard from "../../assets/backcard.png";
+import backcard from "../../assets/backcard.jpg";
 import Modal from './Modal';
 import { useSelector } from 'react-redux';
 import { coinActions } from '../../store/Slice';
@@ -34,6 +34,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Slider from './Slider';
 import { Helmet } from "react-helmet-async";
+import Pslider from '../search/Pslider';
 
 const Rentpro = () => {
   const location = useLocation();
@@ -223,7 +224,7 @@ const Rentpro = () => {
         <div>
           <div className='card1 d-flex flex-column flex-sm-row mt-4 bg-white' id="overid">
             <div className='item-box1'>
-              <img src={property.images && property.images[0] ? property.images[0] : backcard} alt="image" className='rent-s-img' />
+              <Pslider propimg={property.images && property.images[0] ? property.images : []} propvideo={property.video || null } cardcss="productSwiper"/>
             </div>
             <div className='item-box2 p-3'>
               <div className='d-flex'>

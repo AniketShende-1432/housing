@@ -29,7 +29,7 @@ const Slider = () => {
         <div>
             <Swiper
                 slidesPerView={slides}
-                spaceBetween={20}
+                spaceBetween={25}
                 freeMode={true}
                 pagination={{
                     clickable: true,
@@ -38,7 +38,7 @@ const Slider = () => {
                 className="mySwiper"
                 style={{
                     height: '350px', // Set the height of the carousel container
-                    width: '56rem',
+                    width: '72vw',
                     margin: '0px',  // Set the width of the carousel container
                 }}
             >

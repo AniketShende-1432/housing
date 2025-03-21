@@ -20,7 +20,7 @@ import { FaBuilding } from "react-icons/fa";
 import { GiPowerGenerator } from "react-icons/gi";
 import { FaRoad } from "react-icons/fa";
 import { GiElevator } from "react-icons/gi";
-import backcard from "../../assets/backcard.png";
+import backcard from "../../assets/backcard.jpg";
 import Modal from './Modal';
 import { useSelector } from 'react-redux';
 import { coinActions } from '../../store/Slice';
@@ -28,6 +28,8 @@ import { useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Slider from './Slider';
+import { Helmet } from "react-helmet-async";
+import Pslider from '../search/Pslider';
 
 const Commpro = () => {
     const location = useLocation();
@@ -189,7 +191,8 @@ const Commpro = () => {
                 <div>
                     <div className='card1 d-flex flex-column flex-sm-row mt-4 bg-white' id="overid">
                         <div className='item-box1'>
-                            <img src={property.images && property.images[0] ? property.images[0] : backcard} alt="image" className='comm-s-img' />
+                            {/* <img src={property.images && property.images[0] ? property.images[0] : backcard} alt="image" className='comm-s-img' /> */}
+                            <Pslider propimg={property.images && property.images[0] ? property.images : []} propvideo={property.video || null } cardcss="productSwiper"/>
                         </div>
                         <div className='item-box2 p-3'>
                             <div className='d-flex'>

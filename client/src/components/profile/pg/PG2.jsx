@@ -37,6 +37,8 @@ const PG2 = () => {
     const [imagespg, setImagespg] = useState(pgdata?.images || []); // State to store image previews
     const [selectImage, setselectImage] = useState([]);
     const [simage, setsimage] = useState([]);
+    const [videopg, setVideopg] = useState(pgdata?.video || null);
+    const [selectVideopg,setselectVideopg] = useState(null);
 
     const handleFileChangepg = (event) => {
         if (!event.target.files.length) return;
@@ -75,6 +77,37 @@ const PG2 = () => {
 
         // Remove from the image preview array (this is common for both cases)
         setImagespg((prevImages) => prevImages.filter((_, i) => i !== index));
+    };
+    const handleVideoChange = (event) => {
+        if (!event.target.files.length) return;
+
+        const file = event.target.files[0];
+
+        // Check if the uploaded file is a video
+        if (!file.type.startsWith("video/")) {
+            alert("Please upload a valid video file.");
+            return;
+        }
+
+        const videoUrl = URL.createObjectURL(file);
+        setVideopg(videoUrl);
+        setselectVideopg(file);
+        event.target.value = ""; // Reset input value
+    };
+
+    const handleRemoveVideo = () => {
+        if (videopg) {
+            URL.revokeObjectURL(videopg);
+        }
+        if (pgdata?.video && pgdata.video === videopg) {
+            // Remove from formData if it's an existing Cloudinary video
+            setpgdata((prevFormData) => ({
+                ...prevFormData,
+                video: null,
+            }));
+        }
+        setVideopg(null);
+        setselectVideopg(null);
     };
 
     const bedroomoptionspg = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -155,6 +188,7 @@ const PG2 = () => {
                 }
             }
             selectImage.forEach((image) => pgrData.append("images", image));
+            pgrData.append("video",selectVideopg);
             if (isLoggedin) {
                 await axios.post(`${base_url}/api/v2/pgproperty`, pgrData, { withCredentials: true })
                     .then((response) => {
@@ -215,6 +249,7 @@ const PG2 = () => {
                 }
             }
             selectImage.forEach((image) => pgrData.append("newimages", image));
+            pgrData.append("newvideo",selectVideopg);
             pgrData.forEach((value, key) => {
                 console.log(key, value);
             });
@@ -374,6 +409,26 @@ const PG2 = () => {
                                     </div>
                                 ))}
                             </div>
+                        </div>
+                    </div>
+                    <div className='mt-2'>
+                        <div><h5>Video Property</h5></div>
+                        <div>
+                            <label htmlFor="videoUpload" className="photo-btn text-white fw-bold text-center mt-2 p-2 w-100">Upload Video</label>
+                            <input
+                                type="file"
+                                id="videoUpload"
+                                accept="video/*"
+                                style={{ display: "none" }}
+                                onChange={handleVideoChange}
+                            />
+                            {/* Video Preview */}
+                            {videopg && (
+                                <div className="mt-1 d-flex">
+                                    <video src={videopg} controls className="img-thumbnail" style={{ maxWidth: "200px", maxHeight: "200px" }} />
+                                    <button className="close-vbtn" onClick={handleRemoveVideo}>X</button>
+                                </div>
+                            )}
                         </div>
                     </div>
                     {(mode ?? '') !== 'edit' && (<button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handlepgSubmit}>Submit Property</button>)}

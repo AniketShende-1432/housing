@@ -11,6 +11,8 @@ const commercialSchema = new mongoose.Schema({
     areaUnit: { type: String, required: true }, // Sq-ft, Sq-yrd, etc.
     ownership: { type: String, required: true }, // Freehold, Leasehold, etc.
     price: { type: Number, required: true }, // Selling price
+    reraApproved:{type:String},
+    reraNumber:{type:String},
     features: {
         washroom: { type: Number }, // e.g., Available, Not Available
         ageOfProperty: { type: String },
@@ -19,6 +21,7 @@ const commercialSchema = new mongoose.Schema({
     },
     amenities: { type: [String] }, // e.g., Parking, Power Backup
     images: { type: [String] },
+    video:{type: String},
     propertyId: { type: String, required: true },
     visits: { type: Number, default: 0 },
     lastVisitTime: { type: Date, default: null },

@@ -26,6 +26,7 @@ const rentSchema = new mongoose.Schema({
     }, // Nested object for property features
     amenities: { type: [String]}, // Combined amenities
     images: { type: [String] }, // Array of image URLs
+    video:{type: String},
     propertyId: { type: String },
     visits: { type: Number, default: 0 },
     lastVisitTime: { type: Date, default: null },

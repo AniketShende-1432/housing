@@ -26,6 +26,7 @@ const pgSchema = new mongoose.Schema({
     },
     amenities: { type: [String] }, // Washing Machine, Sofa, etc.
     images: { type: [String] },
+    video:{type: String},
     propertyId: { type: String ,required:true},
     visits: { type: Number, default: 0 },
     lastVisitTime: { type: Date, default: null },

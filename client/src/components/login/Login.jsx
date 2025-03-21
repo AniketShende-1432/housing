@@ -148,7 +148,7 @@ const Login = () => {
                         </GoogleOAuthProvider>
                         <div className='d-flex'>
                             <div className='fs-3 border border-dark px-2 mail-icon d-flex align-items-center'> {userType !== 'phone' ? <FaSquarePhone /> : <IoMailOutline className='text-dark' />}</div>
-                            <button type="button" className="otp-btn btn c-btn" onClick={() => handleChange()}>
+                            <button type="button" className="otp-btn btn c-btn text-nowrap" onClick={() => handleChange()}>
                                 {userType !== 'phone' ? 'Mobile OTP' : 'Email Login'}
                             </button>
                         </div>

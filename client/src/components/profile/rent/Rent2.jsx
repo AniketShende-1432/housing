@@ -61,6 +61,8 @@ const Rent2 = () => {
     const [imagesrent, setImagesrent] = useState(rentdata?.images || []); // State to store image previews
     const [selectImage, setselectImage] = useState([]);
     const [simage,setsimage] = useState([]);
+    const [videor, setVideor] = useState(rentdata?.video || null);
+    const [selectVideor,setselectVideor] = useState(null);
 
     const handleFileChangerent = (event) => {
         if (!event.target.files.length) return;
@@ -99,6 +101,37 @@ const Rent2 = () => {
     
         // Remove from the image preview array (this is common for both cases)
         setImagesrent((prevImages) => prevImages.filter((_, i) => i !== index));
+    };
+    const handleVideoChange = (event) => {
+        if (!event.target.files.length) return;
+
+        const file = event.target.files[0];
+
+        // Check if the uploaded file is a video
+        if (!file.type.startsWith("video/")) {
+            alert("Please upload a valid video file.");
+            return;
+        }
+
+        const videoUrl = URL.createObjectURL(file);
+        setVideor(videoUrl);
+        setselectVideor(file);
+        event.target.value = ""; // Reset input value
+    };
+
+    const handleRemoveVideo = () => {
+        if (videor) {
+            URL.revokeObjectURL(videor);
+        }
+        if (rentdata?.video && rentdata.video === videor) {
+            // Remove from formData if it's an existing Cloudinary video
+            setrentdata((prevFormData) => ({
+                ...prevFormData,
+                video: null,
+            }));
+        }
+        setVideor(null);
+        setselectVideor(null);
     };
 
     const bedroomoptionsrent = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -195,6 +228,7 @@ const Rent2 = () => {
                 }
             }
             selectImage.forEach((image) => rntData.append("images", image));
+            rntData.append("video",selectVideor);
             if (isLoggedin) {
                 await axios.post(`${base_url}/api/v2/rentproperty`, rntData,{withCredentials:true})
                     .then((response) => {
@@ -256,6 +290,7 @@ const Rent2 = () => {
                 }
             }
             selectImage.forEach((image) => rntData.append("newimages", image));
+            rntData.append("newvideo",selectVideor);
             rntData.forEach((value, key) => {
                 console.log(key, value);
               });
@@ -443,6 +478,26 @@ const Rent2 = () => {
                                     </div>
                                 ))}
                             </div>
+                        </div>
+                    </div>
+                    <div className='mt-2'>
+                        <div><h5>Video Property</h5></div>
+                        <div>
+                            <label htmlFor="videoUpload" className="photo-btn text-white fw-bold text-center mt-2 p-2 w-100">Upload Video</label>
+                            <input
+                                type="file"
+                                id="videoUpload"
+                                accept="video/*"
+                                style={{ display: "none" }}
+                                onChange={handleVideoChange}
+                            />
+                            {/* Video Preview */}
+                            {videor && (
+                                <div className="mt-1 d-flex">
+                                    <video src={videor} controls className="img-thumbnail" style={{ maxWidth: "200px", maxHeight: "200px" }} />
+                                    <button className="close-vbtn" onClick={handleRemoveVideo}>X</button>
+                                </div>
+                            )}
                         </div>
                     </div>
                     {(mode ?? '') !== 'edit' && (<button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handleRsubmit}>Submit Property</button>)}
