@@ -21,7 +21,7 @@ const Commercial = () => {
   const [possessionStatus, setPossessionStatus] = useState("");
   const [CommData, setCommData] = useState({
     type: "", propertyType: "", city: "", locality: "", projectName: "", possessionStatus: "", carpetArea: "", areaUnit: "",
-    ownership: "", price: '',
+    ownership: "", price: '',reraArrproved:'',reraNumber:'',
     features: {
       washroom: '',
       ageOfProperty: "",

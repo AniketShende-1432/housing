@@ -42,7 +42,7 @@ const Propcard = ({ property, onViewNumber, handleSendsms, handlevisits }) => {
                                 <label className='price'>₹ {Math.floor(property.price / property.carpetArea)}/{property.carpetAreaUnit}</label>
                             </div>
                             <div className='d-flex flex-column m-3 mt-0 m-sm-3 ms-0 ms-sm-0 ps-3 item-bd'>
-                                <label className='fw-bold fs-6'>{property.superArea} {property.superAreaUnit}</label>
+                                <label className='fw-bold fs-6'>{property.carpetArea} {property.carpetAreaUnit}</label>
                                 <label style={{ whiteSpace: "nowrap" }}>Super Build-up Area</label>
                             </div>
                             <div className='d-none d-sm-flex flex-column m-3 ms-0 ps-3 item-bd'>

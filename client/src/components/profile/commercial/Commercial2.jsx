@@ -152,6 +152,13 @@ const Commercial2 = () => {
         setVideoc(null);
         setselectVideoc(null);
     };
+    const handlerera = (e) => {
+        const {name, value} = e.target;
+        setcommdata((prevState)=>({
+            ...prevState,
+            [name]:value
+        }))
+    }
     const handlecommSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -298,6 +305,26 @@ const Commercial2 = () => {
                         </div>
                     </div>
                     <div className='mt-4'>
+                        <h5>RERA Approved</h5>
+                        <div className="dropdown">
+                            <button className="btn dropdown-toggle rera-drop" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {commdata.reraApproved || 'Select'}
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="Yes">Yes</button></li>
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="No">No</button></li>
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="I have Applied">I have Applied</button></li>
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="Not Applicable">Not Applicable</button></li>
+                            </ul>
+                        </div>
+                        <div className='mt-3'>
+                            {commdata.reraApproved === 'Yes' ? 
+                            <input type="text" name="reraNumber" className='rera-inp' placeholder='Enter RERA Number' value={commdata.reraNumber} 
+                            onChange={handlerera}/>
+                        :''}
+                        </div>
+                    </div>
+                    <div className='mt-5'>
                         <div><h5>Add Amenities</h5></div>
                         <div>
                             <div className='text-secondary'>Amenities</div>

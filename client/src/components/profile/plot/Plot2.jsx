@@ -31,8 +31,7 @@ const Plot2 = () => {
     const [simage, setsimage] = useState([]);
     const [videop, setVideop] = useState(plotdata?.video || null);
     const [selectVideop, setselectVideop] = useState(null);
-    console.log(imagesplot);
-    console.log(selectedImage);
+    console.log(plotdata);
 
     const handleFileChangeplot = (event) => {
         if (!event.target.files.length) return;
@@ -137,6 +136,13 @@ const Plot2 = () => {
             return { ...prevState, overlooking };
         });
     };
+    const handlerera = (e) => {
+        const {name, value} = e.target;
+        setplotdata((prevState)=>({
+            ...prevState,
+            [name]:value
+        }))
+    }
     const handleplotSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -159,6 +165,9 @@ const Plot2 = () => {
             }
             selectedImage.forEach((image) => pltData.append("images", image))
             pltData.append("video", selectVideop);
+            pltData.forEach((value, key) => {
+                console.log(key, value);
+            });
             if (isLoggedin) {
                 await axios.post(`${base_url}/api/v2/plotproperty`, pltData, { withCredentials: true })
                     .then((response) => {
@@ -252,6 +261,26 @@ const Plot2 = () => {
             <div className='container main-box w-50'>
                 <div className='main2-box bg-white p-4'>
                     <div className='sell-head'><h3>Sell Of Plot/Land Property</h3></div>
+                    <div className='mt-4'>
+                        <h5>RERA Approved</h5>
+                        <div className="dropdown">
+                            <button className="btn dropdown-toggle rera-drop" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {plotdata.reraApproved || 'Select'}
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="Yes">Yes</button></li>
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="No">No</button></li>
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="I have Applied">I have Applied</button></li>
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="Not Applicable">Not Applicable</button></li>
+                            </ul>
+                        </div>
+                        <div className='mt-3'>
+                            {plotdata.reraApproved === 'Yes' ? 
+                            <input type="text" name="reraNumber" className='rera-inp' placeholder='Enter RERA Number' value={plotdata.reraNumber} 
+                            onChange={handlerera}/>
+                        :''}
+                        </div>
+                    </div>
                     <div className='mt-4'>
                         <div><h5>Add Amenities</h5></div>
                         <div>

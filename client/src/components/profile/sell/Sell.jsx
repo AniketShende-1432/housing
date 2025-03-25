@@ -53,7 +53,7 @@ const Sell = () => {
     const [formData, setFormData] = useState({
         price: '', propertyType: '', city: '', locality: '', society: '', bhk: '', furnishedType: '',
         carpetArea: '', carpetAreaUnit: '', superArea: '', superAreaUnit: '', possessionStatus: '',
-        developer: '', societyArea: '', societyAreaUnit: '', amenities: [],
+        developer: '', societyArea: '', societyAreaUnit: '', reraApproved:'',reraNumber:'', amenities: [],
         features:
         {
             bedrooms: '',

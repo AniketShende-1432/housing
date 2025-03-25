@@ -188,6 +188,13 @@ const Sell2 = () => {
             societyAreaUnit: value, // Update formData with the selected unit
         }));
     }
+    const handlerera = (e) => {
+        const {name, value} = e.target;
+        setformdata((prevState)=>({
+            ...prevState,
+            [name]:value
+        }))
+    }
     const handlePSubmit = async (e) => {
         e.preventDefault();
         let formErrors = {};
@@ -453,11 +460,27 @@ const Sell2 = () => {
                         {errors.socarea && <div className="text-danger error-txt">{errors.socarea}</div>}
                         {errors.socunit && <div className="text-danger error-txt">{errors.socunit}</div>}
                     </div>
-                    <div>
-                        <div>RERA Approved</div>
-                        
+                    <div className={errors.socarea || errors.socunit ? 'mt-3' : 'mt-4'}>
+                        <h5>RERA Approved</h5>
+                        <div className="dropdown">
+                            <button className="btn dropdown-toggle rera-drop" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {formdata.reraApproved || 'Select'}
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="Yes">Yes</button></li>
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="No">No</button></li>
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="I have Applied">I have Applied</button></li>
+                                <li><button className="dropdown-item" type="button" name='reraApproved' onClick={handlerera} value="Not Applicable">Not Applicable</button></li>
+                            </ul>
+                        </div>
+                        <div className='mt-3'>
+                            {formdata.reraApproved === 'Yes' ? 
+                            <input type="text" name="reraNumber" className='rera-inp' placeholder='Enter RERA Number' value={formdata.reraNumber} 
+                            onChange={handlerera}/>
+                        :''}
+                        </div>
                     </div>
-                    <div className={errors.socarea || errors.socunit ? 'mt-3' : 'mt-5'}>
+                    <div className='mt-5'>
                         <div><h5>Add Amenities</h5></div>
                         <div>
                             <div className='text-secondary'>Flat Furnishing</div>

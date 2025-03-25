@@ -11,8 +11,8 @@ const plotSchema = new mongoose.Schema({
     possessionBy: { type: String, required: true }, // e.g., Immediate, Within 6 Months
     ownershipType: { type: String, required: true }, // e.g., Freehold, Leasehold
     approvedBy: { type: String }, // e.g., N.A(Non-Agricultural), Corporation Approved
-    reraApproved:{type:String},
-    reraNumber:{type:String},
+    reraApproved:{type:String, set: (value) => value === '' ? null : value, default: null},
+    reraNumber:{type:String, set: (value) => value === '' ? null : value, default: null},
     dimensions: {
         length: { type: String, required: true },
         breadth: { type: String, required: true },

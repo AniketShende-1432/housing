@@ -37,7 +37,7 @@ const Plot = () => {
     const [formattedplotPrice, setFormattedplotPrice] = useState("");
     const [plotData, setplotData] = useState({
         city: '', locality: '', societyName: '', plotArea: '', areaUnit: '', price: '',
-        possessionBy: '', ownershipType: '', approvedBy: '',
+        possessionBy: '', ownershipType: '', approvedBy: '',reraApproved:'',reraNumber:'',
         dimensions: {
             length: '', // Length of the plot
             breadth: '', // Breadth of the plot

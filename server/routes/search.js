@@ -28,18 +28,24 @@ const getProperties = async (modelName, filters,res) => {
     if (!model) {
       return res.status(400).json({ message: "Invalid property type" });
     }
-    const arrayFields = ["localities", "propertyType", "bedrooms","roomtype","Availablefor","ownership","approvedby","commproper"];
+    const arrayFields = ["localities", "propertyType", "bedrooms","roomtype","Availablefor","ownership","approvedby","commproper","reraApproved"];
     arrayFields.forEach((field) => {
       if (filters[field]) {
         filters[field] = filters[field].split(",");
       }
     });
     const query = {};
-    if (filters.budget) {
-      query.price = { $lte: filters.budget };  // Filter for price
+    if (filters.minbudget && filters.maxbudget && (modelName !== 'rent' && modelName!=='pg')) {
+      query.price = {
+        $gte: filters.minbudget,  // Greater than or equal to minbudget
+        $lte: filters.maxbudget,  // Less than or equal to maxbudget
+      };
     }
-    if(filters.rentBudget){
-      query.monthlyRent = {$lte: filters.rentBudget};
+    if(filters.minrent!==undefined && filters.maxrent!==undefined && (modelName==='rent'|| modelName==='pg')){
+      query.monthlyRent = {
+        $gte: filters.minrent,  // Greater than or equal to minbudget
+        $lte: filters.maxrent,  // Less than or equal to maxbudget
+      };
     }
     if (filters.propertyType && filters.propertyType.length > 0) {
       query.propertyType = { $in: filters.propertyType };  // Filter by property type (e.g., 'Flat', 'Villa')
@@ -48,7 +54,10 @@ const getProperties = async (modelName, filters,res) => {
       query.propertyType = { $in: filters.commproper };  // Filter by property type (e.g., 'Flat', 'Villa')
     }
     if (filters.city) {
-      query.city = filters.city;  // Filter by locality
+      query.$or = [
+        { city: { $regex: filters.city, $options: "i" } },  // Case-insensitive city match
+        { locality: { $regex: filters.city, $options: "i" } }  // Case-insensitive search in locality array
+      ];
     }
     if (filters.roomtype && filters.roomtype.length > 0) {
       query.roomType = { $in: filters.roomtype }  // Filter by locality
@@ -72,11 +81,20 @@ const getProperties = async (modelName, filters,res) => {
     if (filters.bedrooms && filters.bedrooms.length > 0) {
       query.bhk = { $in: filters.bedrooms };  // Filter by number of bedrooms (e.g., '1BHK', '2BHK')
     }
-    if (filters.area) {
+    if (filters.reraApproved && filters.reraApproved.length > 0) {
+      query.reraApproved = { $in: filters.reraApproved };  // Filter by number of bedrooms (e.g., '1BHK', '2BHK')
+    }
+    if (filters.minarea !== undefined && filters.maxarea !== undefined) {
       if (modelName === 'plot') {
-        query.plotArea = {$lte: filters.area};
+        query.plotArea =  {
+          $gte: filters.minarea,  // Allow 0 as a valid minimum value
+          $lte: filters.maxarea,
+        };
       } else {
-        query.carpetArea = {$lte: filters.area}
+        query.carpetArea = {
+          $gte: filters.minarea,  // Allow 0 as a valid minimum value
+          $lte: filters.maxarea,
+        };
       }
     }
     const sortmethod = {visits : -1}

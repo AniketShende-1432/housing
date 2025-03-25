@@ -238,6 +238,55 @@
     border-top-left-radius: 14px;
     border-bottom-left-radius: 14px;
 }
+.multi-range-slider{
+    border:none !important;
+    box-shadow: none !important;
+    margin-left: 8px !important;
+    > .ruler{
+        display: none !important;
+    }
+    > .labels{
+        display: none !important;
+    }
+}
+.bar-inner{
+    background-color: darkorange !important;
+    box-shadow: none !important;
+}
+.thumb-right .caption{
+    position:absolute !important;
+    left:-10px !important;
+}
+.multi-range-slider .thumb .caption {
+    display: flex !important;  /* Always keep the caption visible */
+}
+.multi-range-slider .bar-left {
+    box-shadow: none !important;
+    border: 1px solid black !important;
+}
+.multi-range-slider .bar-right {
+    box-shadow: none !important;
+    border: 1px solid black !important;
+}
+.multi-range-slider .thumb .caption * {
+    background-color:darkorange !important;   /* Keep it styled as a blue box */
+    border-radius: 2px !important;
+    box-shadow: none !important;
+}
+.multi-range-slider .thumb::before {
+    box-shadow: none !important;
+    margin: -4px -8px !important;
+    width: 15px !important;
+	height: 15px !important;
+}
+.area-slider{
+    padding-bottom: 12px !important;
+    margin-top: 15px !important;
+}
+.area-slider .bar .thumb-right .caption{
+    position: absolute !important;
+    left:-15px !important;
+}
 
 @media (max-width: 991px) {
     .s-img {

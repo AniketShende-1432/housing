@@ -21,6 +21,7 @@ import { coinActions } from '../../store/Slice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Helmet } from "react-helmet-async";
+import MultiRangeSlider from "multi-range-slider-react";
 
 const Search = () => {
 
@@ -33,16 +34,27 @@ const Search = () => {
     const [Filter, setFilter] = useState(initialFilter);
     const balance = useSelector((state) => state.coin.balance);
     const [coins, setcoins] = useState(balance);
+    const [filterdata, setfilterdata] = useState({
+        minbudget: 0, maxbudget: 1000000000, minrent: 0, maxrent: 1000000, propertyType: [Filter.property], bedrooms: [], minarea: 0, maxarea: 4000, roomtype: [],
+        Availablefor: [],
+        ownership: [],
+        approvedby: [],
+        commproper: [],
+        city: Filter.city,
+        localities: [Filter.location],
+        reraApproved: [],
+    });
     useEffect(() => {
         localStorage.setItem('filterTab', Filter.tab);
         setfilterdata({
-            budget: 0, rentBudget: 0, propertyType: [Filter.property], bedrooms: [], area: 0, roomtype: [],
+            minbudget: 0, maxbudget: 1000000000, minrent: 0, maxrent: 1000000, propertyType: [Filter.property], bedrooms: [], minarea: 0, maxarea: 4000, roomtype: [],
             Availablefor: [],
             ownership: [],
             approvedby: [],
             commproper: [],
             city: Filter.city,
             localities: [Filter.location],
+            reraApproved: [],
         })
     }, [Filter.tab]);
 
@@ -59,18 +71,11 @@ const Search = () => {
         Nbed: false,
         area: false,
         locate: false,
+        rera: false,
     });
 
     const [searchTrigger, setSearchTrigger] = useState(false);
-    const [filterdata, setfilterdata] = useState({
-        budget: 0, rentBudget: 0, propertyType: [Filter.property], bedrooms: [], area: 0, roomtype: [],
-        Availablefor: [],
-        ownership: [],
-        approvedby: [],
-        commproper: [],
-        city: Filter.city,
-        localities: [Filter.location],
-    });
+    console.log(filterdata);
     const modalRef = useRef(null);
     const [owner, setowner] = useState({});
 
@@ -85,13 +90,11 @@ const Search = () => {
                     PG: 'pg',
                     Commercial: 'commercial',
                 }[Filter.tab];
-                console.log(Filter);
                 let url = `${base_url}/api/v3/properties/${propertyType}`;
-                console.log(filterdata);
                 const queryParams = Object.keys(filterdata)
                     .filter((key) => {
                         const value = filterdata[key];
-                        return Array.isArray(value) ? value.length > 0 : (typeof value === 'string' ? value.trim().length > 0 : value > 0);
+                        return Array.isArray(value) ? value.length > 0 : (typeof value === 'string' ? value.trim().length > 0 : value >= 0);
                     })
                     .map((key) => {
                         const value = filterdata[key];
@@ -103,9 +106,7 @@ const Search = () => {
 
                 if (queryParams) {
                     url += `?${queryParams}`; // Append the filters to the URL
-                    console.log(queryParams);
                 }
-                console.log(url);
                 if (propertyType) {
                     await axios.get(url).then((response) => {
                         updateProperties(propertyType, response.data);
@@ -137,12 +138,50 @@ const Search = () => {
             [key]: data,
         }));
     };
+    // const mchange = (e) => {
+    //     const newValue = e.target.value * 10000000;
+    //     setfilterdata((prevData) => ({
+    //         ...prevData,
+    //         budget: newValue, // Update the budget field
+    //     }));
+    // }
     const mchange = (e) => {
-        const newValue = e.target.value * 10000000;
-        setfilterdata((prevData) => ({
-            ...prevData,
-            budget: newValue, // Update the budget field
-        }));
+        const newMinBudget = e.minValue * 10000000;  // Convert slider value to rupees
+        const newMaxBudget = e.maxValue * 10000000;
+
+        if (newMinBudget !== filterdata.minbudget || newMaxBudget !== filterdata.maxbudget) {
+            setfilterdata((prevData) => ({
+                ...prevData,
+                minbudget: newMinBudget,
+                maxbudget: newMaxBudget,
+            }));
+        }
+    }
+    const rentchange = (e) => {
+        const newMinRent = e.minValue * 100000;  // Convert slider value to rupees
+        const newMaxRent = e.maxValue * 100000;
+
+        if (newMinRent !== filterdata.minrent || newMaxRent !== filterdata.maxrent) {
+            setfilterdata((prevData) => ({
+                ...prevData,
+                minrent: newMinRent,
+                maxrent: newMaxRent,
+            }));
+        }
+    }
+    const formatBudget = (budget) => {
+        if (budget >= 10000000) {
+            return `${(budget / 10000000).toFixed(2)} Cr`; // Show in Crores
+        } else {
+            return `${(budget / 100000).toFixed(0)} Lacs`;  // Show in Lacs
+        }
+    };
+    const formatrent = (budget) => {
+        if (budget >= 100000) {
+            return `${(budget / 100000).toFixed(2)} Lacs`;
+        } else {
+            return `${(budget / 1000).toFixed(0)} K`;
+        }
     }
     const toggleVisibilitys = (section) => {
         setVisibility((prevVisibility) => ({
@@ -215,11 +254,13 @@ const Search = () => {
         });
     }
     const achange = (e) => {
-        const newValue = e.target.value;
-        setfilterdata((prevData) => ({
-            ...prevData,
-            area: newValue, // Update the budget field
-        }));
+        if (e.minValue !== filterdata.minarea || e.maxValue !== filterdata.maxarea) {
+            setfilterdata((prevData) => ({
+                ...prevData,
+                minarea: e.minValue,
+                maxarea: e.maxValue,
+            }));
+        }
     }
     const handleroomtype = (room) => {
         setfilterdata((prevState) => {
@@ -289,6 +330,22 @@ const Search = () => {
             };
         });
     };
+    const handlerera = (rerastate) => {
+        setfilterdata((prevState) => {
+            const reraApproved = [...prevState.reraApproved];
+
+            // If the amenity is not in the array, add it
+            if (!reraApproved.includes(rerastate)) {
+                reraApproved.push(rerastate);
+            } else {
+                // If it's already in the array, remove it (toggle effect)
+                const index = reraApproved.indexOf(rerastate);
+                reraApproved.splice(index, 1);
+            }
+
+            return { ...prevState, reraApproved };
+        });
+    };
     const handleViewNumber = async (property) => {
         if (coins < 1) {
             toast.info('Not enough coins to View Number!');
@@ -356,12 +413,12 @@ const Search = () => {
     return (
         <>
             <nav className="navbar navbar-expand-lg border search-nav">
-            <Helmet>
-                <title>Search Best property to Buy</title>
-                <meta name="description" content="Explore new construction homes and learn how to buy a house, whether it's a duplex, vacation home, or foreclosed property. Compare renting vs buying a house and buying vs building a house. Get insights into multiple listing services, how often contingent offers fall through, and how to get preapproved for a home loan." />
-                <meta name="keywords" content="New construction homes ,How to buy a house ,Buying a duplex ,Buying a vacation home ,Buy realestate ,Buy home,Multiple listing services,Renting vs buying a house
+                <Helmet>
+                    <title>Search Best property to Buy</title>
+                    <meta name="description" content="Explore new construction homes and learn how to buy a house, whether it's a duplex, vacation home, or foreclosed property. Compare renting vs buying a house and buying vs building a house. Get insights into multiple listing services, how often contingent offers fall through, and how to get preapproved for a home loan." />
+                    <meta name="keywords" content="New construction homes ,How to buy a house ,Buying a duplex ,Buying a vacation home ,Buy realestate ,Buy home,Multiple listing services,Renting vs buying a house
                 Buying a foreclosed home,Buying vs building a house,How often do contingent offers fall through,How to get preapproved for a home loan" />
-            </Helmet>
+                </Helmet>
                 <ToastContainer />
                 <div className="container-fluid justify-content-lg-evenly search-cont">
                     <a role="button" className="navbar-brand text-white s-logo fs-3" href="#">ShelterBIG</a>
@@ -409,18 +466,19 @@ const Search = () => {
                                 {visibility.budget && (
                                     <div className="bdg-box2 mt-3">
                                         {Filter.tab === "Buy" || Filter.tab === "Plot/Land" || Filter.tab === "Commercial" ? (
-                                            // Buy Budget Slider
-                                            <div>
-                                                <div className="range d-flex justify-content-between">
-                                                    <div className="minrange">0</div>
-                                                    <div className="maxrange">{filterdata.budget / 10000000}&nbsp;crores</div>
-                                                </div>
-                                                <input
-                                                    type="range" className="form-range" min="0" max="5" step="0.5" id="buyBudgetRange"
-                                                    value={filterdata.budget / 10000000}
-                                                    onChange={mchange}
-                                                />
-                                            </div>
+                                            //Buy Budget Slider
+                                            <MultiRangeSlider
+                                                min={0}
+                                                max={20}
+                                                step={0.05}
+                                                minValue={filterdata.minbudget / 10000000}
+                                                maxValue={filterdata.maxbudget / 10000000}
+                                                onInput={(e) => {
+                                                    mchange(e);
+                                                }}
+                                                minCaption={formatBudget(filterdata.minbudget)}  // Proper formatting
+                                                maxCaption={formatBudget(filterdata.maxbudget)}  // Proper formatting
+                                            />
                                         ) : Filter.tab === "Rent" || Filter.tab === "PG" ? (
                                             // Rent Budget Slider
                                             <div>
@@ -551,11 +609,21 @@ const Search = () => {
                                 {visibility.area && (
                                     <div className='bdg-box2 mt-2 pb-2'>
                                         {Filter.tab === "Buy" || Filter.tab === "Rent" || Filter.tab === "Plot/Land" || Filter.tab === "Commercial" ? (
-                                            <><div className='range d-flex justify-content-between'>
-                                                <div className='minrange w-25'>0&nbsp;sq.ft</div>
-                                                <div className='maxrange'>{filterdata.area}&nbsp;sq.ft</div>
-                                            </div><input type="range" className="form-range" min="0" max="4000" step="500" id="customRange2"
-                                                value={filterdata.area} onChange={achange} /></>
+                                            <>
+                                                <MultiRangeSlider
+                                                    min={0}
+                                                    max={4000}
+                                                    step={100}
+                                                    minValue={filterdata.minarea}
+                                                    maxValue={filterdata.maxarea}
+                                                    onInput={(e) => {
+                                                        achange(e);
+                                                    }}
+                                                    className='area-slider'
+                                                    minCaption={`${filterdata.minarea} Sq-ft`}  // Proper formatting
+                                                    maxCaption={`${filterdata.maxarea} Sq-ft`}  // Proper formatting
+                                                />
+                                            </>
                                         ) : Filter.tab === "PG" ? (
                                             <div className='ms-1'>
                                                 <button className='btn btn-light type-btn me-1' onClick={() => handleroomtype('Shared')}
@@ -609,6 +677,7 @@ const Search = () => {
                 </div>
             </div>
             <div className='item-cont pt-1 pb-4 px-2 px-lg-4'>
+                {/* large screen */}
                 <div className='filter bg-white p-3'>
                     <h3 className='filter-h3'>Apply Filters</h3>
                     <div className='budg'>
@@ -620,31 +689,44 @@ const Search = () => {
                         {visibility.budget && (
                             <div className="bdg-box2 mt-3">
                                 {Filter.tab === "Buy" || Filter.tab === "Plot/Land" || Filter.tab === "Commercial" ? (
-                                    // Buy Budget Slider
-                                    <div>
-                                        <div className="range d-flex justify-content-between">
-                                            <div className="minrange">0</div>
-                                            <div className="maxrange">{filterdata.budget / 10000000}&nbsp;crores</div>
-                                        </div>
-                                        <input
-                                            type="range" className="form-range" min="0" max="5" step="0.5" id="buyBudgetRange"
-                                            value={filterdata.budget / 10000000}
-                                            onChange={mchange}
-                                        />
-                                    </div>
+                                    //Buy Budget Slider
+                                    // <div>
+                                    //     <div className="range d-flex justify-content-between">
+                                    //         <div className="minrange">0</div>
+                                    //         <div className="maxrange">{formatBudget(filterdata.budget)}</div>
+                                    //     </div>
+                                    //     <input
+                                    //         type="range" className="form-range" min="0" max="5" step="0.05" id="buyBudgetRange"
+                                    //         value={filterdata.budget / 10000000}
+                                    //         onChange={mchange}
+                                    //     />
+                                    // // </div>
+                                    <MultiRangeSlider
+                                        min={0}
+                                        max={20}
+                                        step={0.05}
+                                        minValue={filterdata.minbudget / 10000000}
+                                        maxValue={filterdata.maxbudget / 10000000}
+                                        onInput={(e) => {
+                                            mchange(e);
+                                        }}
+                                        minCaption={formatBudget(filterdata.minbudget)}  // Proper formatting
+                                        maxCaption={formatBudget(filterdata.maxbudget)}  // Proper formatting
+                                    />
                                 ) : Filter.tab === "Rent" || Filter.tab === "PG" ? (
                                     // Rent Budget Slider
-                                    <div>
-                                        <div className="range d-flex justify-content-between">
-                                            <div className="minrange">0</div>
-                                            <div className="maxrange">{filterdata.rentBudget / 1000}&nbsp;K</div>
-                                        </div>
-                                        <input
-                                            type="range" className="form-range" min="0" max="100000" step="1000" id="rentBudgetRange"
-                                            value={filterdata.rentBudget} // Default value if not set
-                                            onChange={(e) => setfilterdata({ ...filterdata, rentBudget: e.target.value })}
-                                        />
-                                    </div>
+                                    <MultiRangeSlider
+                                        min={0}
+                                        max={10}
+                                        step={0.05}
+                                        minValue={filterdata.minrent / 100000}
+                                        maxValue={filterdata.maxrent / 100000}
+                                        onInput={(e) => {
+                                            rentchange(e);
+                                        }}
+                                        minCaption={formatrent(filterdata.minrent)}  // Proper formatting
+                                        maxCaption={formatrent(filterdata.maxrent)}  // Proper formatting
+                                    />
                                 ) : null}
                             </div>
 
@@ -762,11 +844,21 @@ const Search = () => {
                         {visibility.area && (
                             <div className='bdg-box2 mt-2 pb-2'>
                                 {Filter.tab === "Buy" || Filter.tab === "Rent" || Filter.tab === "Plot/Land" || Filter.tab === "Commercial" ? (
-                                    <><div className='range d-flex justify-content-between'>
-                                        <div className='minrange w-25'>0&nbsp;sq.ft</div>
-                                        <div className='maxrange'>{filterdata.area}&nbsp;sq.ft</div>
-                                    </div><input type="range" className="form-range" min="0" max="4000" step="500" id="customRange2"
-                                        value={filterdata.area} onChange={achange} /></>
+                                    <>
+                                        <MultiRangeSlider
+                                            min={0}
+                                            max={4000}
+                                            step={100}
+                                            minValue={filterdata.minarea}
+                                            maxValue={filterdata.maxarea}
+                                            onInput={(e) => {
+                                                achange(e);
+                                            }}
+                                            className='area-slider'
+                                            minCaption={`${filterdata.minarea} Sq-ft`}  // Proper formatting
+                                            maxCaption={`${filterdata.maxarea} Sq-ft`}  // Proper formatting
+                                        />
+                                    </>
                                 ) : Filter.tab === "PG" ? (
                                     <div className='ms-1'>
                                         <button className='btn btn-light type-btn me-1' onClick={() => handleroomtype('Shared')}
@@ -812,26 +904,54 @@ const Search = () => {
                         </div>
                         )}
                     </div>
+                    <div className='rera'>
+                        {(Filter.tab === "Buy" || Filter.tab === "Plot/Land" || Filter.tab === "Commercial") && (
+                            <>
+                                <div className='type-box p-2 d-flex justify-content-between align-items-center' onClick={() => toggleVisibilitys("rera")}>
+                                    <div className='fw-bold'>RERA Approved</div>
+                                    <IoIosArrowDown />
+                                </div>
+                                {visibility.rera && (
+                                    <div className='container d-flex flex-wrap mb-2'>
+                                        <button className='btn btn-light type-btn me-1' onClick={() => handlerera("Yes")}
+                                            style={filterdata.reraApproved.includes('Yes') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Yes</button>
+                                        <button className='btn btn-light type-btn me-1' onClick={() => handlerera("No")}
+                                            style={filterdata.reraApproved.includes('No') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >No</button>
+                                        <button className='btn btn-light type-btn' onClick={() => handlerera("I have Applied")}
+                                            style={filterdata.reraApproved.includes('I have Applied') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>I have Applied</button>
+                                        <button className='btn btn-light type-btn mt-2 me-1' onClick={() => handlerera("Not Applicable")}
+                                            style={filterdata.reraApproved.includes('Not Applicable') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Not Applicable</button>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
                     <div className='mt-auto'>
                         <button className='btn apply-btn' onClick={() => setSearchTrigger((prev) => !prev)}>Apply Filter</button>
                     </div>
                 </div>
                 <div className='items-sec p-2'>
-                    {properties.sell.map((property) => (
-                        <Propcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
-                    ))}
-                    {properties.rent.map((property) => (
-                        <Rentcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
-                    ))}
-                    {properties.plot.map((property) => (
-                        <Plotcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
-                    ))}
-                    {properties.pg.map((property) => (
-                        <PGcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
-                    ))}
-                    {properties.commercial.map((property) => (
-                        <Commcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} /> // Render a card for each property
-                    ))}
+                    {Object.values(properties).some((arr) => arr.length > 0) ?
+                        (
+                            <>{properties.sell?.map((property) => (
+                                <Propcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
+                            ))}
+                            {properties.rent?.map((property) => (
+                                <Rentcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
+                            ))}
+                            {properties.plot?.map((property) => (
+                                <Plotcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
+                            ))}
+                            {properties.pg?.map((property) => (
+                                <PGcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
+                            ))}
+                            {properties.commercial?.map((property) => (
+                                <Commcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
+                            ))}
+                            </>
+                        ) : (
+                            <div>No results found ...</div>
+                        )}
                 </div>
                 <div className="modal owner-info" ref={modalRef} tabindex="-1">
                     <div className="modal-dialog">

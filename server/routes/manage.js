@@ -185,7 +185,7 @@ router.put("/updateplotproperty/:propertyId", uploadFields, async (req, res) => 
         if(updatedVideo === 'null' || updatedVideo ===''){
             updatedVideo= null;
         }
-        const updatedData = { ...req.body, features: dimensions, images: updatedImages, video:updatedVideo};
+        const updatedData = { ...req.body, features, dimensions, images: updatedImages, video:updatedVideo};
         // Ensure lastVisitTime is a valid Date or null
         if (updatedData.lastVisitTime === "null" || updatedData.lastVisitTime === "") {
             updatedData.lastVisitTime = null;

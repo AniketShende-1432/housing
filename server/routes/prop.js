@@ -74,7 +74,7 @@ router.post("/sellproperty",uploadFields,async (req, res) => {
     try {
         const token = req.cookies.authToken;
         const { price,type,propertyType,city,locality,society,bhk,furnishedType,carpetArea,carpetAreaUnit,superArea,
-            superAreaUnit,possessionStatus,developer,societyArea,societyAreaUnit,amenities } = req.body;
+            superAreaUnit,possessionStatus,developer,societyArea,societyAreaUnit,reraApproved,reraNumber,amenities } = req.body;
             // const images = req.files.map(file => file.path);
             const images = req.files['images'] ? req.files['images'].map(file => file.path) : [];
             // const video = req.file.path;
@@ -89,7 +89,7 @@ router.post("/sellproperty",uploadFields,async (req, res) => {
         const propertyId = await generateUniquePropertyId(prefix);
         if(existingUser){
             const sell = new Sell({ price,type,propertyType,city,locality,society,bhk,furnishedType,carpetArea,carpetAreaUnit,superArea,
-                superAreaUnit,possessionStatus,features,developer,societyArea,societyAreaUnit,amenities,images,video,propertyId,user:userId });
+                superAreaUnit,possessionStatus,features,developer,societyArea,societyAreaUnit,reraApproved,reraNumber,amenities,images,video,propertyId,user:userId });
             
             await sell.save().then(()=>res.status(200).json({ message: 'Property posted successfully'}));
             

@@ -145,6 +145,31 @@
     width:10rem;
     height: 10rem;
 }
+.rera-drop{
+    border:1px solid black;
+    width:10rem;
+    text-align: left !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.rera-drop:hover{
+    border:1px solid black;
+}
+.rera-inp{
+    border:1px solid white;
+    border-bottom-color: gray;
+    border-radius:0px;
+    width:100%;
+}
+.rera-inp:focus{
+    border:1px solid white;
+    border-bottom-color: gray;
+    outline:none;
+}
+.rera-inp::placeholder {
+    color: rgb(165, 165, 165);  /* Change to any light color */
+}
 @media (max-width: 991px) { 
     .parent-cont{
         padding-bottom: 2rem;

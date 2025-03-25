@@ -17,8 +17,8 @@ const SellpropertySchema = new mongoose.Schema({
     carpetAreaUnit: { type: String, required: true }, // Unit for carpet area, e.g., Sq-ft, Sq-yrd
     superArea: { type: Number }, // Super area
     superAreaUnit: { type: String }, // Unit for super area, e.g., Sq-ft, Sq-yrd
-    reraApproved:{type:String},
-    reraNumber:{type:String},
+    reraApproved:{type:String,set: (value) => value === '' ? null : value, default: null},
+    reraNumber:{type:String, set: (value) => value === '' ? null : value, default: null},
     features: {
         bedrooms: { type: Number }, // Number of bedrooms
         bathrooms: { type: Number }, // Number of bathrooms
