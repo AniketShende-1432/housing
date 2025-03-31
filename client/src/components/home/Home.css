@@ -124,7 +124,9 @@
     width:2rem;
     height:2rem;
 }
-
+.service-btn{
+    cursor: pointer;
+}
 @media (min-width: 768px) and (max-width: 991px) {
     .main-hcont{
         width:77%;
@@ -143,6 +145,10 @@
     }
     .s-cont-box{
         width:100%;
+    }
+    .foot-head{
+        border-bottom: 2px solid darkorange;
+        width:120px;
     }
 }
 @media (min-width: 300px) and (max-width: 750px) {

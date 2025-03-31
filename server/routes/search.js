@@ -76,7 +76,12 @@ const getProperties = async (modelName, filters,res) => {
       query.approvedBy = { $in: filters.approvedby };  // Filter by property type (e.g., 'Flat', 'Villa')
     }
     if (filters.localities && filters.localities.length > 0) {
-      query.locality = { $in: filters.localities };  // Filter by locality
+      query.$or = [
+        ...(query.$or || []),  // Keep previous $or conditions if any
+        ...filters.localities.map(locality => ({
+          locality: { $regex: locality, $options: "i" }  // Add localities to $or array
+        }))
+      ];
     }
     if (filters.bedrooms && filters.bedrooms.length > 0) {
       query.bhk = { $in: filters.bedrooms };  // Filter by number of bedrooms (e.g., '1BHK', '2BHK')
@@ -96,6 +101,12 @@ const getProperties = async (modelName, filters,res) => {
           $lte: filters.maxarea,
         };
       }
+    }
+    if (filters.photos === 'true') {
+      query.images = { $exists: true, $not: { $size: 0 } }; // Filter properties with at least one photo
+    }
+    if (filters.videos === 'true') {
+      query.video = { $ne:null}; // Filter properties with at least one video
     }
     const sortmethod = {visits : -1}
     query.status = 'Active';

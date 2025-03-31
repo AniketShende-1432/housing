@@ -58,11 +58,10 @@
     flex-direction: column;
     width: 23%;
     overflow-y: auto;
-    scrollbar-width: none;
+    scrollbar-width: thin;
     position: sticky;
     top: 100px;
 }
-
 .filters {
     display: flex;
     flex-direction: column;
@@ -286,6 +285,15 @@
 .area-slider .bar .thumb-right .caption{
     position: absolute !important;
     left:-15px !important;
+}
+.form-switch{
+    margin-top: 1.2px !important;
+}
+.form-switch .form-check-input{
+    margin-left: -1em !important;
+}
+.form-check-input:checked {
+    background-color: darkorange !important;
 }
 
 @media (max-width: 991px) {

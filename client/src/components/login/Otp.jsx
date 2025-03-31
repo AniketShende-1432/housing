@@ -51,7 +51,7 @@ const Otp = () => {
         try {
             const base_url = import.meta.env.VITE_BASE_URL; // Use your environment variable
             await axios.post(`${base_url}/api/v1/verify-otp`,otpdata, { withCredentials: true }).then((response) => {
-            if (response.status === 200) {
+            if (response.status === 200 && response.data.message === 'Login successful') {
                 dispatch(authActions.login());
                 sessionStorage.setItem("showLoginToast", "true");
                 navigate('/');
@@ -60,7 +60,7 @@ const Otp = () => {
             }
         });
         } catch (error) {
-            toast.error('Server error while verifying OTP');
+            toast.error(error.response.data.message);
             console.error('Error verifying OTP:', error);
         }
       };

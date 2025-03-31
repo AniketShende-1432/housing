@@ -36,11 +36,11 @@ const Search = () => {
     const [coins, setcoins] = useState(balance);
     const [filterdata, setfilterdata] = useState({
         minbudget: 0, maxbudget: 1000000000, minrent: 0, maxrent: 1000000, propertyType: [Filter.property], bedrooms: [], minarea: 0, maxarea: 4000, roomtype: [],
-        Availablefor: [],
+        photos: false, videos: false, Availablefor: [],
         ownership: [],
         approvedby: [],
         commproper: [],
-        city: Filter.city,
+        city: Filter.city!=='' ?  Filter.city : Filter.location,
         localities: [Filter.location],
         reraApproved: [],
     });
@@ -48,11 +48,11 @@ const Search = () => {
         localStorage.setItem('filterTab', Filter.tab);
         setfilterdata({
             minbudget: 0, maxbudget: 1000000000, minrent: 0, maxrent: 1000000, propertyType: [Filter.property], bedrooms: [], minarea: 0, maxarea: 4000, roomtype: [],
-            Availablefor: [],
+            photos: false, videos: false, Availablefor: [],
             ownership: [],
             approvedby: [],
             commproper: [],
-            city: Filter.city,
+            city: Filter.city!=='' ?  Filter.city : Filter.location,
             localities: [Filter.location],
             reraApproved: [],
         })
@@ -94,7 +94,9 @@ const Search = () => {
                 const queryParams = Object.keys(filterdata)
                     .filter((key) => {
                         const value = filterdata[key];
-                        return Array.isArray(value) ? value.length > 0 : (typeof value === 'string' ? value.trim().length > 0 : value >= 0);
+                        return Array.isArray(value) ? value.length > 0 : (typeof value === 'string' ? value.trim().length > 0 : typeof value === 'boolean'
+                            ? value === true
+                            : value >= 0);
                     })
                     .map((key) => {
                         const value = filterdata[key];
@@ -346,6 +348,12 @@ const Search = () => {
             return { ...prevState, reraApproved };
         });
     };
+    const handlecheckpv = (switchname) => {
+        setfilterdata((prevData) => ({
+            ...prevData,
+            [switchname]: !prevData[switchname],
+        }));
+    }
     const handleViewNumber = async (property) => {
         if (coins < 1) {
             toast.info('Not enough coins to View Number!');
@@ -669,6 +677,40 @@ const Search = () => {
                                 </div>
                                 )}
                             </div>
+                            <div className='rera'>
+                                {(Filter.tab === "Buy" || Filter.tab === "Plot/Land" || Filter.tab === "Commercial") && (
+                                    <>
+                                        <div className='type-box p-2 pb-3 pt-4 d-flex justify-content-between align-items-center' onClick={() => toggleVisibilitys("rera")}>
+                                            <div className='fw-bold'>RERA Approved</div>
+                                            <IoIosArrowDown />
+                                        </div>
+                                        {visibility.rera && (
+                                            <div className='container d-flex flex-wrap mb-2'>
+                                                <button className='btn btn-light type-btn me-1' onClick={() => handlerera("I have Applied")}
+                                                    style={filterdata.reraApproved.includes('I have Applied') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>I have Applied</button>
+                                                <button className='btn btn-light type-btn me-1' onClick={() => handlerera("Not Applicable")}
+                                                    style={filterdata.reraApproved.includes('Not Applicable') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Not Applicable</button>
+                                                <button className='btn btn-light type-btn' onClick={() => handlerera("Yes")}
+                                                    style={filterdata.reraApproved.includes('Yes') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Yes</button>
+                                                <button className='btn btn-light type-btn mt-2' onClick={() => handlerera("No")}
+                                                    style={filterdata.reraApproved.includes('No') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >No</button>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                            <div className='photos type-box p-2 pt-3 d-flex justify-content-between'>
+                                <div className='fw-bold text-nowrap'>Properties with Photos</div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="photos" checked={filterdata.photos} onChange={() => handlecheckpv('photos')} />
+                                </div>
+                            </div>
+                            <div className='photos type-box p-2 pt-3 d-flex justify-content-between mb-1'>
+                                <div className='fw-bold text-nowrap'>Properties with Videos</div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="videos" checked={filterdata.videos} onChange={() => handlecheckpv('videos')} />
+                                </div>
+                            </div>
                             <div className='mt-2'>
                                 <button className='btn apply-btn' onClick={() => setSearchTrigger((prev) => !prev)}>Apply Filter</button>
                             </div>
@@ -926,6 +968,18 @@ const Search = () => {
                             </>
                         )}
                     </div>
+                    <div className='photos type-box p-2 d-flex justify-content-between'>
+                        <div className='fw-bold text-nowrap'>Properties with Photos</div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="photos" checked={filterdata.photos} onChange={() => handlecheckpv('photos')} />
+                        </div>
+                    </div>
+                    <div className='photos type-box p-2 d-flex justify-content-between mb-2'>
+                        <div className='fw-bold text-nowrap'>Properties with Videos</div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="videos" checked={filterdata.videos} onChange={() => handlecheckpv('videos')} />
+                        </div>
+                    </div>
                     <div className='mt-auto'>
                         <button className='btn apply-btn' onClick={() => setSearchTrigger((prev) => !prev)}>Apply Filter</button>
                     </div>
@@ -936,18 +990,18 @@ const Search = () => {
                             <>{properties.sell?.map((property) => (
                                 <Propcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
                             ))}
-                            {properties.rent?.map((property) => (
-                                <Rentcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
-                            ))}
-                            {properties.plot?.map((property) => (
-                                <Plotcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
-                            ))}
-                            {properties.pg?.map((property) => (
-                                <PGcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
-                            ))}
-                            {properties.commercial?.map((property) => (
-                                <Commcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
-                            ))}
+                                {properties.rent?.map((property) => (
+                                    <Rentcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
+                                ))}
+                                {properties.plot?.map((property) => (
+                                    <Plotcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
+                                ))}
+                                {properties.pg?.map((property) => (
+                                    <PGcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
+                                ))}
+                                {properties.commercial?.map((property) => (
+                                    <Commcard key={property._id} property={property} onViewNumber={handleViewNumber} handleSendsms={handleSms} handlevisits={handlevisit} />
+                                ))}
                             </>
                         ) : (
                             <div>No results found ...</div>

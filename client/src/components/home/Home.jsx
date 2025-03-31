@@ -4,10 +4,6 @@ import Navbar from '../navbar/Navbar';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import build1 from "../../assets/building1.jpg";
 import build2 from "../../assets/building2.webp";
-import face from '../../assets/facebook.png';
-import twit from '../../assets/twitter.png';
-import insta from '../../assets/instagram.png';
-import linkd from '../../assets/linkedin.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -15,6 +11,7 @@ import 'swiper/css/autoplay'; // Autoplay styles
 import { Pagination, Autoplay } from 'swiper/modules';
 import { FaSearch } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
+import Footer from './Footer';
 
 const Home = () => {
 
@@ -71,7 +68,15 @@ const Home = () => {
     const handleSearch = () => {
         navigate('/search', { state: filter });
     }
-
+    const handleabout= ()=>{
+        navigate('/about-us', { state: filter });
+    }
+    const handleblog = ()=>{
+        navigate('/about-us/blogs', { state: filter });
+    }
+    const handlePrivacy = ()=>{
+        navigate('/about-us/privacy-policy', { state: filter });
+    }
     return (
         <>
             <Helmet>
@@ -339,46 +344,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <footer className='footer mt-4'>
-                <section className='p-2 p-sm-3'>
-                    <div className='company-n fw-bold fs-2'>ShelterBIG</div>
-                </section>
-                <section className='container text-white'>
-                    <div className='row'>
-                    <div className='col-5 col-sm-3'>
-                            <div className='fw-bold fs-5 foot-head'>Our Services</div>
-                            <div>Search Property</div>
-                            <div>Post Property</div>
-                            <div>Buy Property</div>
-                            <div>Rent Property</div>
-                        </div>
-                        <div className='col-7 col-sm-3'>
-                            <div className='fw-bold fs-5 foot-head'>Company</div>
-                            <div>About Us</div>
-                            <div>Contact Us</div>
-                            <div>Blogs</div>
-                        </div>
-                        <div className='col-5 col-sm-3 mt-2 mt-sm-0'>
-                            <div className='fw-bold fs-5 foot-head'>Help</div>
-                            <div>Support</div>
-                            <div>FAQs</div>
-                            <div>Privacy Policy</div>
-                        </div>
-                        <div className='col-7 col-sm-3 mt-2'>
-                            <div className='fw-bold fs-5'>Follow Us</div>
-                            <div className='row'>
-                                <div className='col-3 col-sm-3 col-lg-2'><img src={face} alt="img" className='follow-icon' /></div>
-                                <div className='col-3 col-sm-3 col-lg-2'><img src={twit} alt="img" className='follow-icon border' /></div>
-                                <div className='col-3 col-sm-3 col-lg-2'><img src={insta} alt="img" className='follow-icon' /></div>
-                                <div className='col-3 col-sm-3 col-lg-2'><img src={linkd} alt="img" className='follow-icon' /></div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section className='text-white text-align-center pb-2 pt-2 border-top mt-2'>
-                    <div className='text-center'>Copyright © 2025 ShelterBIG. All Rights Reserved</div>
-                </section>
-            </footer>
+            <Footer handleSearch={handleSearch} handleabout={handleabout} handleblog={handleblog} handlePrivacy={handlePrivacy}/>
         </>
     )
 }

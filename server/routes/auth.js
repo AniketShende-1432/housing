@@ -204,7 +204,6 @@ router.post('/send-otp', async (req, res) => {
 
 router.post('/verify-otp', async (req, res) => {
     const { phoneNumber, otp } = req.body;
-
     // Check if the OTP is valid and not expired
     const storedOtpData = otpStore[phoneNumber];
     if (!storedOtpData || storedOtpData.otp !== otp || storedOtpData.expiresAt < Date.now()) {

@@ -24,6 +24,10 @@ import PGpro from './components/product/PGpro';
 import Commpro from './components/product/Commpro';
 import Manage from './components/manage/Manage';
 import Otp from './components/login/Otp';
+import About from './components/aboutus/About';
+import Layout from './components/aboutus/Layout';
+import Blog from './components/aboutus/Blog';
+import Privacy from './components/aboutus/Privacy';
 import axios from "axios";
 import { useDispatch } from 'react-redux';
 import { authActions } from './store/Slice';
@@ -87,6 +91,11 @@ function App() {
           <Route path="/pg-product" element={<PGpro />} />
           <Route path="/commercial-product" element={<Commpro />} />
           <Route path="/manage" element={<Manage />} />
+          <Route path="/about-us" element={<Layout />}>  {/* Wrap Layout here */}
+            <Route index element={<About />} />  {/* Default path */}
+            <Route path="blogs" element={<Blog />} />
+            <Route path="privacy-policy" element={<Privacy />} />
+          </Route>
         </Routes>
       </Router>
     </>
