@@ -94,4 +94,22 @@ router.delete('/users/:id',verifyAdmin, async (req, res) => {
     }
 });
 
+router.put("/:id/add-coins", verifyAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { coin } = req.body;
+        const user = await User.findByIdAndUpdate(
+            id,
+            { $inc: { coins: coin } },
+            { new: true }
+        );
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.json({ success: true, user });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+});
+
 module.exports = router;
