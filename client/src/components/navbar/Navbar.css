@@ -31,6 +31,28 @@
     left:83%;
     top:44px;
 }
+.buy-box{
+    height:auto;
+    width:12rem;
+    background-color: white;
+    z-index: 9999;
+    border: 1px solid gray;
+    border-radius: 6px;
+    position:absolute;
+    left:70%;
+    top:44px;
+}
+.own-box{
+    height:auto;
+    width:11rem;
+    background-color: white;
+    z-index: 9999;
+    border: 1px solid gray;
+    border-radius: 6px;
+    position:absolute;
+    left:77%;
+    top:44px;
+}
 .login-box2{
     height:auto;
     width:13rem;
@@ -68,7 +90,20 @@
 .signcol:hover{
     color:darkorange;
 }
-
+.buy-ul{
+    list-style-type: none;
+    padding-left: 1rem;
+    margin-bottom: 0.4rem;
+}
+.buy-bhead{
+    color:darkorange;
+}
+.free-gif{
+    position: absolute;
+    top:30px;
+    height: 2rem;
+    width: 2rem;
+}
 @media (max-width: 991px) { 
     .logo{
         font-size: 1.8rem;
@@ -104,6 +139,18 @@
         right:0;
         top:70px;
     }
+    .buy-box{
+        position:absolute;
+        left:74%;
+        right:0;
+        top:70px;
+    }
+    .own-box{
+        position:absolute;
+        left:75%;
+        right:0;
+        top:70px;
+    }
     .login-box2{
         position:absolute;
         left:75%;
@@ -124,6 +171,18 @@
         margin-left: 1rem !important;
     }
     .login-box{
+        position:absolute;
+        left:47%;
+        right:0;
+        top:70px;
+    }
+    .buy-box{
+        position:absolute;
+        left:48%;
+        right:0;
+        top:70px;
+    }
+    .own-box{
         position:absolute;
         left:50%;
         right:0;

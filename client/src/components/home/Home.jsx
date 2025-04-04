@@ -77,6 +77,9 @@ const Home = () => {
     const handlePrivacy = ()=>{
         navigate('/about-us/privacy-policy', { state: filter });
     }
+    const handleFaqs = ()=>{
+        navigate('/about-us/faqs', { state: filter });
+    }
     return (
         <>
             <Helmet>
@@ -301,7 +304,7 @@ const Home = () => {
             </div>
             <div className='container-lg container-fluid mt-4 mt-sm-0'>
                 <div className='mb-4'><h4>Projects On High Demand</h4></div>
-                <div className='d-flex demand-card' style={{ gap: "1rem" }}>
+                <div className='d-flex demand-card justify-content-lg-center' style={{ gap: "1rem" }}>
                     <div className="card" style={{ width: "18rem" }}>
                         <img src={build1} className="card-img-top" alt="img" />
                         <div className="card-body">
@@ -344,7 +347,8 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <Footer handleSearch={handleSearch} handleabout={handleabout} handleblog={handleblog} handlePrivacy={handlePrivacy}/>
+            <Footer handleSearch={handleSearch} handleabout={handleabout} handleblog={handleblog} handlePrivacy={handlePrivacy}
+            handleFaqs={handleFaqs}/>
         </>
     )
 }

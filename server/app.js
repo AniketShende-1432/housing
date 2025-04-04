@@ -9,6 +9,7 @@ const search = require("./routes/search");
 const manage = require("./routes/manage");
 const adminuser = require("./routes/adminuser");
 const adminprop = require("./routes/adminprop");
+const view = require("./routes/view");
 const cookieParser = require('cookie-parser');
 require("./utlis/cronJob");
 
@@ -27,6 +28,7 @@ app.use("/api/v3", search);
 app.use("/api/v4",manage);
 app.use("/api/v5",adminuser);
 app.use("/api/v6",adminprop);
+app.use("/api/v7",view);
 
 app.listen(process.env.PORT,()=>{
     console.log("Server Started");

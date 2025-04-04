@@ -1,0 +1,19 @@
+.response-main{
+    background-color: rgb(253, 238, 218);
+    min-height: 100vh;
+    max-height: auto;
+}
+.view-head{
+    color:darkorange;
+}
+.view-src-btn{
+    background-color: darkorange !important;
+    height: 2.3rem !important;
+}
+.view-card{
+    background-color: white;
+    border-radius: 5px;
+}
+.view-icon{
+    color:darkorange;
+}

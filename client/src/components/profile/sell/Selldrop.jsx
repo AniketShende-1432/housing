@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react'
 import "./Sell.css";
 
-const Selldrop = ({label,options, value, onChange}) => {
+const Selldrop = ({label,options, value, onChange , placeholder}) => {
 
     const [filteredOptions, setFilteredOptions] = useState(options); // Filtered options
     const [inputValue, setInputValue] = useState(value); // Input field value
@@ -47,14 +47,14 @@ const Selldrop = ({label,options, value, onChange}) => {
                 <input
                     type="text"
                     className="form-control"
-                    placeholder="Type Value"
+                    placeholder={placeholder || "Type Value"}
                     value={inputValue}
                     onChange={handleInputChange}
                     onFocus={() => setDropdownVisible(true)}
                     onBlur={handleBlur}
                 />
                 {dropdownVisible && (
-                    <ul className="list-group list-drop-menu w-100 mt-1 shadow" style={{ zIndex: 1000 }}>
+                    <ul className="list-group list-drop-menu w-100 mt-1 shadow">
                         {filteredOptions.length > 0 ? (
                             filteredOptions.map((option, index) => (
                                 <li

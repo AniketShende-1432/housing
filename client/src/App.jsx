@@ -23,11 +23,13 @@ import Plotpro from './components/product/Plotpro';
 import PGpro from './components/product/PGpro';
 import Commpro from './components/product/Commpro';
 import Manage from './components/manage/Manage';
+import Response from './components/response/Response';
 import Otp from './components/login/Otp';
 import About from './components/aboutus/About';
 import Layout from './components/aboutus/Layout';
 import Blog from './components/aboutus/Blog';
 import Privacy from './components/aboutus/Privacy';
+import FAQs from './components/aboutus/FAQs';
 import axios from "axios";
 import { useDispatch } from 'react-redux';
 import { authActions } from './store/Slice';
@@ -91,10 +93,12 @@ function App() {
           <Route path="/pg-product" element={<PGpro />} />
           <Route path="/commercial-product" element={<Commpro />} />
           <Route path="/manage" element={<Manage />} />
+          <Route path="/v-response" element={<Response />} />
           <Route path="/about-us" element={<Layout />}>  {/* Wrap Layout here */}
             <Route index element={<About />} />  {/* Default path */}
             <Route path="blogs" element={<Blog />} />
             <Route path="privacy-policy" element={<Privacy />} />
+            <Route path="faqs" element={<FAQs />} />
           </Route>
         </Routes>
       </Router>

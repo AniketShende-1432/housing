@@ -355,11 +355,12 @@ const Search = () => {
         }));
     }
     const handleViewNumber = async (property) => {
-        if (coins < 1) {
-            toast.info('Not enough coins to View Number!');
+        if (coins < 2) {
+            toast.info('Not enough coins to View Number! Atleast 2 coins required');
         } else {
             const userId = property.user;
             const base_url = import.meta.env.VITE_BASE_URL;
+            const propinfo = {p_id:property._id,type:property.type};
             try {
                 const response = await axios.get(`${base_url}/api/v3/user/${userId}`);
                 setowner(response.data);  // Store the fetched user data in state (you need to define this state)
@@ -367,9 +368,12 @@ const Search = () => {
                 const modal = new window.bootstrap.Modal(modalRef.current);
                 modal.show();
                 if (response.status === 200) {
-                    await axios.put(`${base_url}/api/v1/update-coins`, { coinsChange: -1 }, { withCredentials: true }).then((response) => {
+                    await axios.put(`${base_url}/api/v1/update-coins`, { coinsChange: -2 }, { withCredentials: true }).then((response) => {
                         setcoins(response.data.coins);
                         dispatch(coinActions.setBalance(response.data.coins));
+                    });
+                    await axios.post(`${base_url}/api/v3/add-viewdata`,propinfo, { withCredentials: true }).then((response) => {
+                        console.log(response.data.message);
                     });
                 }
             } catch (error) {
@@ -379,10 +383,11 @@ const Search = () => {
         }
     };
     const handleSms = async (property) => {
-        if (coins < 1) {
-            toast.info('Not enough coins to Contact!');
+        if (coins < 2) {
+            toast.info('Not enough coins to Contact! Atleast 2 coins required');
         } else {
             const base_url = import.meta.env.VITE_BASE_URL;
+            const propinfo = {p_id:property._id,type:property.type};
             const data = {
                 type: property.type,
                 propertyId: property.propertyId,
@@ -392,9 +397,12 @@ const Search = () => {
                 const response = await axios.post(`${base_url}/api/v3/sendsms`, data);
                 if (response.status === 200) {
                     toast.success('Information is send to Owner, Please wait for reply !');
-                    const res = await axios.put(`${base_url}/api/v1/update-coins`, { coinsChange: -1 }, { withCredentials: true });
+                    const res = await axios.put(`${base_url}/api/v1/update-coins`, { coinsChange: -2 }, { withCredentials: true });
                     setcoins(res.data.coins);
                     dispatch(coinActions.setBalance(res.data.coins));
+                    await axios.post(`${base_url}/api/v3/add-viewdata`,propinfo, { withCredentials: true }).then((response) => {
+                        console.log(response.data.message);
+                    });
                 }
                 else {
                     toast.error(response.data.message);

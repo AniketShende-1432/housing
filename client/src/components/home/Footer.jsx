@@ -6,7 +6,7 @@ import insta from '../../assets/instagram.png';
 import linkd from '../../assets/linkedin.png';
 import './Home.css';
 
-const Footer = ({handleSearch,handleabout,handleblog, handlePrivacy}) => {
+const Footer = ({handleSearch,handleabout,handleblog, handlePrivacy, handleFaqs}) => {
     return (
         <>
             <footer className='footer mt-4'>
@@ -31,7 +31,7 @@ const Footer = ({handleSearch,handleabout,handleblog, handlePrivacy}) => {
                                 <div className='col-6 col-sm-4 mt-2 mt-sm-0'>
                                     <div className='fw-bold fs-5 foot-head'>Help</div>
                                     <div>Support</div>
-                                    <div>FAQs</div>
+                                    <div className='service-btn' onClick={handleFaqs}>FAQs</div>
                                     <div className='service-btn' onClick={handlePrivacy}>Privacy Policy</div>
                                 </div>
                                 <div className='text-white col-6 mt-sm-2 d-sm-none'>

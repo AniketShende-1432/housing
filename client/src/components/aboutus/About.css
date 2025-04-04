@@ -41,6 +41,23 @@
 .preserve{
     white-space: pre;
 }
+/* FAQs */
+.accordion{
+    border-radius: 0.375rem !important;
+}
+.f-head{
+    color:darkorange;
+}
+.accordion-button:not(.collapsed) {
+    background-color: antiquewhite !important;
+}
+.accordion-button:focus{
+    box-shadow: 0px 0px 0px 2px rgb(242, 180, 65) !important;
+    border-top: none !important;
+}
+.accordion-body{
+    text-align: justify;
+}
 /* medai query */
 @media (min-width: 768px) and (max-width: 991px) {
     .blog-div{
@@ -79,5 +96,11 @@
     }
     .h-cbody1{
         width:60% !important;
+    }
+    .prv-div{
+        width: 80% !important;
+    }
+    .preserve{
+        text-wrap: wrap;
     }
 }

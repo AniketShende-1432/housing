@@ -23,13 +23,17 @@ const Layout = () => {
     const handlePrivacy = ()=>{
         navigate('/about-us/privacy-policy');
     }
+    const handleFaqs = ()=>{
+        navigate('/about-us/faqs');
+    }
     return (
         <div>
             <Navbar back="profile-bg" />
             <main>
                 <Outlet />  {/* This renders the child route components dynamically */}
             </main>
-            <Footer handleSearch={handleSearch} handleabout={handleabout} handleblog={handleblog} handlePrivacy={handlePrivacy}/>
+            <Footer handleSearch={handleSearch} handleabout={handleabout} handleblog={handleblog} handlePrivacy={handlePrivacy}
+            handleFaqs={handleFaqs}/>
         </div>
     )
 }
