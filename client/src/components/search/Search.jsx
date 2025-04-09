@@ -456,7 +456,7 @@ const Search = () => {
                             onClick={() => setSearchTrigger((prev) => !prev)}>Search</button>
                         <div className='d-flex align-items-center ms-1 ms-sm-4'>
                             <img src={coin} alt="coin" className='search-coin' />
-                            <div className='ms-1'>{coins || '0'}</div>
+                            <div className='ms-1 text-nowrap'>Available {coins || '0'}</div>
                         </div>
                     </div>
                 </div>
